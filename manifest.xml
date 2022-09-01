@@ -7,6 +7,7 @@
   <url>http://</url>
   <logo>http://</logo>
   <depend package="base/cmake" />
+  <depend package="gui/vizkit3d_debug_drawings" />
   <!--
    To add any dependencies use the depend tag
   <depend package="dummy-dependency-0" />

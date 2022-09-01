@@ -6,7 +6,7 @@ project(pointcloud_object_detection
         DESCRIPTION "")
 find_package(Rock)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 rock_init()
