@@ -1,4 +1,5 @@
 // PCL lib Functions for processing point clouds
+// Source: https://github.com/enginBozkurt/LidarObstacleDetection
 
 #ifndef PROCESSPOINTCLOUDS_H_
 #define PROCESSPOINTCLOUDS_H_
@@ -19,6 +20,8 @@
 #include <chrono>
 #include "Box.h"
 #include <unordered_set>
+
+namespace pointcloud_obstacle_detection {
 
 // Structure to represent node of kd tree
 struct Node
@@ -166,7 +169,7 @@ public:
 
 	  void Proximity(typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx,typename KdTree_euclidean<PointT>::KdTree_euclidean* tree,float distanceTol, int maxSize);
 
-    pointcloud_object_detection::Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
+    pointcloud_obstacle_detection::Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
     void savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
 
@@ -566,7 +569,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
  *and max coordinates
  * */
 template<typename PointT>
-pointcloud_object_detection::Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+pointcloud_obstacle_detection::Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
 {
 
     // Find bounding box for one of the clusters
@@ -574,7 +577,7 @@ pointcloud_object_detection::Box ProcessPointClouds<PointT>::BoundingBox(typenam
     /*Get min and max coordinates in the cluster*/
     pcl::getMinMax3D(*cluster, minPoint, maxPoint);
 
-    pointcloud_object_detection::Box box;
+    pointcloud_obstacle_detection::Box box;
     box.x_min = minPoint.x;
     box.y_min = minPoint.y;
     box.z_min = minPoint.z;
@@ -629,5 +632,6 @@ std::vector<boost::filesystem::path> ProcessPointClouds<PointT>::streamPcd(std::
     return paths;
 
 }
+} //namespace pointcloud_obstacle_detection
 
 #endif /* PROCESSPOINTCLOUDS_H_ */

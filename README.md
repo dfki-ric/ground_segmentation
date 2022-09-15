@@ -1,4 +1,4 @@
-pointcloud_object_detection
+pointcloud_obstacle_detection
 =============
 
 
