@@ -1,8 +1,8 @@
 find_package(PCL 1.2 REQUIRED)
 
 rock_library(pointcloud_object_detection
-    SOURCES processPointClouds.cpp 
-    HEADERS render/box.h processPointClouds.h
+    SOURCES processPointClouds.cpp
+    HEADERS processPointClouds.h Box.h
     DEPS_PKGCONFIG vizkit3d_debug_drawings
 )
 
