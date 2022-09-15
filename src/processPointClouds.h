@@ -1,4 +1,4 @@
-// PCL lib Functions for processing point clouds 
+// PCL lib Functions for processing point clouds
 
 #ifndef PROCESSPOINTCLOUDS_H_
 #define PROCESSPOINTCLOUDS_H_
@@ -12,12 +12,12 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/common/transforms.h>
-#include <iostream> 
-#include <string>  
+#include <iostream>
+#include <string>
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include "render/box.h"
+#include "Box.h"
 #include <unordered_set>
 
 // Structure to represent node of kd tree
@@ -166,7 +166,7 @@ public:
 
 	  void Proximity(typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx,typename KdTree_euclidean<PointT>::KdTree_euclidean* tree,float distanceTol, int maxSize);
 
-    Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
+    pointcloud_object_detection::Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
     void savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
 
@@ -251,7 +251,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
 
 
 template<typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, typename pcl::PointCloud<PointT>::Ptr cloud) 
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, typename pcl::PointCloud<PointT>::Ptr cloud)
 {
   // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
 	typename pcl::PointCloud<PointT>::Ptr obstCloud(new pcl::PointCloud<PointT>());
@@ -566,7 +566,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
  *and max coordinates
  * */
 template<typename PointT>
-Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+pointcloud_object_detection::Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
 {
 
     // Find bounding box for one of the clusters
@@ -574,7 +574,7 @@ Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Pt
     /*Get min and max coordinates in the cluster*/
     pcl::getMinMax3D(*cluster, minPoint, maxPoint);
 
-    Box box;
+    pointcloud_object_detection::Box box;
     box.x_min = minPoint.x;
     box.y_min = minPoint.y;
     box.z_min = minPoint.z;
