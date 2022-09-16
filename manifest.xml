@@ -1,11 +1,16 @@
 <package>
-  <description brief="">
-
-  </description>
-  <author>/</author>
+  <description brief="Detect obstacles as point cloud clusters in a region of interest"></description>
+  <author>mulo01@dfki.de</author>
+  <maintainer>mulo01@dfki.de</maintainer>
+  <stage>0</stage>
   <license></license>
   <url>http://</url>
   <logo>http://</logo>
+  <keywords>
+    <keyword>Obstacle Detection</keyword>
+    <keyword>Perception</keyword>
+    <keyword>Pointcloud</keyword>
+  </keywords>
   <depend package="base/cmake" />
   <depend package="gui/vizkit3d_debug_drawings" />
   <!--
