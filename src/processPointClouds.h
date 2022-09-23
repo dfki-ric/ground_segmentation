@@ -217,7 +217,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
     sor.setInputCloud (cloud);
     sor.setLeafSize (filterRes, filterRes, filterRes);
     sor.filter (*cloud_filtered);
-    LOG_ERROR_S << "Voxeled " << cloud_filtered->points.size();
+    LOG_DEBUG_S << "Voxeled " << cloud_filtered->points.size();
 
     // Crop the scene to create ROI
     pcl::CropBox<PointT> roi;
@@ -225,7 +225,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
     roi.setMax(maxPoint);
     roi.setInputCloud(cloud_filtered);
     roi.filter(*cloud_filtered);
-    LOG_ERROR_S << "ROI " << cloud_filtered->points.size();
+    LOG_DEBUG_S << "ROI " << cloud_filtered->points.size();
 
     //Remove all the points from roof
     std::vector<int> indices;
@@ -515,7 +515,7 @@ std::vector<std::vector<int>> ProcessPointClouds<PointT>::euclideanCluster(typen
 			if((cluster.size()>=minSize)&&cluster.size()<=maxSize)
 				clusters.push_back(cluster);
 			/*else
-				LOG_ERROR_S <<"discarted cluster"<<cluster.size();*/
+				LOG_INFO_S <<"discarted cluster"<<cluster.size();*/
 		}
 
 	}
@@ -601,7 +601,7 @@ template<typename PointT>
 void ProcessPointClouds<PointT>::savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file)
 {
     pcl::io::savePCDFileASCII (file, *cloud);
-    LOG_ERROR_S << "Saved " << cloud->points.size () << " data points to "+file;
+    LOG_DEBUG_S << "Saved " << cloud->points.size () << " data points to "+file;
 }
 
 
@@ -615,7 +615,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::loadPcd(std::s
     {
         PCL_ERROR ("Couldn't read file \n");
     }
-    LOG_ERROR_S << "Loaded " << cloud->points.size () << " data points from "+file;
+    LOG_DEBUG_S << "Loaded " << cloud->points.size () << " data points from "+file;
 
     return cloud;
 }
