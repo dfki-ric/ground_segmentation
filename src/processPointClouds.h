@@ -12,6 +12,7 @@
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/segmentation/extract_clusters.h>
+#include <pcl/features/moment_of_inertia_estimation.h>
 #include <pcl/common/transforms.h>
 #include <iostream>
 #include <string>
@@ -19,6 +20,7 @@
 #include <ctime>
 #include <chrono>
 #include "Box.h"
+#include "OrientedBoundingBox.h"
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
 
@@ -171,6 +173,10 @@ public:
 	  void Proximity(typename pcl::PointCloud<PointT>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx,typename KdTree_euclidean<PointT>::KdTree_euclidean* tree,float distanceTol, int maxSize);
 
     pointcloud_obstacle_detection::Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
+
+		pointcloud_obstacle_detection::OrientedBoundingBox OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
+
+		//pointcloud_obstacle_detection::Box AxisAlignedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
     void savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
 
@@ -581,7 +587,68 @@ pointcloud_obstacle_detection::Box ProcessPointClouds<PointT>::BoundingBox(typen
 	return box;
 }
 
+/*OrientedBoundingBox function shall identify the min and max coordinates
+ *in the provided cluster, a box shall be fitted using these min
+ *and max coordinates
+ * */
+template<typename PointT>
+pointcloud_obstacle_detection::OrientedBoundingBox ProcessPointClouds<PointT>::OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+{
+		pcl::MomentOfInertiaEstimation <pcl::PointXYZI> feature_extractor;
+		feature_extractor.setInputCloud(cluster);
+		feature_extractor.compute();
 
+  	pcl::PointXYZI min_point_OBB;
+		pcl::PointXYZI max_point_OBB;
+		pcl::PointXYZI position_OBB;
+		Eigen::Matrix3f rotational_matrix_OBB;
+		feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+
+    pointcloud_obstacle_detection::OrientedBoundingBox box;
+    box.x_min = min_point_OBB.x;
+    box.y_min = min_point_OBB.y;
+    box.z_min = min_point_OBB.z;
+    box.x_max = max_point_OBB.x;
+    box.y_max = max_point_OBB.y;
+    box.z_max = max_point_OBB.z;
+		box.position.x() = position_OBB.x; 
+		box.position.y() = position_OBB.y;  
+		box.position.z() = position_OBB.z;   
+	  Eigen::Quaternionf quat (rotational_matrix_OBB);
+		box.rotation.x() = quat.x();
+		box.rotation.y() = quat.y();
+		box.rotation.z() = quat.z();
+		box.rotation.w() = quat.w();
+	return box;
+}
+
+/*AxisAlignedBoundingBox function shall identify the min and max coordinates
+ *in the provided cluster, a box shall be fitted using these min
+ *and max coordinates
+ * */
+/*
+template<typename PointT>
+pointcloud_obstacle_detection::Box ProcessPointClouds<PointT>::AxisAlignedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+{
+		pcl::MomentOfInertiaEstimation <pcl::PointXYZI> feature_extractor;
+		feature_extractor.setInputCloud(cluster);
+		feature_extractor.compute();
+
+		pcl::PointXYZI min_point_AABB;
+		pcl::PointXYZI max_point_AABB;
+		feature_extractor.getAABB (min_point_AABB, max_point_AABB);
+
+    pointcloud_obstacle_detection::Box box;
+    box.x_min = min_point_AABB.x;
+    box.y_min = min_point_AABB.y;
+    box.z_min = min_point_AABB.z;
+    box.x_max = max_point_AABB.x;
+    box.y_max = max_point_AABB.y;
+    box.z_max = max_point_AABB.z;
+
+	return box;
+}
+*/
 template<typename PointT>
 void ProcessPointClouds<PointT>::savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file)
 {
