@@ -1,7 +1,5 @@
-#ifndef ORIENTED_BOUNDING_BOX_H
-#define ORIENTED_BOUNDING_BOX_H
-
-#include <Eigen/Geometry>
+#pragma once
+#include <base/Eigen.hpp>
 
 namespace pointcloud_obstacle_detection{
 
@@ -13,9 +11,8 @@ struct OrientedBoundingBox
 	double x_max;
 	double y_max;
 	double z_max;
-	Eigen::Vector3d position;
-	Eigen::Quaterniond rotation; 
+	base::Vector3d position;
+	base::Quaterniond rotation; 
 };
 
 } //namespace pointcloud_obstacle_detection
-#endif
