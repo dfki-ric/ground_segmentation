@@ -21,7 +21,7 @@ double ComputeConvexHulls::cross(const Point &O, const Point &A, const Point &B)
 	return (A.x - O.x) * (double)(B.y - O.y) - (A.y - O.y) * (double)(B.x - O.x);
 }
 
-std::vector<Point> ComputeConvexHulls::convex_hull(std::vector<Point> P)
+std::vector<Point> ComputeConvexHulls::convexHull3D(std::vector<Point> P)
 {
 	int n = P.size(), k = 0;
 	std::vector<Point> H(2*n);
@@ -45,7 +45,7 @@ std::vector<Point> ComputeConvexHulls::convex_hull(std::vector<Point> P)
 	return H;
 }
 
-std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHulls::computeOBBPoints(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
+std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHulls::computeOBBPoints3D(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
 
 	std::vector<std::vector<pointcloud_obstacle_detection::Point>> boxes_points; 
 	for(pointcloud_obstacle_detection::OrientedBoundingBox box : boxes)
@@ -80,12 +80,12 @@ std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHull
 	return boxes_points;
 }
 
-std::vector<std::vector<Point>> ComputeConvexHulls::computeConvexHulls(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
-	std::vector<std::vector<Point>> obstacle_edges = computeOBBPoints(boxes);
+std::vector<std::vector<Point>> ComputeConvexHulls::computeConvexHulls3D(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
+	std::vector<std::vector<Point>> obstacle_edges = computeOBBPoints3D(boxes);
 	std::vector<std::vector<Point>> convex_hulls;
 	for (auto edges : obstacle_edges){
 		std::vector<Point> hull;
-		hull = convex_hull(edges);		
+		hull = convexHull3D(edges);		
 		convex_hulls.push_back(hull);
 	}
 	return convex_hulls;
