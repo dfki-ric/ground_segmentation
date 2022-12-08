@@ -45,28 +45,35 @@ std::vector<Point> ComputeConvexHulls::convexHull3D(std::vector<Point> P)
 	return H;
 }
 
-std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHulls::computeOBBPoints3D(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
+std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHulls::computeOBBPoints3D(std::vector<base::samples::OrientedBoundingBox>  boxes){
 
 	std::vector<std::vector<pointcloud_obstacle_detection::Point>> boxes_points; 
-	for(pointcloud_obstacle_detection::OrientedBoundingBox box : boxes)
+	for(base::samples::OrientedBoundingBox box : boxes)
 	{
-		Eigen::Vector3d p1{box.x_min,box.y_min,box.z_min};
-		Eigen::Vector3d p2{box.x_min,box.y_min,box.z_max};
-		Eigen::Vector3d p3{box.x_max,box.y_min,box.z_max};
-		Eigen::Vector3d p4{box.x_max,box.y_min,box.z_min};
-		Eigen::Vector3d p5{box.x_min,box.y_max,box.z_min};
-		Eigen::Vector3d p6{box.x_min,box.y_max,box.z_max};
-		Eigen::Vector3d p7{box.x_max,box.y_max,box.z_max};
-		Eigen::Vector3d p8{box.x_max,box.y_max,box.z_min};
+		double x_min = -box.dimension.x()/2;
+		double y_min = -box.dimension.y()/2;
+		double z_min = -box.dimension.z()/2;
+		double x_max = box.dimension.x()/2;
+		double y_max = box.dimension.y()/2;
+		double z_max = box.dimension.z()/2;
+		
+		Eigen::Vector3d p1{x_min,y_min,z_min};
+		Eigen::Vector3d p2{x_min,y_min,z_max};
+		Eigen::Vector3d p3{x_max,y_min,z_max};
+		Eigen::Vector3d p4{x_max,y_min,z_min};
+		Eigen::Vector3d p5{x_min,y_max,z_min};
+		Eigen::Vector3d p6{x_min,y_max,z_max};
+		Eigen::Vector3d p7{x_max,y_max,z_max};
+		Eigen::Vector3d p8{x_max,y_max,z_min};
 
-		p1 = box.rotation * p1 + box.position;
-		p2 = box.rotation * p2 + box.position;
-		p3 = box.rotation * p3 + box.position;
-		p4 = box.rotation * p4 + box.position;
-		p5 = box.rotation * p5 + box.position;
-		p6 = box.rotation * p6 + box.position;
-		p7 = box.rotation * p7 + box.position;
-		p8 = box.rotation * p8 + box.position;
+		p1 = box.orientation * p1 + box.position;
+		p2 = box.orientation * p2 + box.position;
+		p3 = box.orientation * p3 + box.position;
+		p4 = box.orientation * p4 + box.position;
+		p5 = box.orientation * p5 + box.position;
+		p6 = box.orientation * p6 + box.position;
+		p7 = box.orientation * p7 + box.position;
+		p8 = box.orientation * p8 + box.position;
 
 		std::vector<Eigen::Vector3d> points{p1,p2,p3,p4,p5,p6,p7,p8};
 		std::vector<pointcloud_obstacle_detection::Point> hull;
@@ -80,7 +87,7 @@ std::vector<std::vector<pointcloud_obstacle_detection::Point>> ComputeConvexHull
 	return boxes_points;
 }
 
-std::vector<std::vector<Point>> ComputeConvexHulls::computeConvexHulls3D(std::vector<pointcloud_obstacle_detection::OrientedBoundingBox> boxes){
+std::vector<std::vector<Point>> ComputeConvexHulls::computeConvexHulls3D(std::vector<base::samples::OrientedBoundingBox>  boxes){
 	std::vector<std::vector<Point>> obstacle_edges = computeOBBPoints3D(boxes);
 	std::vector<std::vector<Point>> convex_hulls;
 	for (auto edges : obstacle_edges){

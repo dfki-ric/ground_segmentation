@@ -23,6 +23,7 @@
 #include "OrientedBoundingBox.h"
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
+#include <base/samples/OrientedBoundingBox.hpp>
 
 namespace pointcloud_obstacle_detection {
 
@@ -174,7 +175,7 @@ public:
 
     pointcloud_obstacle_detection::Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
-		pointcloud_obstacle_detection::OrientedBoundingBox OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
+		base::samples::OrientedBoundingBox OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster, const base::Time& ts);
 
 		//pointcloud_obstacle_detection::Box AxisAlignedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
@@ -592,7 +593,7 @@ pointcloud_obstacle_detection::Box ProcessPointClouds<PointT>::BoundingBox(typen
  *and max coordinates
  * */
 template<typename PointT>
-pointcloud_obstacle_detection::OrientedBoundingBox ProcessPointClouds<PointT>::OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+base::samples::OrientedBoundingBox ProcessPointClouds<PointT>::OrientedBoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster, const base::Time& ts)
 {
 		pcl::MomentOfInertiaEstimation <pcl::PointXYZI> feature_extractor;
 		feature_extractor.setInputCloud(cluster);
@@ -604,21 +605,17 @@ pointcloud_obstacle_detection::OrientedBoundingBox ProcessPointClouds<PointT>::O
 		Eigen::Matrix3f rotational_matrix_OBB;
 		feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
 
-    pointcloud_obstacle_detection::OrientedBoundingBox box;
-    box.x_min = min_point_OBB.x;
-    box.y_min = min_point_OBB.y;
-    box.z_min = min_point_OBB.z;
-    box.x_max = max_point_OBB.x;
-    box.y_max = max_point_OBB.y;
-    box.z_max = max_point_OBB.z;
-		box.position.x() = position_OBB.x; 
-		box.position.y() = position_OBB.y;  
-		box.position.z() = position_OBB.z;   
-	  Eigen::Quaternionf quat (rotational_matrix_OBB);
-		box.rotation.x() = quat.x();
-		box.rotation.y() = quat.y();
-		box.rotation.z() = quat.z();
-		box.rotation.w() = quat.w();
+		Eigen::Vector3d position{position_OBB.x, position_OBB.y, position_OBB.z};
+		Eigen::Quaternionf quat(rotational_matrix_OBB);
+		Eigen::Vector3d size{max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z};
+		Eigen::Quaterniond orientation;
+		orientation.x() = quat.x();
+		orientation.y() = quat.y();
+		orientation.z() = quat.z();
+		orientation.w() = quat.w();
+
+    base::samples::OrientedBoundingBox box;
+		box.initOrientedBoundingBox(ts, position, size, orientation);
 	return box;
 }
 
