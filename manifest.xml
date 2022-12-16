@@ -14,11 +14,4 @@
   <depend package="base/cmake" />
   <depend package="base/types" />
   <depend package="gui/vizkit3d_debug_drawings" />
-  <!--
-   To add any dependencies use the depend tag
-  <depend package="dummy-dependency-0" />
-	...
-  <depend package="dummy-dependency-n-1" />
-  <depend package="dummy-dependency-n" />
-  -->
 </package>
