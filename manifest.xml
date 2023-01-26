@@ -13,5 +13,6 @@
   </keywords>
   <depend package="base/cmake" />
   <depend package="base/types" />
+  <depend package="slam/pcl" />
   <depend package="gui/vizkit3d_debug_drawings" />
 </package>
