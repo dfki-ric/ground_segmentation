@@ -4,7 +4,7 @@ rock_library(pointcloud_obstacle_detection
     SOURCES processPointClouds.cpp 
     HEADERS processPointClouds.h Box.h
     DEPS_PKGCONFIG
-        vizkit3d_debug_drawings
+        vizkit3d_debug_drawings-commands
         base-types 
         pcl_io-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
         pcl_common-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
