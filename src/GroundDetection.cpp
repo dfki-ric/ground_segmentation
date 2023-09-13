@@ -186,7 +186,7 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
     Eigen::Vector4d centroid;
     pcl::compute3DCentroid(*(cell.points), centroid);
     cell.centroid = centroid;  
-    if ((inliers->indices.size() / cell.points->size()) > 0.5) {
+    if (inliers->indices.size() > 5) {
 
         Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
         normal.normalize();
@@ -199,6 +199,7 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
         if(newPos.x() > 0.0001 || newPos.y() > 0.0001)
         {
             std::cout << "TraversabilityGenerator3d: Error, adjustement height calculation is weird" << std::endl;
+            return false;
         }
 
         if(newPos.allFinite())
@@ -256,57 +257,17 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
                 GridCell& cell = heightPair.second;
 
                 if (cell.points->size() < 5) {
-
-                    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-                    {
-                        gridCells[cell.row][cell.col+1][cell.height].points->push_back(*it);
-                    }    
                     continue;
                 }
 
                 if (fitPlane(cell)){
 
                     if (cell.slope < (ground_cell_slope_threshold * (M_PI / 180)) ){ 
-
+                        cell.isGround = true;
                         selectStartCell(cell);
-
-                        GridCell combined_cell;
-                        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-                        {
-                            combined_cell.points->push_back(*it);
-                        }
-
-                        for (int i = 0; i < 26; ++i){
-                            int neighborX = cell.row + indices[i].x;
-                            int neighborY = cell.col + indices[i].y;
-                            int neighborZ = cell.height + indices[i].z;
-
-                            // Check if the neighbor is within the grid boundaries
-                            if (neighborX >= -gridWidth  && neighborX < gridWidth &&
-                                neighborY >= -gridDepth  && neighborY < gridDepth &&
-                                neighborZ >= -gridHeight && neighborZ < gridHeight){
-                                    
-                                GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
-
-                                for (pcl::PointCloud<pcl::PointXYZI>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it)
-                                {
-                                    combined_cell.points->push_back(*it);
-                                }
-                            }
-                        }
-
-                        if(fitPlane(combined_cell)){
-                            if (combined_cell.slope < (ground_cell_slope_threshold * (M_PI / 180)) ){ 
-                                cell.isGround = true;    
-                            }                                  
-                        }
-                        else{
-                            cell.isGround = false;
-                        }
                     }
-
                     else{
-                        cell.isGround = false;  
+                        cell.isGround = false;                                                
                     }
                 }
             }
@@ -381,7 +342,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
                     
                 GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
 
-                if (neighbor.isGround && neighbor.points->size() > 5 && !neighbor.expanded && !neighbor.isFrontier){  
+                if (neighbor.isGround && !neighbor.expanded){  
                     Index3D n;
                     n.x = neighbor.row;
                     n.y = neighbor.col;

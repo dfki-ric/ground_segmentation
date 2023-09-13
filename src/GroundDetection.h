@@ -45,9 +45,9 @@ struct GridCell {
     double slopeDirectionAtan2; 
 
     GridCell() : isGround(false), points(new pcl::PointCloud<pcl::PointXYZI>), source_indices(new pcl::PointIndices){
-        row = -1;
-        col = -1;
-        height = -1;
+        row = 0;
+        col = 0;
+        height = 0;
         expanded = false;        
     }
 };
