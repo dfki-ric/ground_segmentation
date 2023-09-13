@@ -89,12 +89,13 @@ class PointCloudGrid {
 public:
     PointCloudGrid();
     PointCloudGrid(const GridConfig& config);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr getGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr removeGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source);
+    void clear();
+    void setInputCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr input, const Eigen::Quaterniond& R_body2World);
+    pcl::PointCloud<pcl::PointXYZI>::Ptr extractGroundPoints();
+    pcl::PointCloud<pcl::PointXYZI>::Ptr extractNonGroundPoints();
 
 private:
 
-    void clear();
     void addPoint(const pcl::PointXYZI& point, const unsigned int index);
     std::vector<GridCell> getGroundCells();
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
@@ -123,6 +124,9 @@ private:
     std::vector<GridCell> selected_cells_second_quadrant;
     std::vector<GridCell> selected_cells_third_quadrant;
     std::vector<GridCell> selected_cells_fourth_quadrant;
+
+    pcl::PointCloud<pcl::PointXYZI>::Ptr input_cloud;
+    Eigen::Quaterniond orientation;
 
     GridCell robot_cell;
 

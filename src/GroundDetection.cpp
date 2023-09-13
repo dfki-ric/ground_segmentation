@@ -28,7 +28,7 @@ PointCloudGrid::PointCloudGrid(){
                 indices.push_back(idx);
             }
         }
-    }    
+    } 
 }
 
 
@@ -86,9 +86,12 @@ void PointCloudGrid::addPoint(const pcl::PointXYZI& point, const unsigned int in
 }
 
 double PointCloudGrid::computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const
-{
+{    
     const Eigen::Vector3d zNormal(Eigen::Vector3d::UnitZ());
     Eigen::Vector3d planeNormal = plane.normal();
+
+    planeNormal = orientation * planeNormal;
+
     planeNormal.normalize(); //just in case
     return acos(planeNormal.dot(zNormal));
 }
@@ -356,17 +359,24 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
     return ground_cells;
 }
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::getGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source) {
+void PointCloudGrid::setInputCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr input, const Eigen::Quaterniond& R_body2World){
 
     this->clear();
+    input_cloud = input;
+    orientation = R_body2World;
     unsigned int index = 0;
-    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = source->begin(); it != source->end(); ++it)
+    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = input_cloud->begin(); it != input_cloud->end(); ++it)
     {
         this->addPoint(*it,index);
         index++;
     }
 
-    std::vector<GridCell> ground_cells = getGroundCells();
+    ground_cells = getGroundCells();
+}
+
+
+pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractGroundPoints() {
+
     pcl::PointCloud<pcl::PointXYZI>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZI>());
 
     for (auto& cell : ground_cells){
@@ -379,17 +389,8 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::getGroundPoints(pcl::PointC
 }
 
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::removeGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source){
+pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractNonGroundPoints(){
 
-    this->clear();
-    unsigned int index = 0;
-    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = source->begin(); it != source->end(); ++it)
-    {
-        this->addPoint(*it,index);
-        index++;
-    }
-
-    std::vector<GridCell> ground_cells = getGroundCells();
     pcl::PointIndices::Ptr ground_indices(new pcl::PointIndices);
 
     for (auto& cell : ground_cells){
@@ -404,7 +405,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::removeGroundPoints(pcl::Poi
     // Extract points based on indices
     pcl::ExtractIndices<pcl::PointXYZI> extract;
     extract.setNegative (true);
-    extract.setInputCloud(source);
+    extract.setInputCloud(input_cloud);
     extract.setIndices(ground_indices);
     extract.filter(*non_ground_points);
 
