@@ -1,11 +1,50 @@
 #include "GroundDetection.h"
 #include <queue>
 
-PointCloudGrid::PointCloudGrid(double cellSizeX, double cellSizeY,double cellSizeZ) : cellSizeX(cellSizeX), cellSizeY(cellSizeY), cellSizeZ(cellSizeZ){
+PointCloudGrid::PointCloudGrid(){
+    cellSizeX = 0.5;
+    cellSizeY = 0.5;
+    cellSizeZ = 0.5;
+
+    start_cell_distance_threshold = 20;
+    ground_cell_slope_threshold = 30;
 
     gridWidth = 100;
     gridDepth = 100;
     gridHeight = 100;
+
+    robot_cell.row = 0;
+    robot_cell.col = 0;
+    robot_cell.height = 0;
+
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            for (int dz = -1; dz <= 1; ++dz) {
+                Index3D idx;
+
+                idx.x = dx;
+                idx.y = dy;
+                idx.z = dz;
+                indices.push_back(idx);
+            }
+        }
+    }    
+}
+
+
+PointCloudGrid::PointCloudGrid(const GridConfig& config){
+
+
+    cellSizeX = config.cellSizeX;
+    cellSizeY = config.cellSizeY;
+    cellSizeZ = config.cellSizeZ;
+
+    start_cell_distance_threshold = config.startCellDistanceThreshold;
+    ground_cell_slope_threshold = config.slopeThresholdDegrees;
+
+    gridWidth = config.gridSizeX;
+    gridDepth = config.gridSizeY;
+    gridHeight = config.gridSizeZ;
 
     robot_cell.row = 0;
     robot_cell.col = 0;
@@ -135,7 +174,7 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
 
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-    pcl::SACSegmentation<pcl::PointXYZ> seg;
+    pcl::SACSegmentation<pcl::PointXYZI> seg;
     seg.setOptimizeCoefficients(true);
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_MSAC);
@@ -180,7 +219,7 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
 void PointCloudGrid::selectStartCell(GridCell& cell){
 
     double distance = calculateDistance(robot_cell, cell);
-    if (distance <= 20) {
+    if (distance <= start_cell_distance_threshold) {
         // This grid cell is within the specified radius around the robot
 
         if (cell.row >= 0 && cell.col > 0){
@@ -205,6 +244,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         return ground_cells;
     }
 
+    ground_cells.clear();
     selected_cells_first_quadrant.clear();
     selected_cells_second_quadrant.clear();
     selected_cells_third_quadrant.clear();
@@ -215,103 +255,67 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
             for (auto& heightPair : colPair.second) {        
                 GridCell& cell = heightPair.second;
 
-                if (cell.points->size() > 5) {
+                if (cell.points->size() < 5) {
 
-                    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
-                    pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-                    pcl::SACSegmentation<pcl::PointXYZI> seg;
-                    seg.setOptimizeCoefficients(true);
-                    seg.setModelType(pcl::SACMODEL_PLANE);
-                    seg.setMethodType(pcl::SAC_MSAC);
-                    seg.setMaxIterations(50000);
-                    seg.setInputCloud(cell.points);
-                    seg.setDistanceThreshold(0.1); // Adjust this threshold based on your needs
-                    seg.segment(*inliers, *coefficients); 
+                    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+                    {
+                        gridCells[cell.row][cell.col+1][cell.height].points->push_back(*it);
+                    }    
+                    continue;
+                }
 
-                    if (inliers->indices.size() > 5) {
-                        
-                        Eigen::Vector4d centroid;
-                        pcl::compute3DCentroid(*(cell.points), centroid);
-                        cell.centroid = centroid;   
+                if (fitPlane(cell)){
 
-                        Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
-                        normal.normalize();
-                        double distToOrigin = coefficients->values[3];
-                        cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
+                    if (cell.slope < (ground_cell_slope_threshold * (M_PI / 180)) ){ 
 
-                        //adjust height of patch
-                        Eigen::ParametrizedLine<double, 3> line(Eigen::Vector3d::Zero(), Eigen::Vector3d::UnitZ());
-                        Eigen::Vector3d newPos =  line.intersectionPoint(cell.plane);
+                        selectStartCell(cell);
 
-                        if(newPos.x() > 0.0001 || newPos.y() > 0.0001)
+                        GridCell combined_cell;
+                        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
                         {
-                            std::cout << "TraversabilityGenerator3d: Error, adjustement height calculation is weird" << std::endl;
-                            break;
+                            combined_cell.points->push_back(*it);
                         }
 
-                        if(newPos.allFinite())
-                        {
-                            //cell.height = newPos.z();                            
-                        }
+                        for (int i = 0; i < 26; ++i){
+                            int neighborX = cell.row + indices[i].x;
+                            int neighborY = cell.col + indices[i].y;
+                            int neighborZ = cell.height + indices[i].z;
 
-                        const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
-                        cell.slope = computeSlope(cell.plane);
-                        cell.slopeDirection = slopeDir;
-                        cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
+                            // Check if the neighbor is within the grid boundaries
+                            if (neighborX >= -gridWidth  && neighborX < gridWidth &&
+                                neighborY >= -gridDepth  && neighborY < gridDepth &&
+                                neighborZ >= -gridHeight && neighborZ < gridHeight){
+                                    
+                                GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
 
-                        if (cell.slope < (30 * (M_PI / 180))){
-
-                            cell.isGround = true ;
-                            double distance = calculateDistance(robot_cell, cell);
-                            if (distance <= 20) {
-                                // This grid cell is within the specified radius around the robot
-
-                                if (cell.row >= 0 && cell.col > 0){
-                                    selected_cells_first_quadrant.push_back(cell);
-                                }
-                                else if (cell.row >= 0 && cell.col < 0){
-                                    selected_cells_second_quadrant.push_back(cell);
-                                }
-                                else if (cell.row <= 0 && cell.col < 0){
-                                    selected_cells_third_quadrant.push_back(cell);
-                                }
-                                else if (cell.row <= 0 && cell.col > 0) {
-                                    selected_cells_fourth_quadrant.push_back(cell);
+                                for (pcl::PointCloud<pcl::PointXYZI>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it)
+                                {
+                                    combined_cell.points->push_back(*it);
                                 }
                             }
+                        }
+
+                        if(fitPlane(combined_cell)){
+                            if (combined_cell.slope < (ground_cell_slope_threshold * (M_PI / 180)) ){ 
+                                cell.isGround = true;    
+                            }                                  
                         }
                         else{
-
-                            cell.isGround = false;    
-                            for (int i = 0; i < 26; ++i){
-                                int neighborX = cell.row + indices[i].x;
-                                int neighborY = cell.col + indices[i].y;
-                                int neighborZ = cell.height + indices[i].z;
-
-                                // Check if the neighbor is within the grid boundaries
-                                if (neighborX >= -gridWidth  && neighborX < gridWidth &&
-                                    neighborY >= -gridDepth  && neighborY < gridDepth &&
-                                    neighborZ >= -gridHeight && neighborZ < gridHeight){
-                                        
-                                    GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
-                                    neighbor.isFrontier = true;
-                                }
-                            }
+                            cell.isGround = false;
                         }
+                    }
+
+                    else{
+                        cell.isGround = false;  
                     }
                 }
             }
         }
     }
 
-    bool first_quadrant{true};
-    bool second_quadrant{true};
-    bool third_quadrant{true};
-    bool fourth_quadrant{true};
-
     std::queue<Index3D> q;
-
-    if (first_quadrant == true && selected_cells_first_quadrant.size() > 0){
+    
+    if (selected_cells_first_quadrant.size() > 0){
         int cells_q1_mean_height = calculateMeanHeight(selected_cells_first_quadrant);
         GridCell closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
         Index3D q1;
@@ -321,7 +325,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         q.push(q1);
     }
 
-    if (second_quadrant == true && selected_cells_second_quadrant.size() > 0){
+    if (selected_cells_second_quadrant.size() > 0){
         int cells_q2_mean_height = calculateMeanHeight(selected_cells_second_quadrant);
         GridCell closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
         Index3D q2;
@@ -331,7 +335,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         q.push(q2);
     }
 
-    if (third_quadrant == true && selected_cells_third_quadrant.size() > 0){
+    if (selected_cells_third_quadrant.size() > 0){
         int cells_q3_mean_height = calculateMeanHeight(selected_cells_third_quadrant);
         GridCell closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
         Index3D q3;
@@ -341,7 +345,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         q.push(q3);
     }
 
-    if (fourth_quadrant == true && selected_cells_fourth_quadrant.size() > 0){
+    if (selected_cells_fourth_quadrant.size() > 0){
         int cells_q4_mean_height = calculateMeanHeight(selected_cells_fourth_quadrant);
         GridCell closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
         Index3D q4;
@@ -391,7 +395,15 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
     return ground_cells;
 }
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::getGroundPoints() {
+pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::getGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source) {
+
+    this->clear();
+    unsigned int index = 0;
+    for (pcl::PointCloud<pcl::PointXYZI>::iterator it = source->begin(); it != source->end(); ++it)
+    {
+        this->addPoint(*it,index);
+        index++;
+    }
 
     std::vector<GridCell> ground_cells = getGroundCells();
     pcl::PointCloud<pcl::PointXYZI>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZI>());
@@ -417,7 +429,6 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::removeGroundPoints(pcl::Poi
     }
 
     std::vector<GridCell> ground_cells = getGroundCells();
-
     pcl::PointIndices::Ptr ground_indices(new pcl::PointIndices);
 
     for (auto& cell : ground_cells){

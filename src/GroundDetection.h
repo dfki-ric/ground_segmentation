@@ -56,17 +56,46 @@ struct Index3D {
     int x, y, z;
 };
 
+struct GridConfig{
+    double cellSizeX; // meters
+    double cellSizeY; // meters
+    double cellSizeZ; // meters
+
+    double gridSizeX; // meters
+    double gridSizeY; // meters
+    double gridSizeZ; // meters
+
+    double startCellDistanceThreshold; // meters
+    double slopeThresholdDegrees; //degrees
+
+
+    GridConfig(){
+        cellSizeX = 0.5;
+        cellSizeY = 0.5;
+        cellSizeZ = 0.5;
+
+        gridSizeX = 100;
+        gridSizeY = 100;
+        gridSizeZ = 100;
+
+        startCellDistanceThreshold = 20; // meters
+        slopeThresholdDegrees = 30; //degrees 
+    }
+
+};
 
 class PointCloudGrid {
 
 public:
-    PointCloudGrid(double cellSizeX, double cellSizeY, double cellSizeZ);
-    void clear();
-    void addPoint(const pcl::PointXYZI& point, const unsigned int index);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr getGroundPoints();
+    PointCloudGrid();
+    PointCloudGrid(const GridConfig& config);
+    pcl::PointCloud<pcl::PointXYZI>::Ptr getGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source);
     pcl::PointCloud<pcl::PointXYZI>::Ptr removeGroundPoints(pcl::PointCloud<pcl::PointXYZI>::Ptr source);
 
 private:
+
+    void clear();
+    void addPoint(const pcl::PointXYZI& point, const unsigned int index);
     std::vector<GridCell> getGroundCells();
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
@@ -74,7 +103,7 @@ private:
     int calculateMeanHeight(const std::vector<GridCell> cells);
     int countGroundNeighbors(const GridCell& cell);
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
-    bool PointCloudGrid::fitPlane(GridCell& cell);
+    bool fitPlane(GridCell& cell);
     void selectStartCell(GridCell& cell);
 
     double cellSizeX;
@@ -83,6 +112,9 @@ private:
     int gridWidth;
     int gridDepth;
     int gridHeight;
+
+    double start_cell_distance_threshold;
+    double ground_cell_slope_threshold;
 
     std::vector<Index3D> indices;    
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
