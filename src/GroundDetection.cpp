@@ -183,14 +183,14 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
     seg.setMethodType(pcl::SAC_MSAC);
     seg.setMaxIterations(1000);
     seg.setInputCloud(cell.points);
-    seg.setDistanceThreshold(0.1); // Adjust this threshold based on your needs
+    seg.setDistanceThreshold(0.05); // Adjust this threshold based on your needs
     seg.segment(*inliers, *coefficients); 
 
     Eigen::Vector4d centroid;
     pcl::compute3DCentroid(*(cell.points), centroid);
     cell.centroid = centroid;  
     if (inliers->indices.size() > 5) {
-
+        cell.inliers = inliers;
         Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
         normal.normalize();
         double distToOrigin = coefficients->values[3];
@@ -249,6 +249,8 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
     }
 
     ground_cells.clear();
+    non_ground_cells.clear();
+    holes_cells.clear();
     selected_cells_first_quadrant.clear();
     selected_cells_second_quadrant.clear();
     selected_cells_third_quadrant.clear();
@@ -270,7 +272,8 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
                         selectStartCell(cell);
                     }
                     else{
-                        cell.isGround = false;                                                
+                        cell.isGround = false;
+                        non_ground_cells.push_back(cell);          
                     }
                 }
             }
@@ -378,9 +381,17 @@ void PointCloudGrid::setInputCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr input, c
 pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractGroundPoints() {
 
     pcl::PointCloud<pcl::PointXYZI>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZI>());
+    pcl::PointCloud<pcl::PointXYZI>::Ptr inlier_points(new pcl::PointCloud<pcl::PointXYZI>());
+
+    // Extract points based on indices
+    pcl::ExtractIndices<pcl::PointXYZI> extract;
+    extract.setNegative (false);
 
     for (auto& cell : ground_cells){
-        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+        extract.setInputCloud(cell.points);
+        extract.setIndices(cell.inliers);
+        extract.filter(*inlier_points);
+        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = inlier_points->begin(); it != inlier_points->end(); ++it)
         {
             ground_points->points.push_back(*it);
         }
@@ -391,23 +402,34 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractGroundPoints() {
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractNonGroundPoints(){
 
-    pcl::PointIndices::Ptr ground_indices(new pcl::PointIndices);
-
-    for (auto& cell : ground_cells){
-        for (int i{0}; i < cell.source_indices->indices.size(); ++i)
-        {
-            ground_indices->indices.push_back(cell.source_indices->indices.at(i));
-        }
-    }
-
     pcl::PointCloud<pcl::PointXYZI>::Ptr non_ground_points(new pcl::PointCloud<pcl::PointXYZI>());
+    pcl::PointCloud<pcl::PointXYZI>::Ptr inlier_points(new pcl::PointCloud<pcl::PointXYZI>());
 
     // Extract points based on indices
     pcl::ExtractIndices<pcl::PointXYZI> extract;
     extract.setNegative (true);
-    extract.setInputCloud(input_cloud);
-    extract.setIndices(ground_indices);
-    extract.filter(*non_ground_points);
 
-    return non_ground_points;    
+    for (auto& cell : ground_cells){
+        extract.setInputCloud(cell.points);
+        extract.setIndices(cell.inliers);
+        extract.filter(*inlier_points);
+        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = inlier_points->begin(); it != inlier_points->end(); ++it)
+        {
+            non_ground_points->points.push_back(*it);
+        }
+    }
+
+    for (auto& cell : non_ground_cells){
+        for (pcl::PointCloud<pcl::PointXYZI>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+        {
+            non_ground_points->points.push_back(*it);
+        }
+    }
+
+
+    return non_ground_points;
 }
+
+//pcl::PointCloud<pcl::PointXYZI>::Ptr PointCloudGrid::extractHoles(){
+//TODO
+//}

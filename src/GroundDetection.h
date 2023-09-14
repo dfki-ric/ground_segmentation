@@ -27,6 +27,7 @@ struct GridCell {
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
     pcl::PointIndices::Ptr source_indices;
+    pcl::PointIndices::Ptr inliers;
 
     /** The points in the Grid Cell */
     pcl::PointCloud<pcl::PointXYZI>::Ptr points;
@@ -93,6 +94,7 @@ public:
     void setInputCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr input, const Eigen::Quaterniond& R_body2World);
     pcl::PointCloud<pcl::PointXYZI>::Ptr extractGroundPoints();
     pcl::PointCloud<pcl::PointXYZI>::Ptr extractNonGroundPoints();
+    //pcl::PointCloud<pcl::PointXYZI>::Ptr extractHoles();
 
 private:
 
@@ -120,6 +122,8 @@ private:
     std::vector<Index3D> indices;    
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     std::vector<GridCell> ground_cells;
+    std::vector<GridCell> non_ground_cells;
+    std::vector<GridCell> holes_cells;
     std::vector<GridCell> selected_cells_first_quadrant;
     std::vector<GridCell> selected_cells_second_quadrant;
     std::vector<GridCell> selected_cells_third_quadrant;
