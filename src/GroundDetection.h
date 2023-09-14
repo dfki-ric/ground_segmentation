@@ -45,7 +45,7 @@ struct GridCell {
      * Precomputed for performance reasons */
     double slopeDirectionAtan2; 
 
-    GridCell() : isGround(false), points(new pcl::PointCloud<pcl::PointXYZI>), source_indices(new pcl::PointIndices){
+    GridCell() : isGround(false), points(new pcl::PointCloud<pcl::PointXYZI>), source_indices(new pcl::PointIndices), inliers(new pcl::PointIndices){
         row = 0;
         col = 0;
         height = 0;
@@ -68,6 +68,7 @@ struct GridConfig{
 
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
+    double groundInlierThreshold;
 
 
     GridConfig(){
@@ -81,6 +82,7 @@ struct GridConfig{
 
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees 
+        groundInlierThreshold = 0.05; // meters
     }
 
 };
@@ -109,18 +111,9 @@ private:
     bool fitPlane(GridCell& cell);
     void selectStartCell(GridCell& cell);
 
-    double cellSizeX;
-    double cellSizeY;
-    double cellSizeZ;
-    int gridWidth;
-    int gridDepth;
-    int gridHeight;
-
-    double start_cell_distance_threshold;
-    double ground_cell_slope_threshold;
-
     std::vector<Index3D> indices;    
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
+    GridConfig grid_config;
     std::vector<GridCell> ground_cells;
     std::vector<GridCell> non_ground_cells;
     std::vector<GridCell> holes_cells;
