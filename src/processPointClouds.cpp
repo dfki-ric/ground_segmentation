@@ -10,11 +10,6 @@ namespace pointcloud_obstacle_detection{
   //de-constructor:  
   ProcessPointClouds::~ProcessPointClouds() {}
   
-  void ProcessPointClouds::numPoints( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
-  {
-      LOG_INFO_S << cloud->points.size();
-  }
-
   /*FilterCloud function filters the given cloud. Following operations are performed
   * Downsampling: points are converted to voxels using the dimensions provided.
   * Crop: Remove all the points that are outside the min , max limits
@@ -426,68 +421,23 @@ namespace pointcloud_obstacle_detection{
       box.initOrientedBoundingBox(ts, position, size, orientation);
     return box;
   }
-
-  /*AxisAlignedBoundingBox function shall identify the min and max coordinates
-  *in the provided cluster, a box shall be fitted using these min
-  *and max coordinates
-  * */
-  /*
-  
-  pointcloud_obstacle_detection::Box ProcessPointClouds::AxisAlignedBoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster)
-  {
-      pcl::MomentOfInertiaEstimation <pcl::PointXYZI> feature_extractor;
-      feature_extractor.setInputCloud(cluster);
-      feature_extractor.compute();
-
-      pcl::PointXYZI min_point_AABB;
-      pcl::PointXYZI max_point_AABB;
-      feature_extractor.getAABB (min_point_AABB, max_point_AABB);
-
-      pointcloud_obstacle_detection::Box box;
-      box.x_min = min_point_AABB.x;
-      box.y_min = min_point_AABB.y;
-      box.z_min = min_point_AABB.z;
-      box.x_max = max_point_AABB.x;
-      box.y_max = max_point_AABB.y;
-      box.z_max = max_point_AABB.z;
-
-    return box;
-  }
-  */
-  
+ 
   void ProcessPointClouds::savePcd( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::string file)
   {
       pcl::io::savePCDFileASCII (file, *cloud);
       LOG_INFO_S << "Saved " << cloud->points.size () << " data points to "+file;
   }
-
-
   
-   pcl::PointCloud<pcl::PointXYZI>::Ptr ProcessPointClouds::loadPcd(std::string file)
+  pcl::PointCloud<pcl::PointXYZI>::Ptr ProcessPointClouds::loadPcd(std::string file)
   {
-
-       pcl::PointCloud<pcl::PointXYZI>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZI>);
+      pcl::PointCloud<pcl::PointXYZI>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZI>);
 
       if (pcl::io::loadPCDFile<pcl::PointXYZI> (file, *cloud) == -1) //* load the file
       {
-          PCL_ERROR ("Couldn't read file \n");
+          LOG_ERROR_S << "Couldn't read file: " << file;
       }
-      LOG_INFO_S << "Loaded " << cloud->points.size () << " data points from "+file;
-
+      LOG_INFO_S << "Loaded " << cloud->points.size () << " data points from " << file;
       return cloud;
   }
 
-
-  
-  std::vector<boost::filesystem::path> ProcessPointClouds::streamPcd(std::string dataPath)
-  {
-
-      std::vector<boost::filesystem::path> paths(boost::filesystem::directory_iterator{dataPath}, boost::filesystem::directory_iterator{});
-
-      // sort files in accending order so playback is chronological
-      sort(paths.begin(), paths.end());
-
-      return paths;
-
-  }
 } //namespace pointcloud_obstacle_detection

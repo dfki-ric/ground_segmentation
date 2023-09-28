@@ -42,8 +42,6 @@ struct Node
 struct KdTree_euclidean
 {
 	Node* root;
-
-
 	KdTree_euclidean()
 	: root(NULL)
 	{}
@@ -152,9 +150,7 @@ public:
     //deconstructor
     ~ProcessPointClouds();
 
-    void numPoints( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
-
-     pcl::PointCloud<pcl::PointXYZI>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
+    pcl::PointCloud<pcl::PointXYZI>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
 
     std::pair< pcl::PointCloud<pcl::PointXYZI>::Ptr,  pcl::PointCloud<pcl::PointXYZI>::Ptr> SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
 
@@ -166,21 +162,17 @@ public:
 
     std::vector< pcl::PointCloud<pcl::PointXYZI>::Ptr> Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
 
-	  std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
+    std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
 
-	  void Proximity( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
+	void Proximity( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
 
     pointcloud_obstacle_detection::Box BoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster);
 
-		base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster, const base::Time& ts);
-
-		//pointcloud_obstacle_detection::Box AxisAlignedBoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster);
+	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster, const base::Time& ts);
 
     void savePcd( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::string file);
 
-     pcl::PointCloud<pcl::PointXYZI>::Ptr loadPcd(std::string file);
-
-    std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
+    pcl::PointCloud<pcl::PointXYZI>::Ptr loadPcd(std::string file);
 
 };
 } //namespace pointcloud_obstacle_detection
