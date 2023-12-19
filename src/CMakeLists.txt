@@ -1,8 +1,8 @@
 find_package(PCL 1.7 REQUIRED COMPONENTS io common filters kdtree segmentation)
 
 rock_library(pointcloud_obstacle_detection
-    SOURCES processPointClouds.cpp GroundDetection.cpp
-    HEADERS processPointClouds.h Box.h GroundDetection.h 
+    SOURCES processPointClouds.cpp ground_detection.cpp
+    HEADERS processPointClouds.hpp Box.hpp ground_detection.hpp
     DEPS_PKGCONFIG
         vizkit3d_debug_drawings-commands
         base-types 

@@ -50,7 +50,7 @@ struct KdTree_euclidean
 	 *		Insert if the child is null as left child if less than root else right child.
 	 *		For above steps at level 0:x coordinates, level 1: y coordinates , leve 2: z coordinates are compared	 *
 	 * */
-	void inserthelper(Node *&node, uint level, pcl::PointXYZI point, int id)
+	void inserthelper(Node *&node, uint level, pcl::PointXYZ point, int id)
 	{
 		/*Identify the axis*/
 	    uint index = level%3;
@@ -76,7 +76,7 @@ struct KdTree_euclidean
 	 * This function shall loop through each of the cloud points
 	 * and call inserthelper function for each point
 	 * */
-	void insert_cloud( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
+	void insert_cloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 	{
 		for(uint index = 0; index < cloud->points.size(); index++)
 		{
@@ -91,7 +91,7 @@ struct KdTree_euclidean
 	 * 		 call helpersearch with left or right child node.
 	 *
 	 * */
-	void helpersearch(Node *&node,uint depth,std::vector<int> *ids,pcl::PointXYZI target, float distanceTol)
+	void helpersearch(Node *&node,uint depth,std::vector<int> *ids,pcl::PointXYZ target, float distanceTol)
 	{
 		uint id = depth%3;
 		if(node!=NULL)
@@ -128,7 +128,7 @@ struct KdTree_euclidean
 	}
 	/*This is the API for KDTree search. It calls helpersearch function.
 	 * */
-	std::vector<int> search(pcl::PointXYZI target, float distanceTol)
+	std::vector<int> search(pcl::PointXYZ target, float distanceTol)
 	{
 		std::vector<int> ids;
 		uint depth =0;
@@ -150,29 +150,29 @@ public:
     //deconstructor
     ~ProcessPointClouds();
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZI>::Ptr,  pcl::PointCloud<pcl::PointXYZI>::Ptr> SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud);
+    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZI>::Ptr,  pcl::PointCloud<pcl::PointXYZI>::Ptr> SegmentPlane( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, int maxIterations, float distanceThreshold);
+    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SegmentPlane( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZI>::Ptr,  pcl::PointCloud<pcl::PointXYZI>::Ptr> SegmentPlane_RANSAC( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, int maxIterations, float distanceThreshold);
+    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SegmentPlane_RANSAC( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold);
 
-    std::vector< pcl::PointCloud<pcl::PointXYZI>::Ptr> Clustering( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
 
-    std::vector< pcl::PointCloud<pcl::PointXYZI>::Ptr> Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
 
-    std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
+    std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
 
-	void Proximity( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
+	void Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
 
-    pointcloud_obstacle_detection::Box BoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster);
+    pointcloud_obstacle_detection::Box BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster);
 
-	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZI>::Ptr cluster, const base::Time& ts);
+	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts);
 
-    void savePcd( pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, std::string file);
+    void savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file);
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr loadPcd(std::string file);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr loadPcd(std::string file);
 
 };
 } //namespace pointcloud_obstacle_detection

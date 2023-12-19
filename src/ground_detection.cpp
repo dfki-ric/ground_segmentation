@@ -1,4 +1,4 @@
-#include "ground_detection/ground_detection.hpp"
+#include "pointcloud_obstacle_detection/ground_detection.hpp"
 #include <queue>
 
 PointCloudGrid::PointCloudGrid(){
@@ -387,7 +387,6 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         }
         ground_cells.emplace_back(current_cell);
     }
-    return ground_cells;
 }
 
 double PointCloudGrid::computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2) {
@@ -405,7 +404,7 @@ void PointCloudGrid::setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, co
         this->addPoint(*it);
         index++;
     }
-    ground_cells = getGroundCells();
+    getGroundCells();
 }
 
 std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> PointCloudGrid::segmentPoints() {
