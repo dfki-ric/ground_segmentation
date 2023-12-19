@@ -19,7 +19,7 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include "Box.h"
+#include "Box.hpp"
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
 #include <base/samples/OrientedBoundingBox.hpp>

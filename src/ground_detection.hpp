@@ -4,6 +4,7 @@
 #include <pcl/common/centroid.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
+#include <pcl/common/common.h>
 
 #include <vector>
 #include <cmath>
@@ -17,39 +18,48 @@ struct Point {
     double z;
 };
 
+enum TerrainType {
+    UNDEFINED,
+    GROUND,
+    OBSTACLE
+};
+
 struct GridCell {
     int row;
     int col;
     double height;
-    bool isGround;
-    bool isFrontier;
     bool expanded;
+    TerrainType terrain_type;
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
-    pcl::PointIndices::Ptr source_indices;
     pcl::PointIndices::Ptr inliers;
 
     /** The points in the Grid Cell */
-    pcl::PointCloud<pcl::PointXYZI>::Ptr points;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr points;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr inlier_pts;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_pts;
 
     /** The plane that has been fitted to the mls at the location of this node */
     Eigen::Hyperplane<double, 3> plane;
-    
+
     /** slope of the plane */
     double slope;
-    
+
     /** normalized direction of the slope. Only valid if slope > 0 */
     Eigen::Vector3d slopeDirection;
 
     /** The atan2(slopeDirection.y(), slopeDirection.x()), i.e. angle of slopeDirection projected on the xy plane.
      * Precomputed for performance reasons */
-    double slopeDirectionAtan2; 
+    double slopeDirectionAtan2;
 
-    GridCell() : isGround(false), points(new pcl::PointCloud<pcl::PointXYZI>), source_indices(new pcl::PointIndices), inliers(new pcl::PointIndices){
+    GridCell() : points(new pcl::PointCloud<pcl::PointXYZ>), 
+                 inlier_pts(new pcl::PointCloud<pcl::PointXYZ>),
+                 outlier_pts(new pcl::PointCloud<pcl::PointXYZ>),
+                 inliers(new pcl::PointIndices){
         row = 0;
         col = 0;
         height = 0;
-        expanded = false;        
+        expanded = false;
     }
 };
 
@@ -72,17 +82,17 @@ struct GridConfig{
 
 
     GridConfig(){
-        cellSizeX = 0.5;
-        cellSizeY = 0.5;
-        cellSizeZ = 0.5;
+        cellSizeX = 1;
+        cellSizeY = 1;
+        cellSizeZ = 2;
 
         gridSizeX = 100;
         gridSizeY = 100;
         gridSizeZ = 100;
 
-        startCellDistanceThreshold = 20; // meters
-        slopeThresholdDegrees = 30; //degrees 
-        groundInlierThreshold = 0.05; // meters
+        startCellDistanceThreshold = 4; // meters
+        slopeThresholdDegrees = 30; //degrees
+        groundInlierThreshold = 0.1; // meters
     }
 
 };
@@ -93,14 +103,12 @@ public:
     PointCloudGrid();
     PointCloudGrid(const GridConfig& config);
     void clear();
-    void setInputCloud(pcl::PointCloud<pcl::PointXYZI>::Ptr input, const Eigen::Quaterniond& R_body2World);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr extractGroundPoints();
-    pcl::PointCloud<pcl::PointXYZI>::Ptr extractNonGroundPoints();
-    //pcl::PointCloud<pcl::PointXYZI>::Ptr extractHoles();
+    void setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, const Eigen::Quaterniond& R_body2World);
+    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentPoints();
 
 private:
 
-    void addPoint(const pcl::PointXYZI& point, const unsigned int index);
+    void addPoint(const pcl::PointXYZ& point);
     std::vector<GridCell> getGroundCells();
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
@@ -110,8 +118,9 @@ private:
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
     bool fitPlane(GridCell& cell);
     void selectStartCell(GridCell& cell);
+    double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
 
-    std::vector<Index3D> indices;    
+    std::vector<Index3D> indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     GridConfig grid_config;
     std::vector<GridCell> ground_cells;
@@ -121,10 +130,6 @@ private:
     std::vector<GridCell> selected_cells_second_quadrant;
     std::vector<GridCell> selected_cells_third_quadrant;
     std::vector<GridCell> selected_cells_fourth_quadrant;
-
-    pcl::PointCloud<pcl::PointXYZI>::Ptr input_cloud;
     Eigen::Quaterniond orientation;
-
     GridCell robot_cell;
-
 };
