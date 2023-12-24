@@ -387,6 +387,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         }
         ground_cells.emplace_back(current_cell);
     }
+    return ground_cells;
 }
 
 double PointCloudGrid::computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2) {
@@ -404,7 +405,7 @@ void PointCloudGrid::setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, co
         this->addPoint(*it);
         index++;
     }
-    getGroundCells();
+    ground_cells = getGroundCells();
 }
 
 std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> PointCloudGrid::segmentPoints() {
@@ -416,7 +417,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     //pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
 
     // Extract points based on indices
-    pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
+    //pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
 
     for (const auto& cell : ground_cells){
 
