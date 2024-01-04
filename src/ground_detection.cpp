@@ -411,17 +411,16 @@ void PointCloudGrid::setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, co
 std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> PointCloudGrid::segmentPoints() {
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZ>());
-    //pcl::PointCloud<pcl::PointXYZ>::Ptr ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::PointCloud<pcl::PointXYZ>::Ptr ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_points(new pcl::PointCloud<pcl::PointXYZ>());
-    //pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
+    pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
 
     // Extract points based on indices
-    //pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
+    pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
 
     for (const auto& cell : ground_cells){
 
-        /*
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
 
@@ -430,17 +429,16 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
         extract_ground.setNegative(true);
         extract_ground.filter(*non_ground_inliers);
-        */
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+
+        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
         {
             ground_points->points.push_back(*it);
         }
-        /*
+        
         for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
         {
             non_ground_points->points.push_back(*it);
         }
-        */
     }
 
     for (const auto& cell : non_ground_cells){
@@ -448,13 +446,6 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         {
             non_ground_points->points.push_back(*it);
         }
-        /*
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.outlier_pts->begin(); it != cell.outlier_pts->end(); ++it)
-        {
-            non_ground_points->points.push_back(*it);
-        }
-        */
-
     }
     return std::make_pair(ground_points, non_ground_points);
 }
