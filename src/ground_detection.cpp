@@ -30,14 +30,16 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
 
     for (int dx = -1; dx <= 1; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
-            //for (int dz = -1; dz <= 1; ++dz) {
-                Index3D idx;
+            if (dx == 0 && dy == 0){
+                //ignore
+                continue;
+            }
+            Index3D idx;
 
-                idx.x = dx;
-                idx.y = dy;
-                idx.z = 0;
-                indices.push_back(idx);
-            //}
+            idx.x = dx;
+            idx.y = dy;
+            idx.z = 0;
+            indices.push_back(idx);
         }
     }
 }
