@@ -1,5 +1,7 @@
 #pragma once
 
+#include "processPointClouds.hpp"
+
 #include <pcl/common/transforms.h>
 #include <pcl/common/centroid.h>
 #include <pcl/segmentation/sac_segmentation.h>
@@ -11,6 +13,8 @@
 #include <map>
 
 #include <Eigen/Dense>
+
+using namespace pointcloud_obstacle_detection;
 
 struct Point {
     double x;
@@ -79,6 +83,8 @@ struct GridConfig{
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
+    
+    bool returnGroundPoints;
 
 
     GridConfig(){
@@ -114,6 +120,7 @@ private:
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double calculateDistance(const GridCell& cell1, const GridCell& cell2);
     int calculateMeanHeight(const std::vector<GridCell> cells);
+    std::vector<GridCell> getGroundNeighbors(const GridCell& cell);
     int countGroundNeighbors(const GridCell& cell);
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
     bool fitPlane(GridCell& cell);
@@ -132,4 +139,5 @@ private:
     std::vector<GridCell> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
+    ProcessPointClouds processor;
 };

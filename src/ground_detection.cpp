@@ -109,10 +109,10 @@ int PointCloudGrid::calculateMeanHeight(const std::vector<GridCell> cells){
     return mean_height;
 }
 
-int PointCloudGrid::countGroundNeighbors(const GridCell& cell){
+std::vector<GridCell> PointCloudGrid::getGroundNeighbors(const GridCell& cell){
 
-    int neighbors{0};
-    for (int i = 0; i < 9; ++i){
+    std::vector<GridCell> neighbors;
+    for (int i = 0; i < indices.size(); ++i){
         int neighborX = cell.row + indices[i].x;
         int neighborY = cell.col + indices[i].y;
        // int neighborZ = cell.height + indices[i].z;
@@ -124,7 +124,30 @@ int PointCloudGrid::countGroundNeighbors(const GridCell& cell){
             neighborZ >= -grid_config.gridSizeZ  && neighborZ < grid_config.gridSizeZ){
 
             GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
-            if (neighbor.terrain_type == TerrainType::GROUND && neighbor.points->size() > 5){
+            if (neighbor.terrain_type == TerrainType::GROUND){
+                neighbors.push_back(neighbor);
+            }
+        }
+    }
+    return neighbors;
+}
+
+int PointCloudGrid::countGroundNeighbors(const GridCell& cell){
+
+    int neighbors{0};
+    for (int i = 0; i < indices.size(); ++i){
+        int neighborX = cell.row + indices[i].x;
+        int neighborY = cell.col + indices[i].y;
+       // int neighborZ = cell.height + indices[i].z;
+        int neighborZ = cell.height;
+
+        // Check if the neighbor is within the grid boundaries
+        if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
+            neighborY >= -grid_config.gridSizeY  && neighborY < grid_config.gridSizeY &&
+            neighborZ >= -grid_config.gridSizeZ  && neighborZ < grid_config.gridSizeZ){
+
+            GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
+            if (neighbor.terrain_type == TerrainType::GROUND){
                 neighbors++;
             }
         }
@@ -318,7 +341,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
         gridCells[idx.x][idx.y][idx.z].expanded = true;
         GridCell& current_cell = gridCells[idx.x][idx.y][idx.z];
       
-        for (int i = 0; i < 9; ++i){
+        for (int i = 0; i < indices.size(); ++i){
 
             int neighborX = current_cell.row + indices[i].x;
             int neighborY = current_cell.col + indices[i].y;
@@ -422,31 +445,74 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
 
     for (const auto& cell : ground_cells){
-
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
 
-        extract_ground.setNegative(false);
-        extract_ground.filter(*ground_inliers);
+        if (grid_config.returnGroundPoints == true){
+            extract_ground.setNegative(false);
+            extract_ground.filter(*ground_inliers);
+
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+            {
+                ground_points->points.push_back(*it);
+            }
+        }
 
         extract_ground.setNegative(true);
         extract_ground.filter(*non_ground_inliers);
 
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-        {
-            ground_points->points.push_back(*it);
-        }
-        
         for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
         {
             non_ground_points->points.push_back(*it);
         }
     }
 
+
     for (const auto& cell : non_ground_cells){
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-        {
-            non_ground_points->points.push_back(*it);
+        if (countGroundNeighbors(cell) > 0){
+            std::vector<GridCell> all_ground_neighbors = getGroundNeighbors(cell);
+            std::vector<GridCell> close_ground_neighbors;
+            for (const auto& gn : all_ground_neighbors){
+                if (computeDistance(cell.centroid,gn.centroid) < grid_config.cellSizeX*2){
+                    close_ground_neighbors.push_back(gn);
+                }
+            }
+
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+                //check distance along each ground cells normal
+                //if within threshold then add to ground points 
+                //else add to non ground points
+                Eigen::Vector3d point(it->x,it->y,it->z);
+                for (const auto& cgn : close_ground_neighbors){
+
+                    Eigen::Vector3d hyperplanePoint(cgn.points->points.at(0).x,
+                                                    cgn.points->points.at(0).y,
+                                                    cgn.points->points.at(0).z);
+
+                    Eigen::Vector3d hyperplaneNormal = cgn.plane.normal();
+                    hyperplaneNormal.normalize(); //just in case
+                    //hyperplaneNormal = orientation * planeNormal;
+
+                    // Calculate the distance along the normal
+                    double distance = hyperplaneNormal.dot(point - hyperplanePoint) / hyperplaneNormal.norm();
+                    
+                    if (distance < grid_config.groundInlierThreshold){
+                        if (grid_config.returnGroundPoints == true){
+                            ground_points->points.push_back(*it);
+                        }        
+                    }
+                    else{
+                        non_ground_points->points.push_back(*it);
+                    }
+                }
+            }
+
+        }
+        else{
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+            {
+                non_ground_points->points.push_back(*it);
+            }
         }
     }
     return std::make_pair(ground_points, non_ground_points);
