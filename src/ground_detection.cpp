@@ -445,6 +445,12 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
 
     for (const auto& cell : ground_cells){
+
+        if (countGroundNeighbors(cell) == 0){
+            //assumption: a ground cell has atleast another connected ground cell
+            continue;
+        }
+
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
 
