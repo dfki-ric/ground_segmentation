@@ -31,8 +31,10 @@ enum TerrainType {
 struct GridCell {
     int row;
     int col;
-    double height;
+    int height;
+    double z_height;
     bool expanded;
+    bool explored;
     TerrainType terrain_type;
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
@@ -63,7 +65,9 @@ struct GridCell {
         row = 0;
         col = 0;
         height = 0;
+        z_height = 0.0;
         expanded = false;
+        explored = false;
     }
 };
 
@@ -120,12 +124,15 @@ private:
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double calculateDistance(const GridCell& cell1, const GridCell& cell2);
     int calculateMeanHeight(const std::vector<GridCell> cells);
-    std::vector<GridCell> getGroundNeighbors(const GridCell& cell);
+    std::vector<GridCell> getNeighbors(const GridCell& cell, const TerrainType& type);
     int countGroundNeighbors(const GridCell& cell);
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
     bool fitPlane(GridCell& cell);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
+
+    std::vector<GridCell> expandGrid(std::queue<Index3D> q);
+    std::vector<GridCell> explore(std::queue<Index3D> q);
 
     std::vector<Index3D> indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
@@ -140,4 +147,5 @@ private:
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
     ProcessPointClouds processor;
+    unsigned int total_ground_cells;
 };
