@@ -180,7 +180,7 @@ GridCell PointCloudGrid::cellClosestToMeanHeight(const std::vector<GridCell>& ce
     return closest_to_mean_height;
 }
 
-bool PointCloudGrid::fitPlane(GridCell& cell){
+bool PointCloudGrid::fitPlane(GridCell& cell, const double& threshold){
 
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
@@ -190,7 +190,7 @@ bool PointCloudGrid::fitPlane(GridCell& cell){
     seg.setMethodType(pcl::SAC_MSAC);
     seg.setMaxIterations(1000);
     seg.setInputCloud(cell.points);
-    seg.setDistanceThreshold(grid_config.groundInlierThreshold); // Adjust this threshold based on your needs
+    seg.setDistanceThreshold(threshold); // Adjust this threshold based on your needs
     seg.segment(*inliers, *coefficients);
     cell.inliers = inliers;
     pcl::compute3DCentroid(*(cell.points), cell.centroid);
@@ -256,7 +256,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
                     continue;
                 }
 
-                if (fitPlane(cell)){
+                if (fitPlane(cell, grid_config.groundInlierThreshold)){
                     if (cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
                         cell.terrain_type = TerrainType::GROUND;
                         total_ground_cells += 1;
@@ -444,31 +444,61 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     const TerrainType type_ground = TerrainType::GROUND;
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
 
-    for (const auto& cell : ground_cells){
+    for (auto& cellx : ground_cells){
+
+        GridCell& cell = gridCells[cellx.row][cellx.col][cellx.height];
+
+
         if (countGroundNeighbors(cell) == 0){
             //assumption: a ground cell has atleast another connected ground cell
             //All points are then classified as obstacle points
-            gridCells[cell.row][cell.col][cell.height].terrain_type = TerrainType::OBSTACLE;
-            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-            {
-                non_ground_points->points.push_back(*it);
-            }                
+            cell.terrain_type = TerrainType::OBSTACLE;
+            non_ground_cells.push_back(cell);       
             continue;
         }
-
+       
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
-
+        extract_ground.setNegative(false);
+/*
         if (grid_config.returnGroundPoints == true){
             extract_ground.setNegative(false);
+            extract_ground.setIndices(cell.inliers);
             extract_ground.filter(*ground_inliers);
 
             for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
             {
                 ground_points->points.push_back(*it);
+            }            
+        }
+*/        
+        if (grid_config.returnGroundPoints == true){
+            std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
+            if (obstacle_neighbors.size() > 0){
+                if (fitPlane(cell, 0.05) && cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
+                    extract_ground.setIndices(cell.inliers);
+                    extract_ground.filter(*ground_inliers);
+                    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+                    {
+                        ground_points->points.push_back(*it);
+                    }   
+                }
+                else{
+                    cell.terrain_type = TerrainType::OBSTACLE;
+                    non_ground_cells.push_back(cell);
+                    continue;
+                }
+            }
+            else{
+                extract_ground.filter(*ground_inliers);
+                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+                {
+                    ground_points->points.push_back(*it);
+                }            
             }
         }
 
+        extract_ground.setIndices(cell.inliers);
         extract_ground.setNegative(true);
         extract_ground.filter(*non_ground_inliers);
 
@@ -478,7 +508,10 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         }
     }
 
-    for (const auto& cell : non_ground_cells){
+    for (const auto& cellx : non_ground_cells){
+
+        GridCell& cell = gridCells[cellx.row][cellx.col][cellx.height];
+
         if (countGroundNeighbors(cell) > 0){
             std::vector<GridCell> potential_ground_neighbors = getNeighbors(cell, type_ground);
             std::vector<GridCell> actual_ground_neighbors;
@@ -507,9 +540,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     Eigen::Vector3d point(it->x,it->y,it->z);
                     for (const auto& cgn : actual_ground_neighbors){
 
-                        Eigen::Vector3d hyperplanePoint(cgn.points->points.at(0).x,
-                                                        cgn.points->points.at(0).y,
-                                                        cgn.points->points.at(0).z);
+                        Eigen::Vector3d hyperplanePoint(cgn.points->points.at(cgn.points->points.size()/2).x,
+                                                        cgn.points->points.at(cgn.points->points.size()/2).y,
+                                                        cgn.points->points.at(cgn.points->points.size()/2).z);
 
                         Eigen::Vector3d hyperplaneNormal = cgn.plane.normal();
                         hyperplaneNormal.normalize(); //just in case
@@ -518,7 +551,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                         // Calculate the distance along the normal
                         double distance = hyperplaneNormal.dot(point - hyperplanePoint) / hyperplaneNormal.norm();
                         
-                        if (distance < grid_config.groundInlierThreshold){
+                        if (std::abs(distance) < 0.05){
                             if (grid_config.returnGroundPoints == true){
                                 ground_points->points.push_back(*it);
                             }        

@@ -127,7 +127,7 @@ private:
     std::vector<GridCell> getNeighbors(const GridCell& cell, const TerrainType& type);
     int countGroundNeighbors(const GridCell& cell);
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
-    bool fitPlane(GridCell& cell);
+    bool fitPlane(GridCell& cell, const double& threshold);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
 
