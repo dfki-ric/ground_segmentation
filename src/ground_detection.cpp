@@ -445,10 +445,8 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
 
     for (auto& cellx : ground_cells){
-
+        
         GridCell& cell = gridCells[cellx.row][cellx.col][cellx.height];
-
-
         if (countGroundNeighbors(cell) == 0){
             //assumption: a ground cell has atleast another connected ground cell
             //All points are then classified as obstacle points
@@ -460,18 +458,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
         extract_ground.setNegative(false);
-/*
-        if (grid_config.returnGroundPoints == true){
-            extract_ground.setNegative(false);
-            extract_ground.setIndices(cell.inliers);
-            extract_ground.filter(*ground_inliers);
-
-            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-            {
-                ground_points->points.push_back(*it);
-            }            
-        }
-*/        
+      
         if (grid_config.returnGroundPoints == true){
             std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
             if (obstacle_neighbors.size() > 0){
@@ -540,9 +527,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     Eigen::Vector3d point(it->x,it->y,it->z);
                     for (const auto& cgn : actual_ground_neighbors){
 
-                        Eigen::Vector3d hyperplanePoint(cgn.points->points.at(cgn.points->points.size()/2).x,
-                                                        cgn.points->points.at(cgn.points->points.size()/2).y,
-                                                        cgn.points->points.at(cgn.points->points.size()/2).z);
+                        Eigen::Vector3d hyperplanePoint(cgn.points->points.at(0).x,
+                                                        cgn.points->points.at(0).y,
+                                                        cgn.points->points.at(0).z);
 
                         Eigen::Vector3d hyperplaneNormal = cgn.plane.normal();
                         hyperplaneNormal.normalize(); //just in case
