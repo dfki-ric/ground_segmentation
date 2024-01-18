@@ -445,53 +445,45 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
 
     for (auto& cellx : ground_cells){
-        
         GridCell& cell = gridCells[cellx.row][cellx.col][cellx.height];
-        if (countGroundNeighbors(cell) == 0){
-            //assumption: a ground cell has atleast another connected ground cell
-            //All points are then classified as obstacle points
-            cell.terrain_type = TerrainType::OBSTACLE;
-            non_ground_cells.push_back(cell);       
-            continue;
+        std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
+        if (obstacle_neighbors.size() > 0){
+            fitPlane(cell, 0.05);
+            if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
+                cell.terrain_type = TerrainType::OBSTACLE;
+            }
         }
-       
+
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
-        extract_ground.setNegative(false);
-      
-        if (grid_config.returnGroundPoints == true){
-            std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
-            if (obstacle_neighbors.size() > 0){
-                if (fitPlane(cell, 0.05) && cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
-                    extract_ground.setIndices(cell.inliers);
-                    extract_ground.filter(*ground_inliers);
-                    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-                    {
-                        ground_points->points.push_back(*it);
-                    }   
-                }
-                else{
-                    cell.terrain_type = TerrainType::OBSTACLE;
-                    non_ground_cells.push_back(cell);
-                    continue;
-                }
+
+        if (cell.terrain_type == TerrainType::GROUND){
+            extract_ground.setNegative(false);
+            extract_ground.filter(*ground_inliers);
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+            {
+                ground_points->points.push_back(*it);
             }
-            else{
-                extract_ground.filter(*ground_inliers);
-                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-                {
-                    ground_points->points.push_back(*it);
-                }            
+            extract_ground.setNegative(true);
+            extract_ground.filter(*non_ground_inliers);
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
+            {
+                non_ground_points->points.push_back(*it);
             }
         }
-
-        extract_ground.setIndices(cell.inliers);
-        extract_ground.setNegative(true);
-        extract_ground.filter(*non_ground_inliers);
-
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
-        {
-            non_ground_points->points.push_back(*it);
+        else{
+            extract_ground.setNegative(true);
+            extract_ground.filter(*ground_inliers);
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+            {
+                ground_points->points.push_back(*it);
+            }
+            extract_ground.setNegative(false);
+            extract_ground.filter(*non_ground_inliers);
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
+            {
+                non_ground_points->points.push_back(*it);
+            }
         }
     }
 
@@ -539,9 +531,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                         double distance = hyperplaneNormal.dot(point - hyperplanePoint) / hyperplaneNormal.norm();
                         
                         if (std::abs(distance) < 0.05){
-                            if (grid_config.returnGroundPoints == true){
-                                ground_points->points.push_back(*it);
-                            }        
+                            ground_points->points.push_back(*it);
                         }
                         else{
                             non_ground_points->points.push_back(*it);
