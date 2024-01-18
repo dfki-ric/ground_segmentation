@@ -7,6 +7,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/common/common.h>
+#include <pcl/kdtree/kdtree_flann.h>
 
 #include <vector>
 #include <cmath>
@@ -130,7 +131,7 @@ private:
     bool fitPlane(GridCell& cell, const double& threshold);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
-
+    std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
     std::vector<GridCell> expandGrid(std::queue<Index3D> q);
     std::vector<GridCell> explore(std::queue<Index3D> q);
 
