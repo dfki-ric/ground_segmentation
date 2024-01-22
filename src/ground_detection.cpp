@@ -10,19 +10,19 @@ PointCloudGrid::PointCloudGrid(){
 
     for (int dx = -1; dx <= 1; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
-            //for (int dz = -1; dz <= 1; ++dz) {
+            for (int dz = -1; dz <= 1; ++dz) {
 
-                if (dx == 0 && dy == 0) // && dz == 0){
+                if (dx == 0 && dy == 0 && dz == 0){
                     continue;
-                //}
+                }
  
                 Index3D idx;
 
                 idx.x = dx;
                 idx.y = dy;
-                idx.z = 0;
+                idx.z = dz;
                 indices.push_back(idx);
-            //}
+            }
         }
     }
 }
@@ -36,19 +36,19 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
 
     for (int dx = -1; dx <= 1; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
-            //for (int dz = -1; dz <= 1; ++dz) {
+            for (int dz = -1; dz <= 1; ++dz) {
 
-                if (dx == 0 && dy == 0) // && dz == 0){
+                if (dx == 0 && dy == 0 && dz == 0){
                     continue;
-                //}
+                }
  
                 Index3D idx;
 
                 idx.x = dx;
                 idx.y = dy;
-                idx.z = 0;
+                idx.z = dz;
                 indices.push_back(idx);
-            //}
+            }
         }
     }
 }
@@ -125,7 +125,7 @@ std::vector<GridCell> PointCloudGrid::getNeighbors(const GridCell& cell, const T
     for (int i = 0; i < indices.size(); ++i){
         int neighborX = cell.row + indices[i].x;
         int neighborY = cell.col + indices[i].y;
-        int neighborZ = cell.height; // + indices[i].z;
+        int neighborZ = cell.height + indices[i].z;
         //int neighborZ = cell.height;
 
         // Check if the neighbor is within the grid boundaries
@@ -148,7 +148,7 @@ int PointCloudGrid::countGroundNeighbors(const GridCell& cell){
     for (int i = 0; i < indices.size(); ++i){
         int neighborX = cell.row + indices[i].x;
         int neighborY = cell.col + indices[i].y;
-        int neighborZ = cell.height; // + indices[i].z;
+        int neighborZ = cell.height + indices[i].z;
         //int neighborZ = cell.height;
 
         // Check if the neighbor is within the grid boundaries
@@ -323,22 +323,25 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
 
 std::vector<GridCell> PointCloudGrid::expandGrid(std::queue<Index3D> q){
     std::vector<GridCell> result;
+    int count{0};
     while (!q.empty()){
 
         Index3D& idx = q.front();
         q.pop();
 
-        if (gridCells[idx.x][idx.y][idx.z].expanded == true){
+        GridCell& current_cell = gridCells[idx.x][idx.y][idx.z];
+
+
+        if (current_cell.expanded == true){
             continue;
         }
-        gridCells[idx.x][idx.y][idx.z].expanded = true;
-        GridCell& current_cell = gridCells[idx.x][idx.y][idx.z];
-      
+        current_cell.expanded = true;
+
         for (int i = 0; i < indices.size(); ++i){
 
             int neighborX = current_cell.row + indices[i].x;
             int neighborY = current_cell.col + indices[i].y;
-            int neighborZ = current_cell.height; //+ indices[i].z; 
+            int neighborZ = current_cell.height + indices[i].z; 
 
             // Check if the neighbor is within the grid boundaries
             if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
@@ -358,7 +361,6 @@ std::vector<GridCell> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                     n.z = neighbor.height;
                     q.push(n);
                 }
-        
             }
         }
         result.emplace_back(current_cell);
@@ -385,7 +387,7 @@ std::vector<GridCell> PointCloudGrid::explore(std::queue<Index3D> q){
 
             int neighborX = current_cell.row + indices[i].x;
             int neighborY = current_cell.col + indices[i].y;
-            int neighborZ = current_cell.height; // + indices[i].z;
+            int neighborZ = current_cell.height + indices[i].z;
 
             // Check if the neighbor is within the grid boundaries
             if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
