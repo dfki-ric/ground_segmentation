@@ -23,6 +23,7 @@
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
 #include <base/samples/OrientedBoundingBox.hpp>
+#include <base/samples/Pointcloud.hpp>
 
 namespace pointcloud_obstacle_detection {
 
@@ -161,6 +162,9 @@ public:
     std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
 
     std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+
+    std::vector<base::samples::Pointcloud> Clustering_euclideanCluster_Base( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+
 
     std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
 

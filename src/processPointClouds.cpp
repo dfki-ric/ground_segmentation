@@ -360,6 +360,36 @@ namespace pointcloud_obstacle_detection{
       return clusters;
   }
 
+  std::vector<base::samples::Pointcloud> ProcessPointClouds::Clustering_euclideanCluster_Base( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+  {
+
+      // Time clustering process
+      auto startTime = std::chrono::steady_clock::now();
+
+      std::vector<base::samples::Pointcloud> clusters;
+
+      // Create the KdTree object using the points in cloud.
+      KdTree_euclidean *tree =new KdTree_euclidean;
+      tree->insert_cloud(cloud);
+
+      //perform euclidean clustering to group detected obstacles
+    std::vector<std::vector<int>> cluster_indices = euclideanCluster(cloud, tree,clusterTolerance ,minSize,maxSize);
+
+    for (std::vector<std::vector<int>>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
+      {
+       base::samples::Pointcloud cloud_cluster;
+        for (std::vector<int>::const_iterator pit = it->begin (); pit != it->end (); ++pit)
+          cloud_cluster.points.emplace_back(base::Point(cloud->points[*pit].x,cloud->points[*pit].y,cloud->points[*pit].z)); //*
+
+        clusters.push_back(cloud_cluster);
+      }
+      auto endTime = std::chrono::steady_clock::now();
+      auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+      LOG_INFO_S << "euclideanClustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
+
+      return clusters;
+  }
+
   /*BoundingBox function shall identify the min and max coordinates
   *in the provided cluster, a box shall be fitted using these min
   *and max coordinates
