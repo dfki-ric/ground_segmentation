@@ -120,31 +120,31 @@ public:
 private:
 
     void addPoint(const pcl::PointXYZ& point);
-    std::vector<GridCell> getGroundCells();
+    std::vector<Index3D> getGroundCells();
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double calculateDistance(const GridCell& cell1, const GridCell& cell2);
-    int calculateMeanHeight(const std::vector<GridCell> cells);
-    std::vector<GridCell> getNeighbors(const GridCell& cell, const TerrainType& type);
+    int calculateMeanHeight(const std::vector<Index3D> cells);
+    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type);
     int countGroundNeighbors(const GridCell& cell);
-    GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
+    Index3D cellClosestToMeanHeight(const std::vector<Index3D>& cells, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold, const double& inlier_percentage);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
-    std::vector<GridCell> expandGrid(std::queue<Index3D> q);
-    std::vector<GridCell> explore(std::queue<Index3D> q);
+    std::vector<Index3D> expandGrid(std::queue<Index3D> q);
+    std::vector<Index3D> explore(std::queue<Index3D> q);
 
     std::vector<Index3D> indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     GridConfig grid_config;
-    std::vector<GridCell> ground_cells;
-    std::vector<GridCell> non_ground_cells;
-    std::vector<GridCell> undefined_cells;
-    std::vector<GridCell> selected_cells_first_quadrant;
-    std::vector<GridCell> selected_cells_second_quadrant;
-    std::vector<GridCell> selected_cells_third_quadrant;
-    std::vector<GridCell> selected_cells_fourth_quadrant;
+    std::vector<Index3D> ground_cells;
+    std::vector<Index3D> non_ground_cells;
+    std::vector<Index3D> undefined_cells;
+    std::vector<Index3D> selected_cells_first_quadrant;
+    std::vector<Index3D> selected_cells_second_quadrant;
+    std::vector<Index3D> selected_cells_third_quadrant;
+    std::vector<Index3D> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
     ProcessPointClouds processor;
