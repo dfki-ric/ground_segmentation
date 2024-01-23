@@ -187,7 +187,7 @@ GridCell PointCloudGrid::cellClosestToMeanHeight(const std::vector<GridCell>& ce
     return closest_to_mean_height;
 }
 
-bool PointCloudGrid::fitPlane(GridCell& cell, const double& threshold){
+bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold, const double& inlier_percentage){
 
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
@@ -202,7 +202,11 @@ bool PointCloudGrid::fitPlane(GridCell& cell, const double& threshold){
     cell.inliers = inliers;
     pcl::compute3DCentroid(*(cell.points), cell.centroid);
 
-    if (inliers->indices.size() / cell.points->size() > 0.95) {
+    if (cell.inliers->indices.size() == 0){
+        return false;
+    }
+
+    if (inliers->indices.size() / cell.points->size() > inlier_percentage) {
         Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
         normal.normalize();
         double distToOrigin = coefficients->values[3];
@@ -246,7 +250,7 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
 
     ground_cells.clear();
     non_ground_cells.clear();
-    holes_cells.clear();
+    undefined_cells.clear();
     selected_cells_first_quadrant.clear();
     selected_cells_second_quadrant.clear();
     selected_cells_third_quadrant.clear();
@@ -260,10 +264,11 @@ std::vector<GridCell> PointCloudGrid::getGroundCells() {
 
                 if (cell.points->size() < 5) {
                     cell.terrain_type = TerrainType::UNDEFINED;
+                    undefined_cells.push_back(cell);
                     continue;
                 }
-                                
-                if (fitPlane(cell, grid_config.groundInlierThreshold) && cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
+
+                if (fitGroundPlane(cell, grid_config.groundInlierThreshold, 0.95) && cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
                     cell.terrain_type = TerrainType::GROUND;
                     total_ground_cells += 1;
                     selectStartCell(cell);
@@ -469,7 +474,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         GridCell& cell = gridCells[cellx.row][cellx.col][cellx.height];
         std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
         if (obstacle_neighbors.size() > 0){
-            fitPlane(cell, 0.05);
+            fitGroundPlane(cell, 0.05, 0.95);
             if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
                 cell.terrain_type = TerrainType::OBSTACLE;
             }
@@ -576,6 +581,23 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                 }
             }
         }
+
+        /*
+        for (const auto& cell : undefined_cells){
+
+            std::vector<GridCell> ground_neighbors = getNeighbors(cell, type_ground);
+            std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
+
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+                if (ground_neighbors.size() < obstacle_neighbors.size()){
+                    non_ground_points->points.push_back(*it);
+                }
+                else{
+                    ground_points->points.push_back(*it);
+                }
+            }    
+        }
+        */
     }
     return std::make_pair(ground_points, non_ground_points);
 }

@@ -128,7 +128,7 @@ private:
     std::vector<GridCell> getNeighbors(const GridCell& cell, const TerrainType& type);
     int countGroundNeighbors(const GridCell& cell);
     GridCell cellClosestToMeanHeight(const std::vector<GridCell>& cells, const int mean_height);
-    bool fitPlane(GridCell& cell, const double& threshold);
+    bool fitGroundPlane(GridCell& cell, const double& inlier_threshold, const double& inlier_percentage);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
@@ -140,7 +140,7 @@ private:
     GridConfig grid_config;
     std::vector<GridCell> ground_cells;
     std::vector<GridCell> non_ground_cells;
-    std::vector<GridCell> holes_cells;
+    std::vector<GridCell> undefined_cells;
     std::vector<GridCell> selected_cells_first_quadrant;
     std::vector<GridCell> selected_cells_second_quadrant;
     std::vector<GridCell> selected_cells_third_quadrant;
