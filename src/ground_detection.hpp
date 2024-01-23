@@ -111,7 +111,6 @@ struct GridConfig{
 class PointCloudGrid {
 
 public:
-    PointCloudGrid();
     PointCloudGrid(const GridConfig& config);
     void clear();
     void setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, const Eigen::Quaterniond& R_body2World);

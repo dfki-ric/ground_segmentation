@@ -1,32 +1,6 @@
 #include "pointcloud_obstacle_detection/ground_detection.hpp"
 #include <queue>
 
-PointCloudGrid::PointCloudGrid(){
-
-    robot_cell.row = 0;
-    robot_cell.col = 0;
-    robot_cell.height = 0;
-    total_ground_cells = 0;
-
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
-            for (int dz = -1; dz <= 1; ++dz) {
-
-                if (dx == 0 && dy == 0 && dz == 0){
-                    continue;
-                }
- 
-                Index3D idx;
-
-                idx.x = dx;
-                idx.y = dy;
-                idx.z = dz;
-                indices.push_back(idx);
-            }
-        }
-    }
-}
-
 PointCloudGrid::PointCloudGrid(const GridConfig& config){
     grid_config = config;
     robot_cell.row = 0;
