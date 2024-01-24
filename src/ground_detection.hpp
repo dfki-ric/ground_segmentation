@@ -80,28 +80,23 @@ struct GridConfig{
     double radialCellSize; // meters
     double angularCellSize; // meters
     double cellSizeZ; // meters
-
     double radialGridSize; // meters
     double gridSizeY; // meters
     double gridSizeZ; // meters
-
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
-    
     bool returnGroundPoints;
-
-
+    int neighborsRadius;
     GridConfig(){
         radialCellSize = 1;
-        angularCellSize = 1;
-        cellSizeZ = 2;
-
+        angularCellSize = 0.1;
+        cellSizeZ = 0.2;
         startCellDistanceThreshold = 4; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
+        neighborsRadius = 3;
     }
-
 };
 
 class PointCloudGrid {

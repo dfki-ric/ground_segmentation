@@ -8,21 +8,16 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
     robot_cell.height = 0;
     total_ground_cells = 0;
 
-    for (int dx = -1; dx <= 1; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
-            for (int dz = -1; dz <= 1; ++dz) {
-
-                if (dx == 0 && dy == 0 && dz == 0){
+    for (int dx = -grid_config.neighborsRadius; dx <= grid_config.neighborsRadius; ++dx) {
+        for (int dy = -grid_config.neighborsRadius; dy <= grid_config.neighborsRadius; ++dy) {
+                if (dx == 0 && dy == 0){
                     continue;
                 }
- 
-                Index3D idx;
-
+                 Index3D idx;
                 idx.x = dx;
                 idx.y = dy;
                 idx.z = 0;
                 indices.push_back(idx);
-            }
         }
     }
 }
@@ -102,7 +97,7 @@ std::vector<Index3D> PointCloudGrid::getNeighbors(const GridCell& cell, const Te
         //int neighborZ = cell.height;
 
         GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
-        if (neighbor.points->points.size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < 1 && neighbor.terrain_type == type){
+        if (neighbor.points->points.size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < grid_config.neighborsRadius && neighbor.terrain_type == type){
             Index3D id;
             id.x = neighbor.row;
             id.y = neighbor.col;
