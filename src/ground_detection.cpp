@@ -46,9 +46,7 @@ double PointCloudGrid::computeSlope(const Eigen::Hyperplane< double, int(3) >& p
 {
     const Eigen::Vector3d zNormal(Eigen::Vector3d::UnitZ());
     Eigen::Vector3d planeNormal = plane.normal();
-
     planeNormal = orientation * planeNormal;
-
     planeNormal.normalize(); //just in case
     return acos(planeNormal.dot(zNormal));
 }
@@ -78,10 +76,8 @@ int PointCloudGrid::calculateMeanHeight(const std::vector<Index3D> ids){
     // Calculate the mean height of selected cells
     double total_height = 0.0;
     for (const Index3D& id : ids) {
-
         total_height += gridCells[id.x][id.y][id.z].height;
     }
-
     // Find the cell closest to the mean height
     int mean_height = std::floor(total_height / ids.size());
     return mean_height;
@@ -409,11 +405,13 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         extract_ground.setIndices(cell.inliers);
 
         if (cell.terrain_type == TerrainType::GROUND){
-            extract_ground.setNegative(false);
-            extract_ground.filter(*ground_inliers);
-            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-            {
-                ground_points->points.push_back(*it);
+            if (grid_config.returnGroundPoints){
+                extract_ground.setNegative(false);
+                extract_ground.filter(*ground_inliers);
+                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+                {
+                    ground_points->points.push_back(*it);
+                }
             }
             extract_ground.setNegative(true);
             extract_ground.filter(*non_ground_inliers);
@@ -502,7 +500,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     non_ground_points->points.push_back(*it);
                 }
                 else{
-                    ground_points->points.push_back(*it);
+                    if (grid_config.returnGroundPoints){
+                        ground_points->points.push_back(*it);
+                    }
                 }
             }
         }

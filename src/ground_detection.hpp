@@ -96,6 +96,7 @@ struct GridConfig{
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
         neighborsRadius = 3;
+        returnGroundPoints = true;
     }
 };
 
