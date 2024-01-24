@@ -20,7 +20,7 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
 
                 idx.x = dx;
                 idx.y = dy;
-                idx.z = dz;
+                idx.z = 0;
                 indices.push_back(idx);
             }
         }
@@ -33,15 +33,13 @@ void PointCloudGrid::clear(){
 }
 
 void PointCloudGrid::addPoint(const pcl::PointXYZ& point) {
-    int row = static_cast<int>(std::floor(point.x / grid_config.cellSizeX));
-    int col = static_cast<int>(std::floor(point.y / grid_config.cellSizeY));
-    int height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
 
-    if(!(row >= -grid_config.gridSizeX    && row < grid_config.gridSizeX &&
-         col >= -grid_config.gridSizeY    && col < grid_config.gridSizeY &&
-         height >= -grid_config.gridSizeZ  && height < grid_config.gridSizeZ)){
-        return;
-    }
+    Eigen::Vector3d radial_vector(point.x,point.y,point.z);
+    double radial_angle = std::atan2(point.y, point.x);
+
+    int row = static_cast<int>(std::floor(radial_vector.norm() / grid_config.radialCellSize));
+    int col = static_cast<int>(std::floor(radial_angle / grid_config.angularCellSize));
+    int height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
 
     gridCells[row][col][height].row = row;
     gridCells[row][col][height].col = col;
@@ -103,19 +101,13 @@ std::vector<Index3D> PointCloudGrid::getNeighbors(const GridCell& cell, const Te
         int neighborZ = cell.height + indices[i].z;
         //int neighborZ = cell.height;
 
-        // Check if the neighbor is within the grid boundaries
-        if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
-            neighborY >= -grid_config.gridSizeY  && neighborY < grid_config.gridSizeY &&
-            neighborZ >= -grid_config.gridSizeZ  && neighborZ < grid_config.gridSizeZ){
-
-            GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
-            if (neighbor.points->points.size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < 1 && neighbor.terrain_type == type){
-                Index3D id;
-                id.x = neighbor.row;
-                id.y = neighbor.col;
-                id.z = neighbor.height;
-                neighbors.push_back(id);
-            }
+        GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
+        if (neighbor.points->points.size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < 1 && neighbor.terrain_type == type){
+            Index3D id;
+            id.x = neighbor.row;
+            id.y = neighbor.col;
+            id.z = neighbor.height;
+            neighbors.push_back(id);
         }
     }
     return neighbors;
@@ -298,24 +290,18 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
             int neighborY = current_cell.col + indices[i].y;
             int neighborZ = current_cell.height + indices[i].z; 
 
-            // Check if the neighbor is within the grid boundaries
-            if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
-                neighborY >= -grid_config.gridSizeY  && neighborY < grid_config.gridSizeY &&
-                neighborZ >= -grid_config.gridSizeZ  && neighborZ < grid_config.gridSizeZ) {
+            GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
 
-                GridCell neighbor = gridCells[neighborX][neighborY][neighborZ];
+            if(neighbor.points->size() == 0 || neighbor.expanded){
+                continue;
+            }
 
-                if(neighbor.points->size() == 0 || neighbor.expanded){
-                    continue;
-                }
-
-                if (neighbor.terrain_type == TerrainType::GROUND){
-                    Index3D n;
-                    n.x = neighbor.row;
-                    n.y = neighbor.col;
-                    n.z = neighbor.height;
-                    q.push(n);
-                }
+            if (neighbor.terrain_type == TerrainType::GROUND){
+                Index3D n;
+                n.x = neighbor.row;
+                n.y = neighbor.col;
+                n.z = neighbor.height;
+                q.push(n);
             }
         }
         result.emplace_back(idx);
@@ -345,25 +331,19 @@ std::vector<Index3D> PointCloudGrid::explore(std::queue<Index3D> q){
             int neighborY = current_cell.col + indices[i].y;
             int neighborZ = current_cell.height + indices[i].z;
 
-            // Check if the neighbor is within the grid boundaries
-            if (neighborX >= -grid_config.gridSizeX  && neighborX < grid_config.gridSizeX &&
-                neighborY >= -grid_config.gridSizeY  && neighborY < grid_config.gridSizeY &&
-                neighborZ >= -grid_config.gridSizeZ  && neighborZ < grid_config.gridSizeZ) {
+            GridCell& neighbor = copy[neighborX][neighborY][neighborZ];
 
-                GridCell& neighbor = copy[neighborX][neighborY][neighborZ];
-
-                if(neighbor.points->size() == 0 || neighbor.explored){
-                    continue;
-                }
-
-                if (neighbor.terrain_type == TerrainType::GROUND){
-                    Index3D n;
-                    n.x = neighbor.row;
-                    n.y = neighbor.col;
-                    n.z = neighbor.height;
-                    q.push(n);
-                }        
+            if(neighbor.points->size() == 0 || neighbor.explored){
+                continue;
             }
+
+            if (neighbor.terrain_type == TerrainType::GROUND){
+                Index3D n;
+                n.x = neighbor.row;
+                n.y = neighbor.col;
+                n.z = neighbor.height;
+                q.push(n);
+            }        
         }
         result.emplace_back(idx);
     }
@@ -533,8 +513,10 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         }
 
         /*
-        for (const auto& cell : undefined_cells){
-
+        for (const auto& id : undefined_cells){
+            GridCell& cell = gridCells[id.x][id.y][id.z];
+            std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> result = processor.Clustering_euclideanCluster(cell.points,0.5,1,1000);    
+            std::cout << "Clusters are : " << result.size() << std::endl;
             std::vector<GridCell> ground_neighbors = getNeighbors(cell, type_ground);
             std::vector<GridCell> obstacle_neighbors = getNeighbors(cell, type_obstacle);
 
@@ -545,9 +527,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                 else{
                     ground_points->points.push_back(*it);
                 }
-            }    
+            }                
         }
-        */
+        */ 
     }
     return std::make_pair(ground_points, non_ground_points);
 }

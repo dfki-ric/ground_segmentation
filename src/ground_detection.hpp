@@ -77,11 +77,11 @@ struct Index3D {
 };
 
 struct GridConfig{
-    double cellSizeX; // meters
-    double cellSizeY; // meters
+    double radialCellSize; // meters
+    double angularCellSize; // meters
     double cellSizeZ; // meters
 
-    double gridSizeX; // meters
+    double radialGridSize; // meters
     double gridSizeY; // meters
     double gridSizeZ; // meters
 
@@ -93,13 +93,9 @@ struct GridConfig{
 
 
     GridConfig(){
-        cellSizeX = 1;
-        cellSizeY = 1;
+        radialCellSize = 1;
+        angularCellSize = 1;
         cellSizeZ = 2;
-
-        gridSizeX = 100;
-        gridSizeY = 100;
-        gridSizeZ = 100;
 
         startCellDistanceThreshold = 4; // meters
         slopeThresholdDegrees = 30; //degrees
