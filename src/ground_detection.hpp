@@ -119,7 +119,7 @@ private:
     std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type);
     int countGroundNeighbors(const GridCell& cell);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
-    bool fitGroundPlane(GridCell& cell, const double& inlier_threshold, const double& inlier_percentage);
+    bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
     void selectStartCell(GridCell& cell);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
