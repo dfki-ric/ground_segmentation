@@ -10,7 +10,8 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
 
     for (int dx = -grid_config.neighborsRadius; dx <= grid_config.neighborsRadius; ++dx) {
         for (int dy = -grid_config.neighborsRadius; dy <= grid_config.neighborsRadius; ++dy) {
-            for (int dz = 0; dz <= grid_config.neighborsRadius; ++dz) {
+            //Do not use neighbors in zfor now
+            for (int dz = 0; dz <= 0; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
@@ -92,7 +93,6 @@ std::vector<Index3D> PointCloudGrid::getNeighbors(const GridCell& cell, const Te
         int neighborX = cell.row + indices[i].x;
         int neighborY = cell.col + indices[i].y;
         int neighborZ = cell.height + indices[i].z;
-        //int neighborZ = cell.height;
 
         GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
         if (neighbor.points->points.size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < grid_config.neighborsRadius && neighbor.terrain_type == type){
