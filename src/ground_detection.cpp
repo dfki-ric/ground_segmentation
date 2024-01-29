@@ -277,6 +277,7 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
     while (!q.empty()){
 
         Index3D idx = q.front();
+        q.pop();
         GridCell& current_cell = gridCells[idx.x][idx.y][idx.z];
 
         if (current_cell.expanded == true || current_cell.points->size() == 0 ){
@@ -305,7 +306,6 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
             }
         }
         result.emplace_back(idx);
-        q.pop();
     }
     return result;
 }
@@ -403,7 +403,6 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
     for (auto& id : ground_cells){
         GridCell& cell = gridCells[id.x][id.y][id.z];
-        std::cout << "Ground Points: " << cell.points->size() << std::endl;
         fitGroundPlane(cell, grid_config.groundInlierThreshold);
         if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
             cell.terrain_type = TerrainType::OBSTACLE;
@@ -486,9 +485,6 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             size_t index{0};
             for (const auto& gp : actual_ground_neighbors){
                 GridCell& ground_cell = gridCells[gp.x][gp.y][gp.z];
-
-                std::cout << "Points: " << ground_cell.points->size() << std::endl;
-
                 double distance = (ground_cell.centroid.head<3>() - e_lowest_point).norm();
                 if (distance < min_distance) {
                     min_distance = distance;
