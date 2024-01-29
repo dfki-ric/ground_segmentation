@@ -1,6 +1,7 @@
 #pragma once
 
 #include "processPointClouds.hpp"
+#include "GroundDetectionStatistics.hpp"
 
 #include <pcl/common/transforms.h>
 #include <pcl/common/centroid.h>
@@ -15,7 +16,7 @@
 
 #include <Eigen/Dense>
 
-using namespace pointcloud_obstacle_detection;
+namespace pointcloud_obstacle_detection{
 
 struct Point {
     double x;
@@ -105,6 +106,7 @@ class PointCloudGrid {
 public:
     PointCloudGrid(const GridConfig& config);
     void clear();
+    GroundDetectionStatistics& getStatistics();
     void setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, const Eigen::Quaterniond& R_body2World);
     std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentPoints();
 
@@ -140,4 +142,7 @@ private:
     GridCell robot_cell;
     ProcessPointClouds processor;
     unsigned int total_ground_cells;
+    GroundDetectionStatistics statistics;
 };
+
+} //namespace pointcloud_obstacle_detection
