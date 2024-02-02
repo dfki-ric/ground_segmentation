@@ -81,14 +81,12 @@ struct GridConfig{
     double radialCellSize; // meters
     double angularCellSize; // meters
     double cellSizeZ; // meters
-    double radialGridSize; // meters
-    double gridSizeY; // meters
-    double gridSizeZ; // meters
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
     bool returnGroundPoints;
     int neighborsRadius;
+    int min_points;
     GridConfig(){
         radialCellSize = 1;
         angularCellSize = 0.1;
@@ -98,6 +96,7 @@ struct GridConfig{
         groundInlierThreshold = 0.1; // meters
         neighborsRadius = 3;
         returnGroundPoints = true;
+        min_points = 5;
     }
 };
 

@@ -10,7 +10,7 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
     robot_cell.col = 0;
     robot_cell.height = 0;
     total_ground_cells = 0;
-
+ 
     for (int dx = -grid_config.neighborsRadius; dx <= grid_config.neighborsRadius; ++dx) {
         for (int dy = -grid_config.neighborsRadius; dy <= grid_config.neighborsRadius; ++dy) {
             //Do not use neighbors in zfor now
@@ -218,9 +218,31 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 id.y = cell.col;
                 id.z = cell.height;
 
-                if (cell.points->size() < 5) {
+                if (cell.points->size() <= 1){
                     cell.terrain_type = TerrainType::UNDEFINED;
                     undefined_cells.push_back(id);
+                    continue;
+                }
+
+                if (cell.points->size() < grid_config.min_points) {
+                    Eigen::Vector4f centroid;
+                    pcl::compute3DCentroid(*(cell.points), centroid);
+                    Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
+
+                    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+                        Eigen::Vector4f diff = (*it).getVector4fMap() - centroid;
+                        squared_diff_sum += diff.array().square().matrix();                     
+                    }
+
+                    Eigen::Vector4f variance = squared_diff_sum / cell.points->size();
+
+                    if (variance[0] > variance[2] || variance[1] > variance[2]){
+                        cell.terrain_type = TerrainType::GROUND;
+                    }
+                    else{
+                        cell.terrain_type = TerrainType::OBSTACLE;
+                        non_ground_cells.push_back(id);
+                    }
                     continue;
                 }
 
@@ -403,6 +425,14 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
     for (auto& id : ground_cells){
         GridCell& cell = gridCells[id.x][id.y][id.z];
+        if (cell.points->size() < grid_config.min_points){
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+            {
+                ground_points->points.push_back(*it);
+            }
+            continue;
+        }
+
         fitGroundPlane(cell, grid_config.groundInlierThreshold);
         if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
             cell.terrain_type = TerrainType::OBSTACLE;
@@ -414,7 +444,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         if (cell.terrain_type == TerrainType::GROUND){
             extract_ground.setNegative(true);
             extract_ground.filter(*non_ground_inliers);
-            if (non_ground_inliers->points.size() < 5){
+            if (non_ground_inliers->points.size() < grid_config.min_points){
                 if (grid_config.returnGroundPoints){
                     for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
                     {
