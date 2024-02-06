@@ -3,7 +3,6 @@
 
 namespace pointcloud_obstacle_detection{
 
-
 PointCloudGrid::PointCloudGrid(const GridConfig& config){
     grid_config = config;
     robot_cell.row = 0;
@@ -442,29 +441,21 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         extract_ground.setIndices(cell.inliers);
 
         if (cell.terrain_type == TerrainType::GROUND){
+            extract_ground.setNegative(false);
+            extract_ground.filter(*ground_inliers);
+
             extract_ground.setNegative(true);
             extract_ground.filter(*non_ground_inliers);
-            if (non_ground_inliers->points.size() < grid_config.min_points){
-                if (grid_config.returnGroundPoints){
-                    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-                    {
-                        ground_points->points.push_back(*it);
-                    }
+
+            if (grid_config.returnGroundPoints){
+                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
+                {
+                    ground_points->points.push_back(*it);
                 }
             }
-            else{
-                extract_ground.setNegative(false);
-                extract_ground.filter(*ground_inliers);
-                if (grid_config.returnGroundPoints){
-                    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-                    {
-                        ground_points->points.push_back(*it);
-                    }
-                }
-                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
-                {
-                    non_ground_points->points.push_back(*it);
-                }
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
+            {
+                non_ground_points->points.push_back(*it);
             }
         }
         else{
@@ -501,6 +492,14 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             }
         }
         else{
+            //std::vector<Point_3> points;
+            //for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+            //    Point_3 p(it->x, it->y, it->z);
+            //    points.push_back(p);
+            //}
+            // compute convex hull of non-collinear points
+            //CGAL::convex_hull_3(points.begin(), points.end(), cell.poly);
+
             pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
             std::pair<size_t, pcl::PointXYZ> lowest_point = findLowestPoint(cell);
 
@@ -513,6 +512,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             double min_distance = std::numeric_limits<float>::max();
             size_t ground_cell_index{0};
             size_t index{0};
+
             for (const auto& gp : actual_ground_neighbors){
                 GridCell& ground_cell = gridCells[gp.x][gp.y][gp.z];
                 double distance = (ground_cell.centroid.head<3>() - e_lowest_point).norm();
@@ -521,6 +521,21 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     ground_cell_index = index;
                 }
                 index++;
+                
+                //std::vector<Point_3> points;
+                //for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_cell.points->begin(); it != ground_cell.points->end(); ++it){
+                //    Point_3 p(it->x, it->y, it->z);
+                //    points.push_back(p);
+                //}
+                // compute convex hull of non-collinear points
+                //CGAL::convex_hull_3(points.begin(), points.end(), ground_cell.poly);     
+         
+                //if (CGAL::Polygon_mesh_processing::do_intersect(cell.poly, ground_cell.poly)){
+                //    std::cout << "Hulls interest!" << std::endl;
+                //}
+                //else{
+                //    std::cout << "Hulls do not interesect!" << std::endl;
+                //}
             }    
 
             Index3D& ground_cell_index3d = actual_ground_neighbors.at(ground_cell_index); 
@@ -543,8 +558,19 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
             for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
                 Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-                double distance = ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm();                
-                if (std::abs(distance) > grid_config.groundInlierThreshold){
+                //Eigen::Vector3d ground_point;
+                //double min_dist = std::numeric_limits<double>::max();
+            //    for (Vertex_const_iterator v = nearest_ground_cell.poly.vertices_begin(); v != nearest_ground_cell.poly.vertices_end(); ++v) {
+            //        Point_3 point = v->point();
+            //        Eigen::Vector3d temp(point.x(),point.y(),point.z());
+            //        if ((obstacle_point - temp).norm() < min_dist){
+            //            ground_point = temp;
+            //            min_dist = (obstacle_point - temp).norm();
+            //        }
+            //    }
+                double distance = ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm(); 
+
+                if (distance > grid_config.groundInlierThreshold){
                     non_ground_points->points.push_back(*it);
                 }
                 else{

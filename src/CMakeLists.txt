@@ -1,4 +1,5 @@
 find_package(PCL 1.7 REQUIRED COMPONENTS io common filters kdtree segmentation)
+find_package(CGAL REQUIRED COMPONENTS Core)
 
 rock_library(pointcloud_obstacle_detection
     SOURCES processPointClouds.cpp ground_detection.cpp
@@ -11,5 +12,7 @@ rock_library(pointcloud_obstacle_detection
         pcl_filters-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
         pcl_kdtree-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
         pcl_segmentation-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
-)
+    LIBS 
+        CGAL::CGAL
+ )
 

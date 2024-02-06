@@ -10,12 +10,23 @@
 #include <pcl/common/common.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/convex_hull_3.h>
+#include <CGAL/Polygon_mesh_processing/intersection.h>
+
+#include <Eigen/Dense>
+
 #include <vector>
 #include <cmath>
 #include <map>
 
-#include <Eigen/Dense>
-
+typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
+typedef CGAL::Polyhedron_3<K>                                Polyhedron_3;
+typedef K::Point_3                                           Point_3;
+typedef CGAL::Surface_mesh<Point_3>                          Surface_mesh;
+typedef Polyhedron_3::Vertex_const_iterator Vertex_const_iterator; 
 namespace pointcloud_obstacle_detection{
 
 struct Point {
@@ -46,6 +57,9 @@ struct GridCell {
     pcl::PointCloud<pcl::PointXYZ>::Ptr points;
     pcl::PointCloud<pcl::PointXYZ>::Ptr inlier_pts;
     pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_pts;
+
+    // define polyhedron to hold convex hull
+    Polyhedron_3 poly;
 
     /** The plane that has been fitted to the mls at the location of this node */
     Eigen::Hyperplane<double, 3> plane;
