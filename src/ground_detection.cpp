@@ -245,7 +245,7 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                     continue;
                 }
 
-                if (!fitGroundPlane(cell, 0.5)){
+                if (!fitGroundPlane(cell, grid_config.groundInlierThreshold)){
                     cell.terrain_type = TerrainType::OBSTACLE;
                     continue;
                 }
@@ -432,9 +432,15 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             continue;
         }
 
-        fitGroundPlane(cell, grid_config.groundInlierThreshold);
-        if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
-            cell.terrain_type = TerrainType::OBSTACLE;
+        std::vector<Index3D> obstacle_neighbors = getNeighbors(cell, type_obstacle);
+
+        if (obstacle_neighbors.size() > 0){
+            if (!fitGroundPlane(cell, 0.05)){
+                cell.terrain_type = TerrainType::OBSTACLE;
+            }
+            else if (cell.slope > (grid_config.slopeThresholdDegrees * (M_PI / 180))){
+                cell.terrain_type = TerrainType::OBSTACLE;
+            }
         }
 
         extract_ground.setInputCloud(cell.points);
