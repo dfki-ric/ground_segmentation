@@ -131,7 +131,7 @@ private:
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double calculateDistance(const GridCell& cell1, const GridCell& cell2);
     int calculateMeanHeight(const std::vector<Index3D> ids);
-    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type);
+    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices);
     int countGroundNeighbors(const GridCell& cell);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
