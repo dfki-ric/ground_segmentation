@@ -223,7 +223,7 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                     continue;
                 }
 
-                if (cell.points->size() < grid_config.min_points) {
+                if (cell.points->size() <= grid_config.minPoints) {
                     Eigen::Vector4f centroid;
                     pcl::compute3DCentroid(*(cell.points), centroid);
                     Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
@@ -423,7 +423,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
     for (auto& id : ground_cells){
         GridCell& cell = gridCells[id.x][id.y][id.z];
-        if (cell.points->size() < grid_config.min_points){
+        if (cell.points->size() < grid_config.minPoints){
             for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
             {
                 ground_points->points.push_back(*it);
