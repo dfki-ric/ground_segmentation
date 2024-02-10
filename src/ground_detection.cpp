@@ -72,7 +72,7 @@ Eigen::Vector3d PointCloudGrid::computeSlopeDirection(const Eigen::Hyperplane< d
     return projection;
 }
 
-double PointCloudGrid::calculateDistance(const GridCell& cell1, const GridCell& cell2){
+double PointCloudGrid::computeGridDistance(const GridCell& cell1, const GridCell& cell2){
 
     double dx = cell1.row - cell2.row;
     double dy = cell1.col - cell2.col;
@@ -173,7 +173,7 @@ void PointCloudGrid::selectStartCell(GridCell& cell){
     id.y = cell.col;
     id.z = cell.height;
 
-    double distance = calculateDistance(robot_cell, cell);
+    double distance = computeGridDistance(robot_cell, cell);
     if (distance <= grid_config.startCellDistanceThreshold) {
         // This grid cell is within the specified radius around the robot
 

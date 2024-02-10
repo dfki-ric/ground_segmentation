@@ -127,16 +127,15 @@ private:
 
     void addPoint(const pcl::PointXYZ& point);
     std::vector<Index3D> getGroundCells();
+    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices);
+    double computeGridDistance(const GridCell& cell1, const GridCell& cell2);
+    double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
-    double calculateDistance(const GridCell& cell1, const GridCell& cell2);
     int calculateMeanHeight(const std::vector<Index3D> ids);
-    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices);
-    int countGroundNeighbors(const GridCell& cell);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
     void selectStartCell(GridCell& cell);
-    double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
     std::vector<Index3D> explore(std::queue<Index3D> q);
