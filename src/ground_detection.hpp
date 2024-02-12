@@ -16,17 +16,37 @@
 #include <CGAL/convex_hull_3.h>
 #include <CGAL/Polygon_mesh_processing/intersection.h>
 
-#include <Eigen/Dense>
+#include <CGAL/property_map.h>
+#include <CGAL/Shape_detection/Efficient_RANSAC.h>
+#include <CGAL/structure_point_set.h>
+#include <CGAL/jet_estimate_normals.h>
+#include <CGAL/Point_set_3.h>
+#include <CGAL/grid_simplify_point_set.h>
 
+#include <Eigen/Dense>
 #include <vector>
 #include <cmath>
 #include <map>
 
-typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
-typedef CGAL::Polyhedron_3<K>                                Polyhedron_3;
-typedef K::Point_3                                           Point_3;
+typedef CGAL::Exact_predicates_inexact_constructions_kernel  Kernel;
+typedef CGAL::Polyhedron_3<Kernel>                           Polyhedron_3;
+typedef Kernel::Point_3                                      Point_3;
 typedef CGAL::Surface_mesh<Point_3>                          Surface_mesh;
-typedef Polyhedron_3::Vertex_const_iterator Vertex_const_iterator; 
+typedef Polyhedron_3::Vertex_const_iterator                  Vertex_const_iterator; 
+typedef std::pair<Kernel::Point_3, Kernel::Vector_3>         Point_with_normal;
+typedef std::vector<Point_with_normal>                       Pwn_vector;
+typedef CGAL::First_of_pair_property_map<Point_with_normal>  Point_map;
+typedef CGAL::Second_of_pair_property_map<Point_with_normal> Normal_map;
+
+// Efficient RANSAC types
+typedef Kernel::FT                                           FT;
+typedef Kernel::Vector_3                                     Vector;
+typedef CGAL::Point_set_3<Point_3>                           Point_set;
+typedef CGAL::Shape_detection::Efficient_RANSAC_traits
+<Kernel, Point_set, Point_set::Point_map, Point_set::Vector_map> Traits;
+typedef CGAL::Shape_detection::Efficient_RANSAC<Traits>      Efficient_ransac;
+typedef CGAL::Shape_detection::Plane<Traits>                 Plane;
+
 namespace pointcloud_obstacle_detection{
 
 struct Point {
@@ -135,6 +155,7 @@ private:
     int calculateMeanHeight(const std::vector<Index3D> ids);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
+    std::vector<GridCell> fitPlanes(GridCell& cell, const double& threshold);
     void selectStartCell(GridCell& cell);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);

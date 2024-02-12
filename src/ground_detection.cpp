@@ -135,6 +135,71 @@ Index3D PointCloudGrid::cellClosestToMeanHeight(const std::vector<Index3D>& ids,
     return closest_to_mean_height;
 }
 
+std::vector<GridCell> PointCloudGrid::fitPlanes(GridCell& cell, const double& threshold){
+    int neighbor_size = std::max(static_cast<std::size_t>(12),cell.points->size());
+
+    //Efficient Ransac
+    Point_set point_set;
+
+    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+        Point_3 pt(it->x, it->y, it->z);
+        point_set.insert(pt);
+    }
+
+    // Add normal property and estimate normal values
+    point_set.add_normal_map();
+    CGAL::jet_estimate_normals<CGAL::Sequential_tag>
+        (point_set,
+        neighbor_size, // Number of neighbors
+        point_set.parameters(). // Named parameters provided by Point_set_3
+        degree_fitting(2));     // additional named parameter specific to jet_estimate_normals
+    // Simplify point set
+    CGAL::grid_simplify_point_set
+        (point_set,
+        0.1); // Size of grid cell
+    // point_set.parameters() can be omitted if no additional named parameter is needed
+    std::vector<std::string> properties = point_set.properties();
+    // Detect sphere with RANSAC
+    Efficient_ransac ransac;
+    ransac.set_input(point_set,
+                        point_set.point_map(),   // Call built-in property map
+                        point_set.normal_map()); // Call built-in property map
+    ransac.add_shape_factory<Plane>();
+    Efficient_ransac::Parameters parameters;
+    parameters.probability = 0.05;
+    parameters.min_points = std::size_t(point_set.size() / 3);
+    parameters.epsilon = 0.01;
+    parameters.cluster_epsilon = 0.2;
+    parameters.normal_threshold = 0.9;
+    ransac.detect(parameters);
+    Efficient_ransac::Plane_range planes = ransac.planes();
+
+    std::vector<GridCell> fitted_planes;
+
+    for (auto plane : planes){
+        GridCell temp;
+        auto indices = plane->indices_of_assigned_points();
+
+        for (int i : indices){
+            Point_set::Index id(i);
+            const auto& point = point_set.point(id);
+            temp.points->points.push_back(pcl::PointXYZ(point.x(),point.y(),point.z()));
+        }
+
+        Eigen::Vector3d normal{plane->plane_normal().x(), plane->plane_normal().y(), plane->plane_normal().z()};
+        normal.normalize();
+        double distToOrigin = plane->d();
+
+        temp.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
+        const Eigen::Vector3d slopeDir = computeSlopeDirection(temp.plane);
+        temp.slope = computeSlope(temp.plane);
+        temp.slopeDirection = slopeDir;
+        temp.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());    
+        fitted_planes.push_back(temp);
+    }
+    return fitted_planes;
+}
+
 bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
 
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
@@ -247,6 +312,7 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 
                 if (!fitGroundPlane(cell, grid_config.groundInlierThreshold)){
                     cell.terrain_type = TerrainType::OBSTACLE;
+                    non_ground_cells.push_back(id);
                     continue;
                 }
 
