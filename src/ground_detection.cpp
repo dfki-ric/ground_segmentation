@@ -219,18 +219,15 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
         return false;
     }
 
-    if (inliers->indices.size() / cell.points->size() > 0.95){
-        Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
-        normal.normalize();
-        double distToOrigin = coefficients->values[3];
-        cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
-        const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
-        cell.slope = computeSlope(cell.plane);
-        cell.slopeDirection = slopeDir;
-        cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
-        return true;
-    }
-    return false;
+    Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
+    normal.normalize();
+    double distToOrigin = coefficients->values[3];
+    cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
+    const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
+    cell.slope = computeSlope(cell.plane);
+    cell.slopeDirection = slopeDir;
+    cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
+    return true;
 }
 
 void PointCloudGrid::selectStartCell(GridCell& cell){
@@ -718,9 +715,6 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
                 if (distance > grid_config.groundInlierThreshold){
                     non_ground_points->points.push_back(*it);
-                }
-                else{
-                    ground_points->points.push_back(*it);
                 }
             }
         }
