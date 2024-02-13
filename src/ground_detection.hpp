@@ -16,13 +16,6 @@
 #include <CGAL/convex_hull_3.h>
 #include <CGAL/Polygon_mesh_processing/intersection.h>
 
-#include <CGAL/property_map.h>
-#include <CGAL/Shape_detection/Efficient_RANSAC.h>
-#include <CGAL/structure_point_set.h>
-#include <CGAL/jet_estimate_normals.h>
-#include <CGAL/Point_set_3.h>
-#include <CGAL/grid_simplify_point_set.h>
-
 #include <Eigen/Dense>
 #include <vector>
 #include <cmath>
@@ -39,6 +32,13 @@ typedef CGAL::First_of_pair_property_map<Point_with_normal>  Point_map;
 typedef CGAL::Second_of_pair_property_map<Point_with_normal> Normal_map;
 
 // Efficient RANSAC types
+#include <CGAL/property_map.h>
+#include <CGAL/Shape_detection/Efficient_RANSAC.h>
+#include <CGAL/structure_point_set.h>
+#include <CGAL/jet_estimate_normals.h>
+#include <CGAL/Point_set_3.h>
+#include <CGAL/grid_simplify_point_set.h>
+
 typedef Kernel::FT                                           FT;
 typedef Kernel::Vector_3                                     Vector;
 typedef CGAL::Point_set_3<Point_3>                           Point_set;
@@ -46,6 +46,43 @@ typedef CGAL::Shape_detection::Efficient_RANSAC_traits
 <Kernel, Point_set, Point_set::Point_map, Point_set::Vector_map> Traits;
 typedef CGAL::Shape_detection::Efficient_RANSAC<Traits>      Efficient_ransac;
 typedef CGAL::Shape_detection::Plane<Traits>                 Plane;
+
+//Classification
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Classification.h>
+#include <CGAL/bounding_box.h>
+#include <CGAL/tags.h>
+#include <CGAL/Real_timer.h>
+
+namespace Classification = CGAL::Classification;
+
+typedef CGAL::Simple_cartesian<double> Kernel_c;
+typedef Kernel_c::Point_3 Point_c;
+typedef CGAL::Point_set_3<Point_c> Point_set_c;
+typedef Kernel_c::Iso_cuboid_3 Iso_cuboid_3;
+typedef Point_set_c::Point_map Pmap;
+typedef Point_set_c::Property_map<int> Imap;
+typedef Classification::Sum_of_weighted_features_classifier                         Classifier;
+typedef Classification::Point_set_feature_generator<Kernel_c, Point_set_c, Pmap>    Feature_generator;
+
+#ifdef CGAL_LINKED_WITH_TBB
+typedef CGAL::Parallel_tag Concurrency_tag;
+#else
+typedef CGAL::Sequential_tag Concurrency_tag;
+#endif
+
+typedef std::vector<Point_c> Point_range;
+typedef CGAL::Identity_property_map<Point_c> IPmap;
+typedef Classification::Planimetric_grid<Kernel_c, Point_range, IPmap>             Planimetric_grid;
+typedef Classification::Point_set_neighborhood<Kernel_c, Point_range, IPmap>       Neighborhood;
+typedef Classification::Local_eigen_analysis                                    Local_eigen_analysis;
+typedef Classification::Label_handle                                            Label_handle;
+typedef Classification::Feature_handle                                          Feature_handle;
+typedef Classification::Label_set                                               Label_set;
+typedef Classification::Feature_set                                             Feature_set;
+typedef Classification::Feature::Distance_to_plane<Point_range, IPmap>           Distance_to_plane;
+typedef Classification::Feature::Elevation<Kernel_c, Point_range, IPmap>           Elevation;
+typedef Classification::Feature::Vertical_dispersion<Kernel_c, Point_range, IPmap> Dispersion;
 
 namespace pointcloud_obstacle_detection{
 
@@ -160,6 +197,8 @@ private:
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
     std::vector<Index3D> explore(std::queue<Index3D> q);
+    void train(Point_set_c& pts);
+    void classify(std::vector<Kernel_c::Point_3>& pts);
 
     std::vector<Index3D> indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;

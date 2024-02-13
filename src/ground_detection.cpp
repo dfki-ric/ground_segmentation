@@ -219,16 +219,18 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
         return false;
     }
 
-    Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
-    normal.normalize();
-    double distToOrigin = coefficients->values[3];
-    cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
-    const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
-    cell.slope = computeSlope(cell.plane);
-    cell.slopeDirection = slopeDir;
-    cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
-
-    return true;
+    if (inliers->indices.size() / cell.points->size() > 0.95){
+        Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
+        normal.normalize();
+        double distToOrigin = coefficients->values[3];
+        cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
+        const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
+        cell.slope = computeSlope(cell.plane);
+        cell.slopeDirection = slopeDir;
+        cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
+        return true;
+    }
+    return false;
 }
 
 void PointCloudGrid::selectStartCell(GridCell& cell){
@@ -255,6 +257,126 @@ void PointCloudGrid::selectStartCell(GridCell& cell){
             selected_cells_fourth_quadrant.push_back(id);
         }
     }
+}
+
+void PointCloudGrid::train(Point_set_c& pts){
+    Imap label_map;
+    bool lm_found = false;
+    boost::tie (label_map, lm_found) = pts.property_map<int> ("label");
+    if (!lm_found)
+    {
+    std::cerr << "Error: \"label\" property not found in input file." << std::endl;
+    return;
+    }
+    std::vector<int> ground_truth;
+    ground_truth.reserve (pts.size());
+    std::copy (pts.range(label_map).begin(), pts.range(label_map).end(),
+                std::back_inserter (ground_truth));
+    std::cerr << "Generating features" << std::endl;
+    CGAL::Real_timer t;
+    t.start();
+    Feature_set features;
+    std::size_t number_of_scales = 5;
+    Feature_generator generator (pts, pts.point_map(), number_of_scales);
+    #ifdef CGAL_LINKED_WITH_TBB
+    features.begin_parallel_additions();
+    #endif
+    generator.generate_point_based_features (features);
+    #ifdef CGAL_LINKED_WITH_TBB
+    features.end_parallel_additions();
+    #endif
+    t.stop();
+    std::cerr << features.size() << " feature(s) generated in " << t.time() << " second(s)" << std::endl;
+    // Add types
+    Label_set labels;
+    Label_handle ground = labels.add ("ground");
+    Label_handle vegetation = labels.add ("vegetation");
+    Label_handle roof = labels.add ("roof");
+    Classifier classifier (labels, features);
+    std::cerr << "Training" << std::endl;
+    t.reset();
+    t.start();
+    classifier.train<CGAL::Sequential_tag> (ground_truth, 800);
+    t.stop();
+    std::cerr << "Done in " << t.time() << " second(s)" << std::endl;
+    t.reset();
+    t.start();
+    std::vector<int> label_indices(pts.size(), -1);
+    Classification::classify_with_graphcut<CGAL::Sequential_tag>
+    (pts, pts.point_map(), labels, classifier,
+        generator.neighborhood().k_neighbor_query(12),
+        0.2f, 10, label_indices);
+    t.stop();
+    std::cerr << "Classification with graphcut done in " << t.time() << " second(s)" << std::endl;
+    std::cerr << "Precision, recall, F1 scores and IoU:" << std::endl;
+    Classification::Evaluation evaluation (labels, ground_truth, label_indices);
+    for (std::size_t i = 0; i < labels.size(); ++ i)
+    {
+    std::cerr << " * " << labels[i]->name() << ": "
+                << evaluation.precision(labels[i]) << " ; "
+                << evaluation.recall(labels[i]) << " ; "
+                << evaluation.f1_score(labels[i]) << " ; "
+                << evaluation.intersection_over_union(labels[i]) << std::endl;
+    }
+    std::cerr << "Accuracy = " << evaluation.accuracy() << std::endl
+            << "Mean F1 score = " << evaluation.mean_f1_score() << std::endl
+            << "Mean IoU = " << evaluation.mean_intersection_over_union() << std::endl;
+      
+}
+
+void PointCloudGrid::classify(std::vector<Kernel_c::Point_3>& pts){
+    float grid_resolution = 0.34f;
+    unsigned int number_of_neighbors = 6;
+    std::cerr << "Computing useful structures" << std::endl;
+    Iso_cuboid_3 bbox = CGAL::bounding_box (pts.begin(), pts.end());
+    Planimetric_grid grid (pts, IPmap(), bbox, grid_resolution);
+    Neighborhood neighborhood (pts, IPmap());
+    Local_eigen_analysis eigen
+    = Local_eigen_analysis::create_from_point_set
+    (pts, IPmap(), neighborhood.k_neighbor_query(number_of_neighbors));
+    float radius_neighbors = 1.7f;
+    float radius_dtm = 15.0f;
+    std::cerr << "Computing features" << std::endl;
+    Feature_set features;
+    #ifdef CGAL_LINKED_WITH_TBB
+    features.begin_parallel_additions();
+    #endif
+    Feature_handle distance_to_plane = features.add<Distance_to_plane> (pts, IPmap(), eigen);
+    Feature_handle dispersion = features.add<Dispersion> (pts, IPmap(), grid,
+                                                        radius_neighbors);
+    Feature_handle elevation = features.add<Elevation> (pts, IPmap(), grid,
+                                                        radius_dtm);
+    #ifdef CGAL_LINKED_WITH_TBB
+    features.end_parallel_additions();
+    #endif
+    Label_set labels;
+    Label_handle ground = labels.add ("ground");
+    Label_handle vegetation = labels.add ("vegetation");
+    Label_handle roof = labels.add ("roof");
+    std::cerr << "Setting weights" << std::endl;
+    Classifier classifier (labels, features);
+    classifier.set_weight (distance_to_plane, 6.75e-2f);
+    classifier.set_weight (dispersion, 5.45e-1f);
+    classifier.set_weight (elevation, 1.47e1f);
+    std::cerr << "Setting effects" << std::endl;
+    classifier.set_effect (ground, distance_to_plane, Classifier::NEUTRAL);
+    classifier.set_effect (ground, dispersion, Classifier::NEUTRAL);
+    classifier.set_effect (ground, elevation, Classifier::PENALIZING);
+    classifier.set_effect (vegetation, distance_to_plane,  Classifier::FAVORING);
+    classifier.set_effect (vegetation, dispersion, Classifier::FAVORING);
+    classifier.set_effect (vegetation, elevation, Classifier::NEUTRAL);
+    classifier.set_effect (roof, distance_to_plane,  Classifier::NEUTRAL);
+    classifier.set_effect (roof, dispersion, Classifier::NEUTRAL);
+    classifier.set_effect (roof, elevation, Classifier::FAVORING);
+    // Run classification
+    std::cerr << "Classifying" << std::endl;
+    std::vector<int> label_indices (pts.size(), -1);
+    CGAL::Real_timer t;
+    t.start();
+    Classification::classify<Concurrency_tag> (pts, labels, classifier, label_indices);
+    t.stop();
+    std::cerr << "Raw classification performed in " << t.time() << " second(s)" << std::endl;
+    t.reset();    
 }
 
 std::vector<Index3D> PointCloudGrid::getGroundCells() {
@@ -596,6 +718,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
                 if (distance > grid_config.groundInlierThreshold){
                     non_ground_points->points.push_back(*it);
+                }
+                else{
+                    ground_points->points.push_back(*it);
                 }
             }
         }
