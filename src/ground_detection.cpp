@@ -80,7 +80,7 @@ double PointCloudGrid::computeGridDistance(const GridCell& cell1, const GridCell
     return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-int PointCloudGrid::calculateMeanHeight(const std::vector<Index3D> ids){
+int PointCloudGrid::computeMeanHeight(const std::vector<Index3D> ids){
 
     // Calculate the mean height of selected cells
     double total_height = 0.0;
@@ -89,6 +89,32 @@ int PointCloudGrid::calculateMeanHeight(const std::vector<Index3D> ids){
     }
     // Find the cell closest to the mean height
     int mean_height = std::floor(total_height / ids.size());
+    return mean_height;
+}
+
+double PointCloudGrid::computeMeanPointsHeight(const std::vector<Index3D> ids){
+    // Calculate the mean height of selected cells
+    int total_points = 0;
+    double mean_height = 0.0;
+    for (const Index3D& id : ids) {
+        GridCell& cell = gridCells[id.x][id.y][id.z];
+
+        // Compute the transformation matrix
+        Eigen::Affine3f transform = pcl::getTransFromUnitVectorsZY(Eigen::Vector3f::UnitZ(), cell.plane.normal().cast<float>());
+
+        // Apply the transformation to the point clou
+        pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::transformPointCloud(*(cell.points), *transformed_cloud, transform.cast<double>());
+
+        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = transformed_cloud->begin(); it != transformed_cloud->end(); ++it)
+        {
+            mean_height += (*it).z;
+            total_points++;
+        }
+    }
+    if (total_points != 0){
+        mean_height /= total_points;
+    }
     return mean_height;
 }
 
@@ -451,25 +477,25 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
     std::queue<Index3D> q;
 
     if (selected_cells_first_quadrant.size() > 0){
-        int cells_q1_mean_height = calculateMeanHeight(selected_cells_first_quadrant);
+        int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
         Index3D closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
         q.push(closest_to_mean_height_q1);
     }
 
     if (selected_cells_second_quadrant.size() > 0){
-        int cells_q2_mean_height = calculateMeanHeight(selected_cells_second_quadrant);
+        int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
         Index3D closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
         q.push(closest_to_mean_height_q2);
     }
 
     if (selected_cells_third_quadrant.size() > 0){
-        int cells_q3_mean_height = calculateMeanHeight(selected_cells_third_quadrant);
+        int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
         Index3D closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
         q.push(closest_to_mean_height_q3);
     }
 
     if (selected_cells_fourth_quadrant.size() > 0){
-        int cells_q4_mean_height = calculateMeanHeight(selected_cells_fourth_quadrant);
+        int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
         Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
         q.push(closest_to_mean_height_q4);
     }
@@ -615,7 +641,23 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             }
             continue;
         }
-
+        /*  
+        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, indices);
+        double neighbors_height = computeMeanPointsHeight(ground_neighbors);
+        ground_neighbors.clear();
+        ground_neighbors.emplace_back(Index3D(cell.row,cell.col,cell.height));
+        double cell_height = computeMeanPointsHeight(ground_neighbors);
+        if (std::abs(std::abs(neighbors_height) - std::abs(cell_height)) < grid_config.groundInlierThreshold)
+        {
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
+            {
+                ground_points->points.push_back(*it);
+            }
+            continue;            
+        }
+        std::cout << "Nighbors height: " << neighbors_height << std::endl;
+        std::cout << "Cell     height: " << cell_height << std::endl;
+        */
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
 

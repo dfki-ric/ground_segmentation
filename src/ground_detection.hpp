@@ -145,6 +145,8 @@ struct GridCell {
 };
 
 struct Index3D {
+    Index3D(int x, int y, int z): x(x), y(y), z(z) {}
+    Index3D(){x = NAN; y = NAN; z= NAN;}
     int x, y, z;
 };
 
@@ -189,7 +191,8 @@ private:
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
-    int calculateMeanHeight(const std::vector<Index3D> ids);
+    int computeMeanHeight(const std::vector<Index3D> ids);
+    double computeMeanPointsHeight(const std::vector<Index3D> ids);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
     std::vector<GridCell> fitPlanes(GridCell& cell, const double& threshold);
