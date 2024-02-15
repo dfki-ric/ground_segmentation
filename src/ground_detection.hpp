@@ -9,6 +9,7 @@
 #include <pcl/filters/extract_indices.h>
 #include <pcl/common/common.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/features/normal_3d.h>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
@@ -124,6 +125,9 @@ struct GridCell {
     /** slope of the plane */
     double slope;
 
+    /** Normal of the plane*/
+    Eigen::Vector3d normal;
+
     /** normalized direction of the slope. Only valid if slope > 0 */
     Eigen::Vector3d slopeDirection;
 
@@ -160,16 +164,19 @@ struct GridConfig{
     bool returnGroundPoints;
     int neighborsRadius;
     int minPoints;
+    int ransac_iterations;
+
     GridConfig(){
-        radialCellSize = 1;
-        angularCellSize = 0.1;
-        cellSizeZ = 0.2;
-        startCellDistanceThreshold = 4; // meters
+        radialCellSize = 2;
+        angularCellSize = 0.785398;
+        cellSizeZ = 1;
+        startCellDistanceThreshold = 5; // meters
         slopeThresholdDegrees = 30; //degrees
-        groundInlierThreshold = 0.1; // meters
-        neighborsRadius = 3;
+        groundInlierThreshold = 0.2; // meters
+        neighborsRadius = 1;
         returnGroundPoints = true;
         minPoints = 5;
+        ransac_iterations = 50;
     }
 };
 
@@ -181,6 +188,7 @@ public:
     GroundDetectionStatistics& getStatistics();
     void setInputCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr input, const Eigen::Quaterniond& R_body2World);
     std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentPoints();
+    std::map<int, std::map<int, std::map<int, GridCell>>>& getGridCells();
 
 private:
 
@@ -190,6 +198,7 @@ private:
     double computeGridDistance(const GridCell& cell1, const GridCell& cell2);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
+    double computeSlope(const Eigen::Vector3d& normal);
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     int computeMeanHeight(const std::vector<Index3D> ids);
     double computeMeanPointsHeight(const std::vector<Index3D> ids);

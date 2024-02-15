@@ -51,6 +51,16 @@ void PointCloudGrid::addPoint(const pcl::PointXYZ& point) {
     gridCells[row][col][height].points->push_back(point);
 }
 
+// Function to calculate the slope from the normal vector
+double PointCloudGrid::computeSlope(const Eigen::Vector3d& normal)
+{
+    const Eigen::Vector3d zNormal(Eigen::Vector3d::UnitZ());
+    Eigen::Vector3d planeNormal = normal;
+    planeNormal = orientation * planeNormal;
+    planeNormal.normalize(); //just in case
+    return acos(planeNormal.dot(zNormal));
+}
+
 double PointCloudGrid::computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const
 {
     const Eigen::Vector3d zNormal(Eigen::Vector3d::UnitZ());
@@ -100,7 +110,7 @@ double PointCloudGrid::computeMeanPointsHeight(const std::vector<Index3D> ids){
         GridCell& cell = gridCells[id.x][id.y][id.z];
 
         // Compute the transformation matrix
-        Eigen::Affine3f transform = pcl::getTransFromUnitVectorsZY(Eigen::Vector3f::UnitZ(), cell.plane.normal().cast<float>());
+        Eigen::Affine3f transform = pcl::getTransFromUnitVectorsZY(Eigen::Vector3f::UnitZ(), cell.normal.cast<float>());
 
         // Apply the transformation to the point clou
         pcl::PointCloud<pcl::PointXYZ>::Ptr transformed_cloud(new pcl::PointCloud<pcl::PointXYZ>);
@@ -245,14 +255,31 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
         return false;
     }
 
-    Eigen::Vector3d normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
+    // Compute the covariance matrix
+    Eigen::Matrix3d covariance_matrix;
+    pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
+
+    // Compute eigenvectors and eigenvalues
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
+    Eigen::Matrix3d eigenvectors = eigen_solver.eigenvectors();
+
+    // Normal is the eigenvector corresponding to the smallest eigenvalue
+    Eigen::Vector3d normal = eigenvectors.col(0);
+
+    // Ensure all normals point upward
+    if (normal(2) < 0) {
+        normal *= -1; // flip the normal direction
+    }
+
+    Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
     normal.normalize();
+    cell.normal = normal;
     double distToOrigin = coefficients->values[3];
-    cell.plane = Eigen::Hyperplane<double, 3>(normal, distToOrigin);
-    const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
+    cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
+    //const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
     cell.slope = computeSlope(cell.plane);
-    cell.slopeDirection = slopeDir;
-    cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
+    //cell.slopeDirection = slopeDir;
+    //cell.slopeDirectionAtan2 = std::atan2(slopeDir.y(), slopeDir.x());
     return true;
 }
 
@@ -622,15 +649,13 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
-
     pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_points(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr non_ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
 
-    // Extract points based on indices
     pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
-
     const TerrainType type_ground = TerrainType::GROUND;
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
+    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
 
     for (auto& id : ground_cells){
         GridCell& cell = gridCells[id.x][id.y][id.z];
@@ -641,23 +666,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             }
             continue;
         }
-        /*  
-        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, indices);
-        double neighbors_height = computeMeanPointsHeight(ground_neighbors);
-        ground_neighbors.clear();
-        ground_neighbors.emplace_back(Index3D(cell.row,cell.col,cell.height));
-        double cell_height = computeMeanPointsHeight(ground_neighbors);
-        if (std::abs(std::abs(neighbors_height) - std::abs(cell_height)) < grid_config.groundInlierThreshold)
-        {
-            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-            {
-                ground_points->points.push_back(*it);
-            }
-            continue;            
-        }
-        std::cout << "Nighbors height: " << neighbors_height << std::endl;
-        std::cout << "Cell     height: " << cell_height << std::endl;
-        */
+
         extract_ground.setInputCloud(cell.points);
         extract_ground.setIndices(cell.inliers);
 
@@ -667,10 +676,40 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         extract_ground.setNegative(true);
         extract_ground.filter(*non_ground_inliers);
 
-        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it)
-        {
-            non_ground_points->points.push_back(*it);
-        }
+        if (ground_inliers->size() == 0) continue;
+
+        size_t nearest_index{0};
+        std::vector<int> point_indices(1);
+        std::vector<float> point_distances(1);
+
+        kdtree.setInputCloud(ground_inliers);
+        Eigen::Vector3d ground_normal = cell.normal;
+        ground_normal.normalize();
+
+        for (pcl::PointCloud<pcl::PointXYZ>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it){
+                Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+                pcl::PointXYZ search_point;
+                search_point.x = it->x;
+                search_point.y = it->y;
+                search_point.z = it->z;
+
+                if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
+                    nearest_index = point_indices[0];
+                }
+
+                Eigen::Vector3d ground_point(ground_inliers->points.at(nearest_index).x,
+                                             ground_inliers->points.at(nearest_index).y,
+                                             ground_inliers->points.at(nearest_index).z);
+
+                double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+
+                if (distance > grid_config.groundInlierThreshold){
+                    non_ground_points->points.push_back(*it);
+                }
+                else{
+                    ground_points->points.push_back(*it);
+                }
+            }
 
         if (grid_config.returnGroundPoints){
             for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
@@ -704,11 +743,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
             }
         }
         else{
-            pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
             size_t nearest_index{0};
             std::vector<int> point_indices(1);
             std::vector<float> point_distances(1);
-            pcl::ExtractIndices<pcl::PointXYZ> extract_ground;
 
             Eigen::Vector3d ground_normal;
             pcl::PointCloud<pcl::PointXYZ>::Ptr close_ground_points(new pcl::PointCloud<pcl::PointXYZ>());
@@ -727,15 +764,15 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     close_ground_points->points.push_back(*it);
                 }
 
-                ground_normal += (1/(distance+0.001)) * ground_cell.plane.normal().normalized();
+                ground_normal += (1/(distance+0.001)) * ground_cell.normal.normalized();
             }
 
             if (close_ground_points->size() == 0)
                 continue;
 
             ground_normal /= actual_ground_neighbors.size();
-            ground_normal.normalize(); 
             ground_normal = orientation * ground_normal;
+            ground_normal.normalize(); 
 
             kdtree.setInputCloud(close_ground_points);
             for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
@@ -753,10 +790,13 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                                              close_ground_points->points.at(nearest_index).y,
                                              close_ground_points->points.at(nearest_index).z);
 
-                double distance = ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm(); 
+                double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
 
                 if (distance > grid_config.groundInlierThreshold){
                     non_ground_points->points.push_back(*it);
+                }
+                else{
+                    ground_points->points.push_back(*it);
                 }
             }
         }
@@ -786,6 +826,10 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         */ 
     }
     return std::make_pair(ground_points, non_ground_points);
+}
+
+std::map<int, std::map<int, std::map<int, GridCell>>>& PointCloudGrid::getGridCells(){
+    return gridCells;
 }
 
 //pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloudGrid::extractHoles(){
