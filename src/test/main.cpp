@@ -12,37 +12,17 @@
 #include <iostream>
 #include <thread>
 
-#include "ground_detection.hpp"
+#include <pointcloud_obstacle_detection/ground_detection.hpp>
 
 //using namespace std::chrono_literals;
 using namespace pointcloud_obstacle_detection;
 
-
-#include <CGAL/Simple_cartesian.h>
-#include <CGAL/Monge_via_jet_fitting.h>
-#include <fstream>
-#include <vector>
-typedef double                   DFT;
-typedef CGAL::Simple_cartesian<DFT>     Data_Kernel;
-typedef Data_Kernel::Point_3     DPoint;
-typedef CGAL::Monge_via_jet_fitting<Data_Kernel> My_Monge_via_jet_fitting;
-typedef My_Monge_via_jet_fitting::Monge_form     My_Monge_form;
 
 int main (int argc, char** argv)
 {
     if (argc != 2)
         return (0);
     
-    size_t d_fitting = 4;
-    size_t d_monge = 4;
- 
-    //initalize the in_points container
-    double x, y, z;
-    std::vector<DPoint> in_points;
-
-    My_Monge_form monge_form;
-    My_Monge_via_jet_fitting monge_fit;
-
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ> ());
 
     pcl::PLYReader PLYFileReader;
