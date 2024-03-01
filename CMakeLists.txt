@@ -26,6 +26,8 @@ install(
 		lib/cmake/${PROJECT_NAME}
 )
 
+add_subdirectory(test)
+
 # Install package-manifest
 #install(
 #        FILES package.xml

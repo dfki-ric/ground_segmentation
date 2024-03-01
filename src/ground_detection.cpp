@@ -1,4 +1,4 @@
-#include "pointcloud_obstacle_detection/ground_detection.hpp"
+#include "ground_detection.hpp"
 #include <queue>
 
 namespace pointcloud_obstacle_detection{

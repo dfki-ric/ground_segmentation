@@ -3,16 +3,16 @@ find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(DEPS REQUIRED IMPORTED_TARGET base-types vizkit3d_debug_drawings-commands)
+pkg_check_modules(base_types REQUIRED IMPORTED_TARGET base-types)
 
 set(SOURCES ground_detection.cpp processPointClouds.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-    PkgConfig::DEPS
+    PkgConfig::base_types
     Boost::system
-    Boost::filesystem 
+    Boost::filesystem
     Boost::serialization
     ${PCL_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -20,7 +20,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
     ${PCL_INCLUDE_DIRS}
 )
@@ -47,12 +47,11 @@ install(EXPORT ${PROJECT_NAME}-targets
 	DESTINATION cmake/${PROJECT_NAME}
 )
 
-add_subdirectory(test)
+#add_subdirectory(test)
 
 set(PKGCONFIG_CFLAGS)
 set(PKGCONFIG_REQUIRES
     base-types
-    vizkit3d_debug_drawings
 )
 
 configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)

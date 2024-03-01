@@ -47,9 +47,6 @@ struct GridCell {
     pcl::PointCloud<pcl::PointXYZ>::Ptr inlier_pts;
     pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_pts;
 
-    // define polyhedron to hold convex hull
-    Polyhedron_3 poly;
-
     /** The plane that has been fitted to the mls at the location of this node */
     Eigen::Hyperplane<double, 3> plane;
 
