@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace pointcloud_obstacle_detection{
 struct Box
 {

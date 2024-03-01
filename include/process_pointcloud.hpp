@@ -1,8 +1,8 @@
 // PCL lib Functions for processing point clouds
 // Source: https://github.com/enginBozkurt/LidarObstacleDetection
 
-#ifndef PROCESSPOINTCLOUDS_H_
-#define PROCESSPOINTCLOUDS_H_
+#ifndef PROCESSPOINTCLOUD_H_
+#define PROCESSPOINTCLOUD_H_
 
 #include <pcl/io/pcd_io.h>
 #include <pcl/common/common.h>
@@ -143,13 +143,13 @@ struct KdTree_euclidean
 
 };
 
-class ProcessPointClouds {
+class ProcessPointCloud {
 public:
 
     //constructor
-    ProcessPointClouds();
+    ProcessPointCloud();
     //deconstructor
-    ~ProcessPointClouds();
+    ~ProcessPointCloud();
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
 
@@ -181,4 +181,4 @@ public:
 };
 } //namespace pointcloud_obstacle_detection
 
-#endif /* PROCESSPOINTCLOUDS_H_ */
+#endif /* PROCESSPOINTCLOUD_H_ */

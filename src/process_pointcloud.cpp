@@ -1,14 +1,14 @@
 // PCL lib Functions for processing point clouds 
 
-#include "processPointClouds.hpp"
+#include "process_pointcloud.hpp"
 
 namespace pointcloud_obstacle_detection{
     //constructor:
-  ProcessPointClouds::ProcessPointClouds() {}
+  ProcessPointCloud::ProcessPointCloud() {}
 
 
   //de-constructor:  
-  ProcessPointClouds::~ProcessPointClouds() {}
+  ProcessPointCloud::~ProcessPointCloud() {}
   
   /*FilterCloud function filters the given cloud. Following operations are performed
   * Downsampling: points are converted to voxels using the dimensions provided.
@@ -16,7 +16,7 @@ namespace pointcloud_obstacle_detection{
   * RoofCrop: Remove roof points , dimensions of roof are given.
   * */
  
-  pcl::PointCloud<pcl::PointXYZ>::Ptr ProcessPointClouds::FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
+  pcl::PointCloud<pcl::PointXYZ>::Ptr ProcessPointCloud::FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
   {
 
       // Time segmentation process
@@ -53,7 +53,7 @@ namespace pointcloud_obstacle_detection{
 
 
   
-  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointClouds::SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
     // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
      pcl::PointCloud<pcl::PointXYZ>::Ptr obstCloud(new pcl::PointCloud<pcl::PointXYZ>());
@@ -76,7 +76,7 @@ namespace pointcloud_obstacle_detection{
 
 
   
-  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointClouds::SegmentPlane( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold)
+  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::SegmentPlane( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold)
   {
       // Time segmentation process
       auto startTime = std::chrono::steady_clock::now();
@@ -118,7 +118,7 @@ namespace pointcloud_obstacle_detection{
   * 		 Repeat above steps for maxIterations
   * */
   
-  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointClouds::SegmentPlane_RANSAC( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold)
+  std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::SegmentPlane_RANSAC( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold)
   {
       // Time segmentation process
       auto startTime = std::chrono::steady_clock::now();
@@ -214,7 +214,7 @@ namespace pointcloud_obstacle_detection{
       return segResult;
   }
 
-  std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointClouds::Clustering( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+  std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::Clustering( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
   {
 
       // Time clustering process
@@ -264,7 +264,7 @@ namespace pointcloud_obstacle_detection{
   *
   * */
   
-  void ProcessPointClouds::Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize)
+  void ProcessPointCloud::Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize)
   {
     if((processed_f[idx]==false)&&
         (cluster.size()<maxSize))
@@ -289,7 +289,7 @@ namespace pointcloud_obstacle_detection{
   * 		 	limits if not discard
   * */
   
-  std::vector<std::vector<int>> ProcessPointClouds::euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize)
+  std::vector<std::vector<int>> ProcessPointCloud::euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize)
   {
     std::vector<std::vector<int>> clusters;
     /*Create a flag for each point in the cloud, to identified if the point is processed or not, and set it to false*/
@@ -327,7 +327,7 @@ namespace pointcloud_obstacle_detection{
   * 		 Identified clusters are filtered, clusters that dont have points in min, max points are discarded.
   * */
   
-  std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointClouds::Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+  std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
   {
 
       // Time clustering process
@@ -360,7 +360,7 @@ namespace pointcloud_obstacle_detection{
       return clusters;
   }
 
-  std::vector<base::samples::Pointcloud> ProcessPointClouds::Clustering_euclideanCluster_Base( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+  std::vector<base::samples::Pointcloud> ProcessPointCloud::Clustering_euclideanCluster_Base( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
   {
 
       // Time clustering process
@@ -395,7 +395,7 @@ namespace pointcloud_obstacle_detection{
   *and max coordinates
   * */
   
-  pointcloud_obstacle_detection::Box ProcessPointClouds::BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster)
+  pointcloud_obstacle_detection::Box ProcessPointCloud::BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster)
   {
 
       // Find bounding box for one of the clusters
@@ -426,7 +426,7 @@ namespace pointcloud_obstacle_detection{
   *and max coordinates
   * */
   
-  base::samples::OrientedBoundingBox ProcessPointClouds::OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts)
+  base::samples::OrientedBoundingBox ProcessPointCloud::OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts)
   {
       pcl::MomentOfInertiaEstimation <pcl::PointXYZ> feature_extractor;
       feature_extractor.setInputCloud(cluster);
@@ -452,13 +452,13 @@ namespace pointcloud_obstacle_detection{
     return box;
   }
  
-  void ProcessPointClouds::savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file)
+  void ProcessPointCloud::savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file)
   {
       pcl::io::savePCDFileASCII (file, *cloud);
       LOG_INFO_S << "Saved " << cloud->points.size () << " data points to "+file;
   }
   
-  pcl::PointCloud<pcl::PointXYZ>::Ptr ProcessPointClouds::loadPcd(std::string file)
+  pcl::PointCloud<pcl::PointXYZ>::Ptr ProcessPointCloud::loadPcd(std::string file)
   {
       pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 

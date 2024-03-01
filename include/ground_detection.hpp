@@ -1,7 +1,7 @@
 #pragma once
 
-#include "processPointClouds.hpp"
-#include "GroundDetectionStatistics.hpp"
+#include "process_pointcloud.hpp"
+#include "ground_detection_statistics.hpp"
 
 #include <pcl/common/transforms.h>
 #include <pcl/common/centroid.h>
@@ -149,7 +149,7 @@ private:
     std::vector<Index3D> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
-    ProcessPointClouds processor;
+    ProcessPointCloud processor;
     unsigned int total_ground_cells;
     GroundDetectionStatistics statistics;
 };

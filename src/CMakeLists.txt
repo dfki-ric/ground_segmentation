@@ -1,15 +1,15 @@
-find_package(PCL 1.7 REQUIRED COMPONENTS io common filters kdtree segmentation visualization)
+find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visualization)
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(base_types REQUIRED IMPORTED_TARGET base-types)
 
-set(SOURCES ground_detection.cpp processPointClouds.cpp)
+set(SOURCES ground_detection.cpp process_pointcloud.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-target_link_libraries(${PROJECT_NAME}
-  PUBLIC
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
     PkgConfig::base_types
     Boost::system
     Boost::filesystem
@@ -18,19 +18,17 @@ target_link_libraries(${PROJECT_NAME}
     ${VTK_LIBRARIES}
 )
 
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     ${PCL_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}
-  PUBLIC
+target_compile_definitions(${PROJECT_NAME} PUBLIC
     NUMERIC_DEPRECATE=1
 )
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
 	    DESTINATION include/${PROJECT_NAME}
 	    FILES_MATCHING PATTERN "*.hpp"
 )
@@ -47,12 +45,24 @@ install(EXPORT ${PROJECT_NAME}-targets
 	DESTINATION cmake/${PROJECT_NAME}
 )
 
-#add_subdirectory(test)
-
-set(PKGCONFIG_CFLAGS)
-set(PKGCONFIG_REQUIRES
+set(PKG_CONFIG_DEPS
     base-types
+    pcl_io-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
+    pcl_common-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
+    pcl_filters-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
+    pcl_kdtree-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
+    pcl_segmentation-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
+    pcl_visualization-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
 )
+
+set(pkg_config_dependencies "")
+
+foreach(value ${PKG_CONFIG_DEPS})
+    set(pkg_config_dependencies "${pkg_config_dependencies} ${value}")
+endforeach()
+
+set(PKGCONFIG_REQUIRES ${pkg_config_dependencies})
+set(PKGCONFIG_CFLAGS)
 
 configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)
 install(FILES
