@@ -390,37 +390,6 @@ namespace pointcloud_obstacle_detection{
       return clusters;
   }
 
-  /*BoundingBox function shall identify the min and max coordinates
-  *in the provided cluster, a box shall be fitted using these min
-  *and max coordinates
-  * */
-  
-  pointcloud_obstacle_detection::Box ProcessPointCloud::BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster)
-  {
-
-      // Find bounding box for one of the clusters
-      pcl::PointXYZ minPoint, maxPoint;
-      /*Get min and max coordinates in the cluster*/
-      pcl::getMinMax3D(*cluster, minPoint, maxPoint);
-
-      pointcloud_obstacle_detection::Box box;
-      box.x_min = minPoint.x;
-      box.y_min = minPoint.y;
-      box.z_min = minPoint.z;
-      box.x_max = maxPoint.x;
-      box.y_max = maxPoint.y;
-      box.z_max = maxPoint.z;
-
-    /*LOG_INFO_S << "Max x: " << maxPoint.x;
-    LOG_INFO_S << "Max y: " << maxPoint.y;
-    LOG_INFO_S << "Max z: " << maxPoint.z;
-    LOG_INFO_S << "Min x: " << minPoint.x;
-    LOG_INFO_S << "Min y: " << minPoint.y;
-    LOG_INFO_S << "Min z: " << minPoint.z;*/
-
-    return box;
-  }
-
   /*OrientedBoundingBox function shall identify the min and max coordinates
   *in the provided cluster, a box shall be fitted using these min
   *and max coordinates

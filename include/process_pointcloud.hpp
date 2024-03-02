@@ -19,7 +19,6 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include "Box.hpp"
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
 #include <base/samples/OrientedBoundingBox.hpp>
@@ -169,8 +168,6 @@ public:
     std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
 
 	void Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
-
-    pointcloud_obstacle_detection::Box BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster);
 
 	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts);
 
