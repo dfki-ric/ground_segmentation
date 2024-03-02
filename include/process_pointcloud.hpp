@@ -1,8 +1,8 @@
 // PCL lib Functions for processing point clouds
 // Source: https://github.com/enginBozkurt/LidarObstacleDetection
 
-#ifndef PROCESSPOINTCLOUDS_H_
-#define PROCESSPOINTCLOUDS_H_
+#ifndef PROCESSPOINTCLOUD_H_
+#define PROCESSPOINTCLOUD_H_
 
 #include <pcl/io/pcd_io.h>
 #include <pcl/common/common.h>
@@ -19,7 +19,6 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
-#include "Box.hpp"
 #include <unordered_set>
 #include <base-logging/Logging.hpp>
 #include <base/samples/OrientedBoundingBox.hpp>
@@ -143,13 +142,13 @@ struct KdTree_euclidean
 
 };
 
-class ProcessPointClouds {
+class ProcessPointCloud {
 public:
 
     //constructor
-    ProcessPointClouds();
+    ProcessPointCloud();
     //deconstructor
-    ~ProcessPointClouds();
+    ~ProcessPointCloud();
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
 
@@ -170,8 +169,6 @@ public:
 
 	void Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
 
-    pointcloud_obstacle_detection::Box BoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster);
-
 	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts);
 
     void savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file);
@@ -181,4 +178,4 @@ public:
 };
 } //namespace pointcloud_obstacle_detection
 
-#endif /* PROCESSPOINTCLOUDS_H_ */
+#endif /* PROCESSPOINTCLOUD_H_ */

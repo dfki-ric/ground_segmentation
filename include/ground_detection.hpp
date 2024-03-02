@@ -1,7 +1,7 @@
 #pragma once
 
-#include "processPointClouds.hpp"
-#include "GroundDetectionStatistics.hpp"
+#include "process_pointcloud.hpp"
+#include "ground_detection_statistics.hpp"
 
 #include <pcl/common/transforms.h>
 #include <pcl/common/centroid.h>
@@ -11,79 +11,10 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/features/normal_3d.h>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Polyhedron_3.h>
-#include <CGAL/Surface_mesh.h>
-#include <CGAL/convex_hull_3.h>
-#include <CGAL/Polygon_mesh_processing/intersection.h>
-
 #include <Eigen/Dense>
 #include <vector>
 #include <cmath>
 #include <map>
-
-typedef CGAL::Exact_predicates_inexact_constructions_kernel  Kernel;
-typedef CGAL::Polyhedron_3<Kernel>                           Polyhedron_3;
-typedef Kernel::Point_3                                      Point_3;
-typedef CGAL::Surface_mesh<Point_3>                          Surface_mesh;
-typedef Polyhedron_3::Vertex_const_iterator                  Vertex_const_iterator; 
-typedef std::pair<Kernel::Point_3, Kernel::Vector_3>         Point_with_normal;
-typedef std::vector<Point_with_normal>                       Pwn_vector;
-typedef CGAL::First_of_pair_property_map<Point_with_normal>  Point_map;
-typedef CGAL::Second_of_pair_property_map<Point_with_normal> Normal_map;
-
-// Efficient RANSAC types
-#include <CGAL/property_map.h>
-#include <CGAL/Shape_detection/Efficient_RANSAC.h>
-#include <CGAL/structure_point_set.h>
-#include <CGAL/jet_estimate_normals.h>
-#include <CGAL/Point_set_3.h>
-#include <CGAL/grid_simplify_point_set.h>
-
-typedef Kernel::FT                                           FT;
-typedef Kernel::Vector_3                                     Vector;
-typedef CGAL::Point_set_3<Point_3>                           Point_set;
-typedef CGAL::Shape_detection::Efficient_RANSAC_traits
-<Kernel, Point_set, Point_set::Point_map, Point_set::Vector_map> Traits;
-typedef CGAL::Shape_detection::Efficient_RANSAC<Traits>      Efficient_ransac;
-typedef CGAL::Shape_detection::Plane<Traits>                 Plane;
-
-//Classification
-#include <CGAL/Simple_cartesian.h>
-#include <CGAL/Classification.h>
-#include <CGAL/bounding_box.h>
-#include <CGAL/tags.h>
-#include <CGAL/Real_timer.h>
-
-namespace Classification = CGAL::Classification;
-
-typedef CGAL::Simple_cartesian<double> Kernel_c;
-typedef Kernel_c::Point_3 Point_c;
-typedef CGAL::Point_set_3<Point_c> Point_set_c;
-typedef Kernel_c::Iso_cuboid_3 Iso_cuboid_3;
-typedef Point_set_c::Point_map Pmap;
-typedef Point_set_c::Property_map<int> Imap;
-typedef Classification::Sum_of_weighted_features_classifier                         Classifier;
-typedef Classification::Point_set_feature_generator<Kernel_c, Point_set_c, Pmap>    Feature_generator;
-
-#ifdef CGAL_LINKED_WITH_TBB
-typedef CGAL::Parallel_tag Concurrency_tag;
-#else
-typedef CGAL::Sequential_tag Concurrency_tag;
-#endif
-
-typedef std::vector<Point_c> Point_range;
-typedef CGAL::Identity_property_map<Point_c> IPmap;
-typedef Classification::Planimetric_grid<Kernel_c, Point_range, IPmap>             Planimetric_grid;
-typedef Classification::Point_set_neighborhood<Kernel_c, Point_range, IPmap>       Neighborhood;
-typedef Classification::Local_eigen_analysis                                    Local_eigen_analysis;
-typedef Classification::Label_handle                                            Label_handle;
-typedef Classification::Feature_handle                                          Feature_handle;
-typedef Classification::Label_set                                               Label_set;
-typedef Classification::Feature_set                                             Feature_set;
-typedef Classification::Feature::Distance_to_plane<Point_range, IPmap>           Distance_to_plane;
-typedef Classification::Feature::Elevation<Kernel_c, Point_range, IPmap>           Elevation;
-typedef Classification::Feature::Vertical_dispersion<Kernel_c, Point_range, IPmap> Dispersion;
 
 namespace pointcloud_obstacle_detection{
 
@@ -115,9 +46,6 @@ struct GridCell {
     pcl::PointCloud<pcl::PointXYZ>::Ptr points;
     pcl::PointCloud<pcl::PointXYZ>::Ptr inlier_pts;
     pcl::PointCloud<pcl::PointXYZ>::Ptr outlier_pts;
-
-    // define polyhedron to hold convex hull
-    Polyhedron_3 poly;
 
     /** The plane that has been fitted to the mls at the location of this node */
     Eigen::Hyperplane<double, 3> plane;
@@ -204,13 +132,10 @@ private:
     double computeMeanPointsHeight(const std::vector<Index3D> ids);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);
     bool fitGroundPlane(GridCell& cell, const double& inlier_threshold);
-    std::vector<GridCell> fitPlanes(GridCell& cell, const double& threshold);
     void selectStartCell(GridCell& cell);
     std::pair<size_t,pcl::PointXYZ>  findLowestPoint(const GridCell& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
     std::vector<Index3D> explore(std::queue<Index3D> q);
-    void train(Point_set_c& pts);
-    void classify(std::vector<Kernel_c::Point_3>& pts);
 
     std::vector<Index3D> indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
@@ -224,7 +149,7 @@ private:
     std::vector<Index3D> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
-    ProcessPointClouds processor;
+    ProcessPointCloud processor;
     unsigned int total_ground_cells;
     GroundDetectionStatistics statistics;
 };

@@ -1,4 +1,4 @@
 build/
 *.sw?
 *.pcd
-src/data/*
+data/*
