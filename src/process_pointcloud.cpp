@@ -33,7 +33,7 @@ namespace pointcloud_obstacle_detection{
       sor.setInputCloud (cloud);
       sor.setLeafSize (filterRes, filterRes, filterRes);
       sor.filter (*cloud_filtered);
-      LOG_INFO_S << "Voxeled " << cloud_filtered->points.size();
+      LOG_DEBUG_S << "Voxeled " << cloud_filtered->points.size();
       roi.setInputCloud(cloud_filtered);
     }
     else{
@@ -41,17 +41,15 @@ namespace pointcloud_obstacle_detection{
     }
     
       roi.filter(*cloud_filtered);
-      LOG_INFO_S << "ROI " << cloud_filtered->points.size();
+      LOG_DEBUG_S << "ROI " << cloud_filtered->points.size();
 
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "filtering took " << elapsedTime.count() << " milliseconds";
+      LOG_DEBUG_S << "filtering took " << elapsedTime.count() << " milliseconds";
 
       return cloud_filtered;
 
   }
-
-
   
   std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> ProcessPointCloud::SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
   {
@@ -103,7 +101,7 @@ namespace pointcloud_obstacle_detection{
     std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> segResult = SeparateClouds(inliers,cloud);
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "plane segmentation took " << elapsedTime.count() << " milliseconds";
+      LOG_DEBUG_S << "plane segmentation took " << elapsedTime.count() << " milliseconds";
 
 
       return segResult;
@@ -208,7 +206,7 @@ namespace pointcloud_obstacle_detection{
 
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "plane segmentation took " << elapsedTime.count() << " milliseconds";
+      LOG_DEBUG_S << "plane segmentation took " << elapsedTime.count() << " milliseconds";
 
 
       return segResult;
@@ -249,7 +247,7 @@ namespace pointcloud_obstacle_detection{
       }
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "clustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
+      LOG_DEBUG_S << "clustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
 
       return clusters;
   }
@@ -310,12 +308,12 @@ namespace pointcloud_obstacle_detection{
         if((cluster.size()>=minSize)&&cluster.size()<=maxSize)
           clusters.push_back(cluster);
         /*else
-          LOG_INFO_S <<"discarted cluster"<<cluster.size();*/
+          LOG_DEBUG_S <<"discarted cluster"<<cluster.size();*/
       }
 
     }
-    /*LOG_INFO_S<<"Distance Tolerance"<<distanceTol;
-    LOG_INFO_S<<"Max Distance "<<tree->max_distance;*/
+    /*LOG_DEBUG_S<<"Distance Tolerance"<<distanceTol;
+    LOG_DEBUG_S<<"Max Distance "<<tree->max_distance;*/
     return clusters;
 
   }
@@ -355,7 +353,7 @@ namespace pointcloud_obstacle_detection{
       }
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "euclideanClustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
+      LOG_DEBUG_S << "euclideanClustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
 
       return clusters;
   }
@@ -385,7 +383,7 @@ namespace pointcloud_obstacle_detection{
       }
       auto endTime = std::chrono::steady_clock::now();
       auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-      LOG_INFO_S << "euclideanClustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
+      LOG_DEBUG_S << "euclideanClustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters";
 
       return clusters;
   }
@@ -424,7 +422,7 @@ namespace pointcloud_obstacle_detection{
   void ProcessPointCloud::savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file)
   {
       pcl::io::savePCDFileASCII (file, *cloud);
-      LOG_INFO_S << "Saved " << cloud->points.size () << " data points to "+file;
+      LOG_DEBUG_S << "Saved " << cloud->points.size () << " data points to "+file;
   }
   
   pcl::PointCloud<pcl::PointXYZ>::Ptr ProcessPointCloud::loadPcd(std::string file)
@@ -435,7 +433,7 @@ namespace pointcloud_obstacle_detection{
       {
           LOG_ERROR_S << "Couldn't read file: " << file;
       }
-      LOG_INFO_S << "Loaded " << cloud->points.size () << " data points from " << file;
+      LOG_DEBUG_S << "Loaded " << cloud->points.size () << " data points from " << file;
       return cloud;
   }
 
