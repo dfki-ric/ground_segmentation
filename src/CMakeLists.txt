@@ -2,15 +2,11 @@ find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visua
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(base_types REQUIRED IMPORTED_TARGET base-types)
-
 set(SOURCES ground_detection.cpp process_pointcloud.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    PkgConfig::base_types
     Boost::system
     Boost::filesystem
     Boost::serialization
@@ -42,11 +38,10 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
 # Export the library interface
 install(EXPORT ${PROJECT_NAME}-targets
         NAMESPACE ${PROJECT_NAME}::
-	DESTINATION cmake/${PROJECT_NAME}
+	    DESTINATION cmake/${PROJECT_NAME}
 )
 
 set(PKG_CONFIG_DEPS
-    base-types
     pcl_io-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
     pcl_common-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
     pcl_filters-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
