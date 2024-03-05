@@ -17,7 +17,7 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
-                 Index3D idx;
+                Index3D idx;
                 idx.x = dx;
                 idx.y = dy;
                 idx.z = dz;

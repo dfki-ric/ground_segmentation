@@ -78,7 +78,10 @@ struct GridCell {
 
 struct Index3D {
     Index3D(int x, int y, int z): x(x), y(y), z(z) {}
-    Index3D(){x = NAN; y = NAN; z= NAN;}
+    Index3D(){
+        x = std::numeric_limits<int>::min(); 
+        y = std::numeric_limits<int>::min(); 
+        z = std::numeric_limits<int>::min();}
     int x, y, z;
 };
 

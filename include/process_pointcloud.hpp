@@ -20,11 +20,12 @@
 #include <ctime>
 #include <chrono>
 #include <unordered_set>
-#include <base-logging/Logging.hpp>
-#include <base/samples/OrientedBoundingBox.hpp>
-#include <base/samples/Pointcloud.hpp>
 
 namespace pointcloud_obstacle_detection {
+
+typedef pcl::PointCloud<pcl::PointXYZ>::Ptr CloudXYZ;
+typedef std::pair< CloudXYZ, CloudXYZ>      CloudPair;
+typedef std::vector< CloudXYZ>              CloudVector;
 
 // Structure to represent node of kd tree
 struct Node
@@ -76,7 +77,7 @@ struct KdTree_euclidean
 	 * This function shall loop through each of the cloud points
 	 * and call inserthelper function for each point
 	 * */
-	void insert_cloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+	void insert_cloud( CloudXYZ cloud)
 	{
 		for(uint index = 0; index < cloud->points.size(); index++)
 		{
@@ -150,30 +151,48 @@ public:
     //deconstructor
     ~ProcessPointCloud();
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr FilterCloud( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint);
+    CloudXYZ FilterCloud(CloudXYZ cloud, 
+						 bool downSampleInputCloud, 
+						 float filterRes, 
+						 Eigen::Vector4f minPoint, 
+						 Eigen::Vector4f maxPoint);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SeparateClouds(pcl::PointIndices::Ptr inliers,  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    CloudPair SeparateClouds(pcl::PointIndices::Ptr inliers,  
+									CloudXYZ cloud);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SegmentPlane( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold);
+    CloudPair SegmentPlane(CloudXYZ cloud, 
+								  int maxIterations, 
+								  float distanceThreshold);
 
-    std::pair< pcl::PointCloud<pcl::PointXYZ>::Ptr,  pcl::PointCloud<pcl::PointXYZ>::Ptr> SegmentPlane_RANSAC( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceThreshold);
+    CloudPair SegmentPlane_RANSAC(CloudXYZ cloud, 
+										 int maxIterations, 
+										 float distanceThreshold);
 
-    std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    CloudVector Clustering(CloudXYZ cloud, 
+						   float clusterTolerance, 
+						   int minSize, int maxSize);
 
-    std::vector< pcl::PointCloud<pcl::PointXYZ>::Ptr> Clustering_euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    CloudVector Clustering_euclideanCluster(CloudXYZ cloud, 
+											float clusterTolerance, 
+											int minSize, 
+											int maxSize);
 
-    std::vector<base::samples::Pointcloud> Clustering_euclideanCluster_Base( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    std::vector<std::vector<int>> euclideanCluster(CloudXYZ cloud,  
+	                                               KdTree_euclidean* tree, 
+												   float distanceTol, 
+												   int minSize, 
+												   int maxSize);
 
+	void Proximity(CloudXYZ cloud,
+	               std::vector<int> &cluster,
+				   std::vector<bool> &processed_f,
+				   int idx, 
+				   KdTree_euclidean* tree,
+				   float distanceTol, int maxSize);
 
-    std::vector<std::vector<int>> euclideanCluster( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,  KdTree_euclidean* tree, float distanceTol, int minSize, int maxSize);
+    void savePcd( CloudXYZ cloud, std::string file);
 
-	void Proximity( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,std::vector<int> &cluster,std::vector<bool> &processed_f,int idx, KdTree_euclidean* tree,float distanceTol, int maxSize);
-
-	base::samples::OrientedBoundingBox OrientedBoundingBox( pcl::PointCloud<pcl::PointXYZ>::Ptr cluster, const base::Time& ts);
-
-    void savePcd( pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string file);
-
-    pcl::PointCloud<pcl::PointXYZ>::Ptr loadPcd(std::string file);
+    CloudXYZ loadPcd(std::string file);
 
 };
 } //namespace pointcloud_obstacle_detection
