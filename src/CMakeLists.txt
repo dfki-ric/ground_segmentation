@@ -38,7 +38,7 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
 # Export the library interface
 install(EXPORT ${PROJECT_NAME}-targets
         NAMESPACE ${PROJECT_NAME}::
-	    DESTINATION cmake/${PROJECT_NAME}
+	    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 set(PKG_CONFIG_DEPS

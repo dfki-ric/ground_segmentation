@@ -269,7 +269,7 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 id.y = cell.col;
                 id.z = cell.height;
 
-                if (cell.points->size() <= 1){
+                if (cell.points->size() <= 2){
                     cell.terrain_type = TerrainType::UNDEFINED;
                     undefined_cells.push_back(id);
                     continue;

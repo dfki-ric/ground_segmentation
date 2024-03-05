@@ -15,6 +15,7 @@
 #include <vector>
 #include <cmath>
 #include <map>
+#include <queue>
 
 namespace pointcloud_obstacle_detection{
 
@@ -99,12 +100,12 @@ struct GridConfig{
 
     GridConfig(){
         radialCellSize = 2;
-        angularCellSize = 0.785398;
-        cellSizeZ = 1;
-        startCellDistanceThreshold = 5; // meters
+        angularCellSize = 0.349066;
+        cellSizeZ = 0.5;
+        startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
-        groundInlierThreshold = 0.2; // meters
-        neighborsRadius = 1;
+        groundInlierThreshold = 0.05; // meters
+        neighborsRadius = 3;
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;

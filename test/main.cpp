@@ -23,7 +23,7 @@ int main (int argc, char** argv)
     if (argc != 2)
         return (0);
     
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ> ());
+    CloudXYZ cloud (new pcl::PointCloud<pcl::PointXYZ> ());
 
     pcl::PLYReader PLYFileReader;
     const int offset=0;
@@ -53,7 +53,7 @@ int main (int argc, char** argv)
     ground_detection->setInputCloud(cloud, R_robot2World);
 
     std::cout <<"Segmenting points " << std::endl;
-    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> result = ground_detection->segmentPoints();
+    std::pair<CloudXYZ,CloudXYZ> result = ground_detection->segmentPoints();
     std::map<int, std::map<int, std::map<int, GridCell>>>& gridCells = ground_detection->getGridCells();
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
