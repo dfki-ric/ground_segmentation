@@ -41,9 +41,21 @@ void PointCloudGrid::addPoint(const pcl::PointXYZ& point) {
     Eigen::Vector3d radial_vector(point.x,point.y,point.z);
     double radial_angle = std::atan2(point.y, point.x);
 
-    int row = static_cast<int>(std::floor(radial_vector.norm() / grid_config.radialCellSize));
-    int col = static_cast<int>(std::floor(radial_angle / grid_config.angularCellSize));
-    int height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    int row = 0;
+    int col = 0;
+    int height = 0;
+
+    if (grid_config.grid_type == GridType::POLAR){
+        row = static_cast<int>(std::floor(radial_vector.norm() / grid_config.radialCellSize));
+        col = static_cast<int>(std::floor(radial_angle / grid_config.angularCellSize));
+        height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    }
+    else 
+    if (grid_config.grid_type == GridType::SQUARE){
+        row = static_cast<int>(std::floor(point.x / grid_config.cellSizeX));
+        col = static_cast<int>(std::floor(point.y / grid_config.cellSizeY));
+        height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    }
 
     gridCells[row][col][height].row = row;
     gridCells[row][col][height].col = col;
@@ -287,12 +299,9 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 
                     Eigen::Vector4f variance = squared_diff_sum / cell.points->size();
 
-                    if (variance[0] > variance[2] || variance[1] > variance[2]){
-                        cell.terrain_type = TerrainType::GROUND;
-                    }
-                    else{
+                    if (variance[0] < variance[2] && variance[1] < variance[2]){
                         cell.terrain_type = TerrainType::OBSTACLE;
-                        non_ground_cells.push_back(id);
+                        non_ground_cells.push_back(id);                    
                     }
                     continue;
                 }

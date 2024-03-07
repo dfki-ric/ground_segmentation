@@ -31,6 +31,13 @@ enum TerrainType {
     OBSTACLE
 };
 
+enum GridType {
+    SQUARE,
+    POLAR,
+    HEXAGONAL
+};
+
+
 struct GridCell {
     int row;
     int col;
@@ -89,6 +96,8 @@ struct Index3D {
 struct GridConfig{
     double radialCellSize; // meters
     double angularCellSize; // meters
+    double cellSizeX; // meters
+    double cellSizeY; // meters
     double cellSizeZ; // meters
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
@@ -97,11 +106,14 @@ struct GridConfig{
     int neighborsRadius;
     int minPoints;
     int ransac_iterations;
+    GridType grid_type;
 
     GridConfig(){
         radialCellSize = 2;
         angularCellSize = 0.349066;
-        cellSizeZ = 0.5;
+        cellSizeX = 1;
+        cellSizeY = 1;
+        cellSizeZ = 0.3;
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.05; // meters
@@ -109,6 +121,7 @@ struct GridConfig{
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;
+        grid_type = GridType::SQUARE;
     }
 };
 
