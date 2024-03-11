@@ -17,6 +17,16 @@
 //using namespace std::chrono_literals;
 using namespace pointcloud_obstacle_detection;
 
+// Function to extract the file extension from a given filename
+std::string getFileExtension(const std::string& filename) {
+    size_t lastDotPos = filename.find_last_of(".");
+    if (lastDotPos != std::string::npos) {
+        return filename.substr(lastDotPos + 1);
+    }
+    // Return an empty string if there is no extension
+    return "";
+}
+
 
 int main (int argc, char** argv)
 {
@@ -25,23 +35,38 @@ int main (int argc, char** argv)
     
     CloudXYZ cloud (new pcl::PointCloud<pcl::PointXYZ> ());
 
-    pcl::PLYReader PLYFileReader;
-    const int offset=0;
-    PLYFileReader.read<pcl::PointXYZ>(argv[1],*cloud,offset);
+    std::string ext = getFileExtension(argv[1]);
+
+    if (ext == "ply"){
+        pcl::PLYReader PLYFileReader;
+        const int offset=0;
+        PLYFileReader.read<pcl::PointXYZ>(argv[1],*cloud,offset);
+    }
+    else
+    if (ext == "pcd"){
+        if (pcl::io::loadPCDFile<pcl::PointXYZ> (argv[1], *cloud) == -1) //* load the file
+        {
+            std::cerr << "Couldn't read file: " << argv[1] << std::endl;
+            return 0;
+        }
+    }
 
     GridConfig config;
 
-    config.radialCellSize = 3;
-    config.angularCellSize = 0.785398;
+    //config.radialCellSize = 1;
+    //config.angularCellSize = 0.3;
+    config.cellSizeX = 1;
+    config.cellSizeY = 1;
     config.cellSizeZ = 1;
 
     config.neighborsRadius = 1;
 
-    config.startCellDistanceThreshold = 20;
-    config.slopeThresholdDegrees = 3;
+    config.startCellDistanceThreshold = 5;
+    config.slopeThresholdDegrees = 30;
     config.groundInlierThreshold = 0.1;
     config.returnGroundPoints = true;
     config.minPoints = 5;
+    config.grid_type = GridType::SQUARE;
 
 
     PointCloudGrid* ground_detection = new PointCloudGrid(config);
@@ -54,6 +79,17 @@ int main (int argc, char** argv)
 
     std::cout <<"Segmenting points " << std::endl;
     std::pair<CloudXYZ,CloudXYZ> result = ground_detection->segmentPoints();
+
+    pcl::visualization::PCLVisualizer::Ptr viewer2 (new pcl::visualization::PCLVisualizer ("3D Viewer 2"));
+    viewer2->setBackgroundColor (0, 0, 0);
+    viewer2->addCoordinateSystem (1.0);
+    viewer2->initCameraParameters ();
+
+    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> ground(result.first, 0, 255, 0);
+    viewer2->addPointCloud<pcl::PointXYZ>(result.first, ground, "ground");
+    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> obstacle(result.second, 255, 0, 0);
+    viewer2->addPointCloud<pcl::PointXYZ>(result.second, obstacle, "obstacle");
+
     std::map<int, std::map<int, std::map<int, GridCell>>>& gridCells = ground_detection->getGridCells();
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
@@ -62,8 +98,7 @@ int main (int argc, char** argv)
     viewer->initCameraParameters ();
 
     int count{0};
-
-
+    bool show_grid{true};
     for (auto& rowPair : gridCells) {
         for (auto& colPair : rowPair.second) {
             for (auto& heightPair : colPair.second) {
@@ -71,28 +106,29 @@ int main (int argc, char** argv)
 
                 if (cell.points->size() == 0) continue;
 
-                uint8_t r = rand() % 256;
-                uint8_t g = rand() % 256;
-                uint8_t b = rand() % 256;
+                uint8_t r,g,b;
+
+                if (show_grid){
+                    r = rand() % 256;
+                    g = rand() % 256;
+                    b = rand() % 256;
+                }
+                else{
+                    if (cell.terrain_type == TerrainType::GROUND){
+                        r = 0; g = 255 ; b = 0;
+                    }
+                    else if (cell.terrain_type == TerrainType::OBSTACLE){
+                        r = 255; g = 0 ; b = 0;
+                    }
+
+                }
 
                 pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color(cell.points, r, g, b);
                 viewer->addPointCloud<pcl::PointXYZ>(cell.points, color, std::to_string(count));
                 viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, std::to_string(count++)); 
 
-                // Compute centroid of the point cloud
-                Eigen::Vector4f centroid;
-                pcl::compute3DCentroid(*cell.points, centroid);
-
-                // Compute the covariance matrix
-                Eigen::Matrix3f covariance_matrix;
-                pcl::computeCovarianceMatrixNormalized(*cell.points, centroid, covariance_matrix);
-
-                // Compute eigenvectors and eigenvalues
-                Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
-                Eigen::Matrix3f eigenvectors = eigen_solver.eigenvectors();
-
-                // Normal is the eigenvector corresponding to the smallest eigenvalue
-                Eigen::Vector3f normal = eigenvectors.col(0);
+                Eigen::Vector4d centroid = cell.centroid;
+                Eigen::Vector3d normal = cell.normal;
 
                 // Ensure all normals point upward
                 if (normal(2) < 0) {
@@ -114,6 +150,7 @@ int main (int argc, char** argv)
     while (!viewer->wasStopped ())
     {
         viewer->spinOnce(100);
+        viewer2->spinOnce(100);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
