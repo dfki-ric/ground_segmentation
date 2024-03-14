@@ -196,31 +196,10 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
     seg.setDistanceThreshold(threshold); // Adjust this threshold based on your needs
     seg.segment(*inliers, *coefficients);
     cell.inliers = inliers;
-    pcl::compute3DCentroid(*(cell.points), cell.centroid);
-
     if (cell.inliers->indices.size() == 0){
         return false;
     }
-
-    // Compute the covariance matrix
-    Eigen::Matrix3d covariance_matrix;
-    pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
-
-    // Compute eigenvectors and eigenvalues
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
-    Eigen::Matrix3d eigenvectors = eigen_solver.eigenvectors();
-
-    // Normal is the eigenvector corresponding to the smallest eigenvalue
-    Eigen::Vector3d normal = eigenvectors.col(0);
-
-    // Ensure all normals point upward
-    if (normal(2) < 0) {
-        normal *= -1; // flip the normal direction
-    }
-
     Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
-    normal.normalize();
-    cell.normal = normal;
     double distToOrigin = coefficients->values[3];
     cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
     //const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
@@ -286,6 +265,45 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                     undefined_cells.push_back(id);
                     continue;
                 }
+
+                pcl::compute3DCentroid(*(cell.points), cell.centroid);
+                // Compute the covariance matrix
+                Eigen::Matrix3d covariance_matrix;
+                pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
+
+                // Compute eigenvectors and eigenvalues
+                Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
+                Eigen::Matrix3d eigenvectors = eigen_solver.eigenvectors();
+                Eigen::Vector3d eigenvalues = eigen_solver.eigenvalues();
+
+                // Compute the ratio of eigenvalues to determine point distribution
+                double ratio = eigenvalues[2] / eigenvalues.sum();
+
+                std::cout << ratio << std::endl;
+
+                if (ratio > 0.80){
+                    //The points form a line
+                    continue;
+                } 
+                else 
+                if (ratio > 0.4){
+                    //The points form a plane
+                } 
+                else{
+                    //The points are noise
+                    continue;
+                }
+
+                // Normal is the eigenvector corresponding to the smallest eigenvalue
+                Eigen::Vector3d normal = eigenvectors.col(0);
+
+                // Ensure all normals point upward
+                if (normal(2) < 0) {
+                    normal *= -1; // flip the normal direction
+                }
+
+                normal.normalize();
+                cell.normal = normal;
 
                 if (cell.points->size() <= grid_config.minPoints) {
                     Eigen::Vector4f centroid;
