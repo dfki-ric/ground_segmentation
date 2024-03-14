@@ -17,7 +17,7 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
-                 Index3D idx;
+                Index3D idx;
                 idx.x = dx;
                 idx.y = dy;
                 idx.z = dz;
@@ -41,9 +41,21 @@ void PointCloudGrid::addPoint(const pcl::PointXYZ& point) {
     Eigen::Vector3d radial_vector(point.x,point.y,point.z);
     double radial_angle = std::atan2(point.y, point.x);
 
-    int row = static_cast<int>(std::floor(radial_vector.norm() / grid_config.radialCellSize));
-    int col = static_cast<int>(std::floor(radial_angle / grid_config.angularCellSize));
-    int height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    int row = 0;
+    int col = 0;
+    int height = 0;
+
+    if (grid_config.grid_type == GridType::POLAR){
+        row = static_cast<int>(std::floor(radial_vector.norm() / grid_config.radialCellSize));
+        col = static_cast<int>(std::floor(radial_angle / grid_config.angularCellSize));
+        height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    }
+    else 
+    if (grid_config.grid_type == GridType::SQUARE){
+        row = static_cast<int>(std::floor(point.x / grid_config.cellSizeX));
+        col = static_cast<int>(std::floor(point.y / grid_config.cellSizeY));
+        height = static_cast<int>(std::floor(point.z / grid_config.cellSizeZ));
+    }
 
     gridCells[row][col][height].row = row;
     gridCells[row][col][height].col = col;
@@ -184,31 +196,10 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
     seg.setDistanceThreshold(threshold); // Adjust this threshold based on your needs
     seg.segment(*inliers, *coefficients);
     cell.inliers = inliers;
-    pcl::compute3DCentroid(*(cell.points), cell.centroid);
-
     if (cell.inliers->indices.size() == 0){
         return false;
     }
-
-    // Compute the covariance matrix
-    Eigen::Matrix3d covariance_matrix;
-    pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
-
-    // Compute eigenvectors and eigenvalues
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
-    Eigen::Matrix3d eigenvectors = eigen_solver.eigenvectors();
-
-    // Normal is the eigenvector corresponding to the smallest eigenvalue
-    Eigen::Vector3d normal = eigenvectors.col(0);
-
-    // Ensure all normals point upward
-    if (normal(2) < 0) {
-        normal *= -1; // flip the normal direction
-    }
-
     Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
-    normal.normalize();
-    cell.normal = normal;
     double distToOrigin = coefficients->values[3];
     cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
     //const Eigen::Vector3d slopeDir = computeSlopeDirection(cell.plane);
@@ -269,11 +260,50 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 id.y = cell.col;
                 id.z = cell.height;
 
-                if (cell.points->size() <= 1){
+                if (cell.points->size() <= 2){
                     cell.terrain_type = TerrainType::UNDEFINED;
                     undefined_cells.push_back(id);
                     continue;
                 }
+
+                pcl::compute3DCentroid(*(cell.points), cell.centroid);
+                // Compute the covariance matrix
+                Eigen::Matrix3d covariance_matrix;
+                pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
+
+                // Compute eigenvectors and eigenvalues
+                Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
+                Eigen::Matrix3d eigenvectors = eigen_solver.eigenvectors();
+                Eigen::Vector3d eigenvalues = eigen_solver.eigenvalues();
+
+                // Compute the ratio of eigenvalues to determine point distribution
+                double ratio = eigenvalues[2] / eigenvalues.sum();
+
+                std::cout << ratio << std::endl;
+
+                if (ratio > 0.80){
+                    //The points form a line
+                    continue;
+                } 
+                else 
+                if (ratio > 0.4){
+                    //The points form a plane
+                } 
+                else{
+                    //The points are noise
+                    continue;
+                }
+
+                // Normal is the eigenvector corresponding to the smallest eigenvalue
+                Eigen::Vector3d normal = eigenvectors.col(0);
+
+                // Ensure all normals point upward
+                if (normal(2) < 0) {
+                    normal *= -1; // flip the normal direction
+                }
+
+                normal.normalize();
+                cell.normal = normal;
 
                 if (cell.points->size() <= grid_config.minPoints) {
                     Eigen::Vector4f centroid;
@@ -287,12 +317,9 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 
                     Eigen::Vector4f variance = squared_diff_sum / cell.points->size();
 
-                    if (variance[0] > variance[2] || variance[1] > variance[2]){
-                        cell.terrain_type = TerrainType::GROUND;
-                    }
-                    else{
+                    if (variance[0] < variance[2] && variance[1] < variance[2]){
                         cell.terrain_type = TerrainType::OBSTACLE;
-                        non_ground_cells.push_back(id);
+                        non_ground_cells.push_back(id);                    
                     }
                     continue;
                 }

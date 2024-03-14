@@ -15,6 +15,7 @@
 #include <vector>
 #include <cmath>
 #include <map>
+#include <queue>
 
 namespace pointcloud_obstacle_detection{
 
@@ -29,6 +30,13 @@ enum TerrainType {
     GROUND,
     OBSTACLE
 };
+
+enum GridType {
+    SQUARE,
+    POLAR,
+    HEXAGONAL
+};
+
 
 struct GridCell {
     int row;
@@ -78,13 +86,18 @@ struct GridCell {
 
 struct Index3D {
     Index3D(int x, int y, int z): x(x), y(y), z(z) {}
-    Index3D(){x = NAN; y = NAN; z= NAN;}
+    Index3D(){
+        x = std::numeric_limits<int>::min(); 
+        y = std::numeric_limits<int>::min(); 
+        z = std::numeric_limits<int>::min();}
     int x, y, z;
 };
 
 struct GridConfig{
     double radialCellSize; // meters
     double angularCellSize; // meters
+    double cellSizeX; // meters
+    double cellSizeY; // meters
     double cellSizeZ; // meters
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
@@ -93,18 +106,22 @@ struct GridConfig{
     int neighborsRadius;
     int minPoints;
     int ransac_iterations;
+    GridType grid_type;
 
     GridConfig(){
         radialCellSize = 2;
-        angularCellSize = 0.785398;
-        cellSizeZ = 1;
-        startCellDistanceThreshold = 5; // meters
+        angularCellSize = 0.349066;
+        cellSizeX = 1;
+        cellSizeY = 1;
+        cellSizeZ = 0.3;
+        startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
-        groundInlierThreshold = 0.2; // meters
-        neighborsRadius = 1;
+        groundInlierThreshold = 0.05; // meters
+        neighborsRadius = 3;
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;
+        grid_type = GridType::SQUARE;
     }
 };
 
