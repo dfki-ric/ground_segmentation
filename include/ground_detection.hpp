@@ -27,6 +27,7 @@ struct Point {
 
 enum TerrainType {
     UNDEFINED,
+    UNKNOWN,
     GROUND,
     OBSTACLE
 };
@@ -49,7 +50,8 @@ struct GridCell {
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
     pcl::PointIndices::Ptr inliers;
-
+    Eigen::Matrix3d eigenvectors;
+    Eigen::Vector3d eigenvalues;
     /** The points in the Grid Cell */
     pcl::PointCloud<pcl::PointXYZ>::Ptr points;
     pcl::PointCloud<pcl::PointXYZ>::Ptr inlier_pts;
@@ -103,9 +105,9 @@ struct GridConfig{
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
     bool returnGroundPoints;
-    int neighborsRadius;
-    int minPoints;
-    int ransac_iterations;
+    uint16_t neighborsRadius;
+    uint16_t minPoints;
+    uint16_t ransac_iterations;
     GridType grid_type;
 
     GridConfig(){
@@ -137,6 +139,8 @@ public:
 
 private:
 
+    std::vector<Index3D> generateIndices(const uint16_t& radius);
+    void cleanUp();
     void addPoint(const pcl::PointXYZ& point);
     std::vector<Index3D> getGroundCells();
     std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices);
@@ -160,6 +164,7 @@ private:
     std::vector<Index3D> ground_cells;
     std::vector<Index3D> non_ground_cells;
     std::vector<Index3D> undefined_cells;
+    std::vector<Index3D> unknown_cells;
     std::vector<Index3D> selected_cells_first_quadrant;
     std::vector<Index3D> selected_cells_second_quadrant;
     std::vector<Index3D> selected_cells_third_quadrant;
@@ -167,7 +172,7 @@ private:
     Eigen::Quaterniond orientation;
     GridCell robot_cell;
     ProcessPointCloud processor;
-    unsigned int total_ground_cells;
+    uint32_t total_ground_cells;
     GroundDetectionStatistics statistics;
 };
 
