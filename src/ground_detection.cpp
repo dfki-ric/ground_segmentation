@@ -75,9 +75,9 @@ void PointCloudGrid::addPoint(const pcl::PointXYZ& point) {
         cell_z = point.z / grid_config.cellSizeZ;
     }
 
-    if(cell_x <= -grid_config.maxX && cell_x > grid_config.maxX ||
-       cell_y <= -grid_config.maxY && cell_y > grid_config.maxY ||
-       cell_z <= -grid_config.maxZ && cell_z > grid_config.maxZ){
+    if((cell_x <= -grid_config.maxX || cell_x > grid_config.maxX) ||
+       (cell_y <= -grid_config.maxY || cell_y > grid_config.maxY) ||
+       (cell_z <= -grid_config.maxZ || cell_z > grid_config.maxZ)){
         return;
     }
 
@@ -426,7 +426,8 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                 continue;
             }
 
-            if (neighbor.terrain_type == TerrainType::UNKNOWN){
+            if (neighbor.terrain_type == TerrainType::UNKNOWN &&
+                neighbor.primitive_type == PrimitiveType::LINE){
                 //Found a way to an unknown patch
                 //Make the patch ground
                 neighbor.terrain_type = TerrainType::GROUND;
