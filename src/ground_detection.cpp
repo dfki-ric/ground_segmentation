@@ -295,11 +295,28 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 cell.eigenvalues = eigen_solver.eigenvalues();
                 // Compute the ratio of eigenvalues to determine point distribution
                 double ratio = cell.eigenvalues[2] / cell.eigenvalues.sum();
-                if (ratio > 0.80){
-                    //The points form a line
-                    cell.terrain_type = TerrainType::UNKNOWN;    
+                if (ratio > 0.80){ 
+                    //The points form a line  
                     cell.primitive_type = PrimitiveType::LINE; 
-                    unknown_cells.push_back(id);
+                    
+                    Eigen::Vector3d v = cell.eigenvectors.col(2);
+                    // Ensure all normals point upward
+                    if (v(2) < 0) {
+                        v *= -1; // flip the normal direction
+                    }
+                    v = orientation * v;
+                    v.normalize(); //just in case
+
+                    double angle_rad = acos(v.dot(Eigen::Vector3d::UnitZ()));
+
+                    if (angle_rad > ((90-grid_config.slopeThresholdDegrees) * (M_PI / 180))){
+                        cell.terrain_type = TerrainType::UNKNOWN;  
+                        unknown_cells.push_back(id);
+                    }
+                    else{
+                        cell.terrain_type = TerrainType::OBSTACLE;
+                        non_ground_cells.push_back(id);  
+                    }
                     continue;
                 } 
                 else 
