@@ -38,6 +38,11 @@ enum GridType {
     HEXAGONAL
 };
 
+enum PrimitiveType {
+    LINE,
+    PLANE,
+    NOISE
+};
 
 struct GridCell {
     int row;
@@ -47,6 +52,7 @@ struct GridCell {
     bool expanded;
     bool explored;
     TerrainType terrain_type;
+    PrimitiveType primitive_type;
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
     pcl::PointIndices::Ptr inliers;

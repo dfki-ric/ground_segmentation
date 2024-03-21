@@ -297,18 +297,21 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 double ratio = cell.eigenvalues[2] / cell.eigenvalues.sum();
                 if (ratio > 0.80){
                     //The points form a line
-                    cell.terrain_type = TerrainType::UNKNOWN;     
+                    cell.terrain_type = TerrainType::UNKNOWN;    
+                    cell.primitive_type = PrimitiveType::LINE; 
                     unknown_cells.push_back(id);
                     continue;
                 } 
                 else 
                 if (ratio > 0.4){
                     //The points form a plane
+                    cell.primitive_type = PrimitiveType::PLANE; 
                 } 
                 else{
                     //The points are not a plane
                     //Assumping it is an obstacle? Like plants etc.
                     cell.terrain_type = TerrainType::UNKNOWN;
+                    cell.primitive_type = PrimitiveType::NOISE; 
                     unknown_cells.push_back(id);
                     continue;
                 }
@@ -533,7 +536,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
     if (grid_config.returnGroundPoints){
         for (auto& id : ground_cells){
             GridCell& cell = gridCells[id.x][id.y][id.z];
-            if (cell.points->size() < grid_config.minPoints){
+            if (cell.points->size() < grid_config.minPoints || cell.primitive_type == PrimitiveType::LINE){
                 for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
                 {
                     ground_points->points.push_back(*it);
