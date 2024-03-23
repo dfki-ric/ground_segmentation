@@ -135,7 +135,7 @@ struct GridConfig{
         maxZ = 20;
 
         startCellDistanceThreshold = 20; // meters
-        slopeThresholdDegrees = 40; //degrees
+        slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.2; // meters
         neighborsRadius = 1;
         returnGroundPoints = true;
