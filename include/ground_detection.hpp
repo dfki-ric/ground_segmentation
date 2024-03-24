@@ -44,6 +44,12 @@ enum PrimitiveType {
     NOISE
 };
 
+enum Confidence {
+    HIGH,
+    MEDIUM,
+    LOW
+};
+
 struct GridCell {
     int row;
     int col;
@@ -53,6 +59,7 @@ struct GridCell {
     bool explored;
     TerrainType terrain_type;
     PrimitiveType primitive_type;
+    Confidence confidence;
     std::vector<GridCell> neighbors;
     Eigen::Vector4d centroid;
     pcl::PointIndices::Ptr inliers;
@@ -89,6 +96,7 @@ struct GridCell {
         z_height = 0.0;
         expanded = false;
         explored = false;
+        confidence = Confidence::LOW;
     }
 };
 
@@ -128,7 +136,7 @@ struct GridConfig{
 
         cellSizeX = 2;
         cellSizeY = 2;
-        cellSizeZ = 4;
+        cellSizeZ = 10;
 
         maxX = 50;
         maxY = 50;
@@ -161,7 +169,7 @@ private:
     void cleanUp();
     void addPoint(const pcl::PointXYZ& point);
     std::vector<Index3D> getGroundCells();
-    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices);
+    std::vector<Index3D> getNeighbors(const GridCell& cell, const TerrainType& type, const std::vector<Index3D>& indices, const double& radius);
     double computeGridDistance(const GridCell& cell1, const GridCell& cell2);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
@@ -177,9 +185,12 @@ private:
     std::vector<Index3D> explore(std::queue<Index3D> q);
 
     std::vector<Index3D> indices;
+    std::vector<Index3D> obs_indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     GridConfig grid_config;
+    std::vector<Index3D> initial_ground_cells;
     std::vector<Index3D> ground_cells;
+    std::vector<Index3D> actual_ground_cells;
     std::vector<Index3D> non_ground_cells;
     std::vector<Index3D> undefined_cells;
     std::vector<Index3D> unknown_cells;
