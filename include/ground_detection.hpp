@@ -140,15 +140,15 @@ struct GridConfig{
 
         maxX = 50;
         maxY = 50;
-        maxZ = 20;
+        maxZ = 50;
 
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
-        groundInlierThreshold = 0.2; // meters
+        groundInlierThreshold = 0.1; // meters
         neighborsRadius = 1;
         returnGroundPoints = true;
         minPoints = 5;
-        ransac_iterations = 1000;
+        ransac_iterations = 50;
         grid_type = GridType::SQUARE;
     }
 };
