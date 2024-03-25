@@ -68,7 +68,6 @@ GroundDetectionStatistics& PointCloudGrid::getStatistics(){
 
 void PointCloudGrid::cleanUp(){
     ground_cells.clear();
-    initial_ground_cells.clear();
     non_ground_cells.clear();
     undefined_cells.clear();
     unknown_cells.clear();
@@ -251,7 +250,7 @@ bool PointCloudGrid::fitGroundPlane(GridCell& cell, const double& threshold){
     if (cell.inliers->indices.size() == 0){
         return false;
     }
-    else
+
     if (cell.inliers->indices.size() / cell.points->size() > 0.95){
         cell.confidence = Confidence::HIGH;
     }
@@ -372,13 +371,11 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
                 normal.normalize();
                 cell.normal = normal;
 
-                if (cell.points->size() <= grid_config.minPoints) {
-                    Eigen::Vector4f centroid;
-                    pcl::compute3DCentroid(*(cell.points), centroid);
+                if (cell.points->size() <= grid_config.minPoints){
                     Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
 
                     for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
-                        Eigen::Vector4f diff = (*it).getVector4fMap() - centroid;
+                        Eigen::Vector4f diff = (*it).getVector4fMap() - cell.centroid.cast<float>();
                         squared_diff_sum += diff.array().square().matrix();                     
                     }
 
@@ -405,7 +402,6 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 
                 if (cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
                     cell.terrain_type = TerrainType::GROUND;
-                    initial_ground_cells.push_back(id);
                     total_ground_cells += 1;
                     selectStartCell(cell);
                 }
@@ -771,18 +767,6 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                 }
             }
         }
-        
-        /*
-        for (const auto& id : initial_ground_cells){
-            GridCell& cell = gridCells[id.x][id.y][id.z];
-            if (!cell.expanded){
-                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-                {
-                    non_ground_points->points.push_back(*it);
-                }
-            }
-        }
-        */
 
         statistics.clear();
         statistics.ground_cells = ground_cells.size();

@@ -188,9 +188,7 @@ private:
     std::vector<Index3D> obs_indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     GridConfig grid_config;
-    std::vector<Index3D> initial_ground_cells;
     std::vector<Index3D> ground_cells;
-    std::vector<Index3D> actual_ground_cells;
     std::vector<Index3D> non_ground_cells;
     std::vector<Index3D> undefined_cells;
     std::vector<Index3D> unknown_cells;
