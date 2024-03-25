@@ -222,7 +222,7 @@ Index3D PointCloudGrid::cellClosestToMeanHeight(const std::vector<Index3D>& ids,
         const GridCell& cell = gridCells[id.x][id.y][id.z];
 
         double height_difference = std::abs(cell.height - mean_height);
-        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 1).size();
+        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 3).size();
 
         if (height_difference <= min_height_difference) {
             if (neighbor_count >= max_ground_neighbors){
@@ -279,13 +279,13 @@ void PointCloudGrid::selectStartCell(GridCell& cell){
         if (cell.row >= 0 && cell.col > 0){
             selected_cells_first_quadrant.push_back(id);
         }
-        else if (cell.row >= 0 && cell.col < 0){
+        else if (cell.row <= 0 && cell.col > 0){
             selected_cells_second_quadrant.push_back(id);
         }
         else if (cell.row <= 0 && cell.col < 0){
             selected_cells_third_quadrant.push_back(id);
         }
-        else if (cell.row >= 0 && cell.col > 0) {
+        else if (cell.row >= 0 && cell.col < 0) {
             selected_cells_fourth_quadrant.push_back(id);
         }
     }
@@ -568,7 +568,7 @@ std::pair<size_t,pcl::PointXYZ> PointCloudGrid::findLowestPoint(const GridCell& 
     return std::make_pair(min_point_index, min_point);
 }
 
-std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> PointCloudGrid::segmentPoints() {
+std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Ptr> PointCloudGrid::segmentPoints(){
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr ground_points(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::PointCloud<pcl::PointXYZ>::Ptr ground_inliers(new pcl::PointCloud<pcl::PointXYZ>());
@@ -643,8 +643,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                 }
             }
 
-            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it)
-            {
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it){
                 ground_points->points.push_back(*it);
             }
         }
