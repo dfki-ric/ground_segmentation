@@ -505,7 +505,8 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                         count++;
                     }
                 }
-                if ((count / neighbor.points->size()) < 0.1){continue;}
+                //TODO: Magic parameter needs to be added to the config
+                if ((count / neighbor.points->size()) < 0.6){continue;}
             }
 
             if (neighbor.terrain_type == TerrainType::GROUND ){
