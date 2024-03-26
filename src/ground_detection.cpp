@@ -469,7 +469,8 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
             }
 
             if (neighbor.terrain_type == TerrainType::UNKNOWN &&
-                neighbor.primitive_type == PrimitiveType::LINE){
+                (neighbor.primitive_type == PrimitiveType::LINE ||
+                neighbor.primitive_type == PrimitiveType::PLANE)){
                 //Found a way to an unknown patch
                 //Make the patch ground
                 neighbor.terrain_type = TerrainType::GROUND;
