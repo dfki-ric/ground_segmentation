@@ -12,11 +12,9 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
     
     indices = generateIndices(grid_config.neighborsRadius);
 
-    int radius = 1;
-
-    for (int dx = -radius; dx <= radius; ++dx) {
-       for (int dy = -radius; dy <= radius; ++dy) {
-            for (int dz = -radius; dz <= 0; ++dz) {
+    for (int dx = -1; dx <= 1; ++dx) {
+       for (int dy = -1; dy <= 1; ++dy) {
+            for (int dz = -1; dz <= 0; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
@@ -28,8 +26,6 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
             }
        }
     }
-
-
 }
 
 std::vector<Index3D> PointCloudGrid::generateIndices(const uint16_t& radius){
@@ -37,23 +33,18 @@ std::vector<Index3D> PointCloudGrid::generateIndices(const uint16_t& radius){
 
     for (int dx = -radius; dx <= radius; ++dx) {
         for (int dy = -radius; dy <= radius; ++dy) {
-            if (dx == 0 && dy == 0){
-                continue;
+            for (int dz = -radius; dz <= radius; ++dz) {
+                if (dx == 0 && dy == 0 && dz == 0){
+                    continue;
+                }
+                Index3D idx;
+                idx.x = dx;
+                idx.y = dy;
+                idx.z = dz;
+                idxs.push_back(idx);
             }
-            Index3D idx;
-            idx.x = dx;
-            idx.y = dy;
-            idx.z = 0;
-            idxs.push_back(idx);
         }
     }
-    //Index3D idx_up;
-    //idx_up.x = 0;
-    //idx_up.y = 0;
-    //idx_up.z = 1;
-
-    //idxs.push_back(idx_up);
-
     return idxs;    
 }
 
@@ -443,6 +434,11 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 }
 
 std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
+    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+    size_t nearest_index{0};
+    std::vector<int> point_indices(1);
+    std::vector<float> point_distances(1);
+
     std::vector<Index3D> result;
     int count{0};
     while (!q.empty()){
@@ -476,7 +472,43 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                 neighbor.terrain_type = TerrainType::GROUND;
             }
 
-            if (neighbor.terrain_type == TerrainType::GROUND){
+            if (indices[i].z !=0 && grid_config.processing_phase == 2){
+
+                Eigen::Vector3d ground_normal;
+                if (current_cell.normal.isApprox(Eigen::Vector3d::Zero())){
+                    ground_normal = current_cell.eigenvectors.col(0);
+                }
+                else{
+                    ground_normal = current_cell.normal;
+                }
+
+                uint16_t count = 0;
+                
+                kdtree.setInputCloud(current_cell.points);
+                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it){
+                    Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+                    pcl::PointXYZ search_point;
+                    search_point.x = it->x;
+                    search_point.y = it->y;
+                    search_point.z = it->z;
+
+                    if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
+                        nearest_index = point_indices[0];
+                    }
+                    Eigen::Vector3d ground_point(current_cell.points->points.at(nearest_index).x,
+                                                    current_cell.points->points.at(nearest_index).y,
+                                                    current_cell.points->points.at(nearest_index).z);
+
+                    double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+
+                    if (distance < grid_config.groundInlierThreshold){
+                        count++;
+                    }
+                }
+                if ((count / neighbor.points->size()) < 0.1){continue;}
+            }
+
+            if (neighbor.terrain_type == TerrainType::GROUND ){
                 Index3D n;
                 n.x = neighbor.row;
                 n.y = neighbor.col;

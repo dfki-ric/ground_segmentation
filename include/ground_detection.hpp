@@ -130,6 +130,8 @@ struct GridConfig{
     uint16_t ransac_iterations;
     GridType grid_type;
 
+    uint16_t processing_phase;
+
     GridConfig(){
         radialCellSize = 2;
         angularCellSize = 0.349066;
@@ -138,9 +140,9 @@ struct GridConfig{
         cellSizeY = 2;
         cellSizeZ = 10;
 
-        maxX = 50;
-        maxY = 50;
-        maxZ = 50;
+        maxX = 100;
+        maxY = 100;
+        maxZ = 100;
 
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
@@ -150,6 +152,8 @@ struct GridConfig{
         minPoints = 5;
         ransac_iterations = 50;
         grid_type = GridType::SQUARE;
+
+        processing_phase = 1;
     }
 };
 
