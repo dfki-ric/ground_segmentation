@@ -10,7 +10,7 @@ PointCloudGrid::PointCloudGrid(const GridConfig& config){
     robot_cell.height = 0;
     total_ground_cells = 0;
     
-    indices = generateIndices(grid_config.neighborsRadius);
+    indices = generateIndices(grid_config.neighborsIndexThreshold);
 
     for (int dx = -1; dx <= 1; ++dx) {
        for (int dy = -1; dy <= 1; ++dy) {
@@ -464,14 +464,6 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                 continue;
             }
 
-            if (neighbor.terrain_type == TerrainType::UNKNOWN &&
-                (neighbor.primitive_type == PrimitiveType::LINE ||
-                neighbor.primitive_type == PrimitiveType::PLANE)){
-                //Found a way to an unknown patch
-                //Make the patch ground
-                neighbor.terrain_type = TerrainType::GROUND;
-            }
-
             if (indices[i].z !=0 && grid_config.processing_phase == 2){
 
                 Eigen::Vector3d ground_normal;
@@ -506,7 +498,24 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                     }
                 }
                 //TODO: Magic parameter needs to be added to the config
-                if ((count / neighbor.points->size()) < 0.6){continue;}
+                if ((count / neighbor.points->size()) < 0.6){
+                    //Index3D id;
+                    //id.x = neighborX;
+                    //id.y = neighborY;
+                    //id.z = neighborZ;
+
+                    //neighbor.terrain_type = TerrainType::OBSTACLE;
+                    //non_ground_cells.push_back(id);    
+                    continue;
+                }
+            
+                if (neighbor.terrain_type == TerrainType::UNKNOWN &&
+                   (neighbor.primitive_type == PrimitiveType::LINE ||
+                    neighbor.primitive_type == PrimitiveType::PLANE)){
+                    //Found a way to an unknown patch
+                    //Make the patch ground
+                    neighbor.terrain_type = TerrainType::GROUND;
+                }
             }
 
             if (neighbor.terrain_type == TerrainType::GROUND ){

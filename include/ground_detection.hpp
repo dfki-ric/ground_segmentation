@@ -125,7 +125,7 @@ struct GridConfig{
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
     bool returnGroundPoints;
-    uint16_t neighborsRadius;
+    uint16_t neighborsIndexThreshold;
     uint16_t minPoints;
     uint16_t ransac_iterations;
     GridType grid_type;
@@ -147,7 +147,7 @@ struct GridConfig{
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
-        neighborsRadius = 1;
+        neighborsIndexThreshold = 1;
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;
