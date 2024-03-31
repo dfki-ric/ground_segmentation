@@ -140,9 +140,9 @@ struct GridConfig{
         cellSizeY = 2;
         cellSizeZ = 10;
 
-        maxX = 100;
-        maxY = 100;
-        maxZ = 100;
+        maxX = 20;
+        maxY = 20;
+        maxZ = 20;
 
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
