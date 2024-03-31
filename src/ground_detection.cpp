@@ -498,7 +498,7 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                     }
                 }
                 //TODO: Magic parameter needs to be added to the config
-                if ((count / neighbor.points->size()) < 0.6){
+                if ((count / neighbor.points->size()) < 0.1){
                     //Index3D id;
                     //id.x = neighborX;
                     //id.y = neighborY;
@@ -508,14 +508,14 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                     //non_ground_cells.push_back(id);    
                     continue;
                 }
-            
-                if (neighbor.terrain_type == TerrainType::UNKNOWN &&
-                   (neighbor.primitive_type == PrimitiveType::LINE ||
-                    neighbor.primitive_type == PrimitiveType::PLANE)){
-                    //Found a way to an unknown patch
-                    //Make the patch ground
-                    neighbor.terrain_type = TerrainType::GROUND;
-                }
+            }
+
+            if (neighbor.terrain_type == TerrainType::UNKNOWN &&
+                (neighbor.primitive_type == PrimitiveType::LINE ||
+                neighbor.primitive_type == PrimitiveType::PLANE)){
+                //Found a way to an unknown patch
+                //Make the patch ground
+                neighbor.terrain_type = TerrainType::GROUND;
             }
 
             if (neighbor.terrain_type == TerrainType::GROUND ){
