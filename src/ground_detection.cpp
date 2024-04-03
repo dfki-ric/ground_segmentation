@@ -124,6 +124,45 @@ double PointCloudGrid::computeSlope(const Eigen::Hyperplane< double, int(3) >& p
     return acos(planeNormal.dot(zNormal));
 }
 
+bool PointCloudGrid::neighborCheck(const GridCell& cell, GridCell& neighbor){
+    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+    size_t nearest_index{0};
+    std::vector<int> point_indices(1);
+    std::vector<float> point_distances(1);
+    Eigen::Vector3d ground_normal;
+    if (cell.normal.isApprox(Eigen::Vector3d::Zero())){
+        ground_normal = cell.eigenvectors.col(0);
+    }
+    else{
+        ground_normal = cell.normal;
+    }
+   
+    uint16_t count = 0;
+    kdtree.setInputCloud(cell.points);
+    for (pcl::PointCloud<pcl::PointXYZ>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it){
+        Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+        pcl::PointXYZ search_point;
+        search_point.x = it->x;
+        search_point.y = it->y;
+        search_point.z = it->z;
+        if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
+            nearest_index = point_indices[0];
+        }
+        Eigen::Vector3d ground_point(cell.points->points.at(nearest_index).x,
+                                        cell.points->points.at(nearest_index).y,
+                                        cell.points->points.at(nearest_index).z);
+        double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+        if (distance < grid_config.groundInlierThreshold){
+            count++;
+        }
+    }
+    if ((count / neighbor.points->size()) > 0.9){   
+        neighbor.terrain_type = TerrainType::GROUND;
+        return true;
+    }
+    return false;
+}
+
 Eigen::Vector3d PointCloudGrid::computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const
 {
     /** The vector of maximum slope on a plane is the projection of (0,0,1) onto the plane.
@@ -434,90 +473,34 @@ std::vector<Index3D> PointCloudGrid::getGroundCells() {
 }
 
 std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
-    pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
-    size_t nearest_index{0};
-    std::vector<int> point_indices(1);
-    std::vector<float> point_distances(1);
-
     std::vector<Index3D> result;
     int count{0};
     while (!q.empty()){
-
         Index3D idx = q.front();
         q.pop();
         GridCell& current_cell = gridCells[idx.x][idx.y][idx.z];
-
         if (current_cell.expanded == true || current_cell.points->size() == 0){
             continue;
         }
         current_cell.expanded = true;
-
         for (int i = 0; i < indices.size(); ++i){
-
             int neighborX = current_cell.row + indices[i].x;
             int neighborY = current_cell.col + indices[i].y;
             int neighborZ = current_cell.height + indices[i].z; 
-
             GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
-
             if(neighbor.points->size() == 0 || neighbor.expanded){
                 continue;
             }
-
             if (indices[i].z !=0 && grid_config.processing_phase == 2){
-
-                Eigen::Vector3d ground_normal;
-                if (current_cell.normal.isApprox(Eigen::Vector3d::Zero())){
-                    ground_normal = current_cell.eigenvectors.col(0);
-                }
-                else{
-                    ground_normal = current_cell.normal;
-                }
-
-                uint16_t count = 0;
-                
-                kdtree.setInputCloud(current_cell.points);
-                for (pcl::PointCloud<pcl::PointXYZ>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it){
-                    Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-                    pcl::PointXYZ search_point;
-                    search_point.x = it->x;
-                    search_point.y = it->y;
-                    search_point.z = it->z;
-
-                    if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
-                        nearest_index = point_indices[0];
-                    }
-                    Eigen::Vector3d ground_point(current_cell.points->points.at(nearest_index).x,
-                                                    current_cell.points->points.at(nearest_index).y,
-                                                    current_cell.points->points.at(nearest_index).z);
-
-                    double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
-
-                    if (distance < grid_config.groundInlierThreshold){
-                        count++;
-                    }
-                }
-                //TODO: Magic parameter needs to be added to the config
-                if ((count / neighbor.points->size()) < 0.1){
-                    //Index3D id;
-                    //id.x = neighborX;
-                    //id.y = neighborY;
-                    //id.z = neighborZ;
-
-                    //neighbor.terrain_type = TerrainType::OBSTACLE;
-                    //non_ground_cells.push_back(id);    
+                if (!neighborCheck(current_cell,neighbor)){
                     continue;
                 }
             }
-
-            if (neighbor.terrain_type == TerrainType::UNKNOWN &&
-                (neighbor.primitive_type == PrimitiveType::LINE ||
-                neighbor.primitive_type == PrimitiveType::PLANE)){
-                //Found a way to an unknown patch
-                //Make the patch ground
-                neighbor.terrain_type = TerrainType::GROUND;
+            if (neighbor.terrain_type == TerrainType::UNKNOWN){
+                if (!neighborCheck(current_cell,neighbor)){
+                    continue;
+                }
             }
-
             if (neighbor.terrain_type == TerrainType::GROUND ){
                 Index3D n;
                 n.x = neighbor.row;

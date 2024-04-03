@@ -178,6 +178,7 @@ private:
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double computeSlope(const Eigen::Vector3d& normal);
+    bool neighborCheck(const GridCell& cell, GridCell& neighbor);
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     int computeMeanHeight(const std::vector<Index3D> ids);
     double computeMeanPointsHeight(const std::vector<Index3D> ids);
