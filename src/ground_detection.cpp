@@ -488,7 +488,7 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
             int neighborY = current_cell.col + indices[i].y;
             int neighborZ = current_cell.height + indices[i].z; 
             GridCell& neighbor = gridCells[neighborX][neighborY][neighborZ];
-            if(neighbor.points->size() == 0 || neighbor.expanded){
+            if(neighbor.points->size() == 0 || neighbor.expanded || neighbor.terrain_type == TerrainType::OBSTACLE){
                 continue;
             }
             if (indices[i].z !=0 && grid_config.processing_phase == 2){
