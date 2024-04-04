@@ -496,7 +496,8 @@ std::vector<Index3D> PointCloudGrid::expandGrid(std::queue<Index3D> q){
                     continue;
                 }
             }
-            if (neighbor.terrain_type == TerrainType::UNKNOWN){
+            if (neighbor.terrain_type == TerrainType::UNKNOWN && (neighbor.primitive_type == PrimitiveType::LINE || 
+                                                                  neighbor.primitive_type == PrimitiveType::PLANE)){
                 if (!neighborCheck(current_cell,neighbor)){
                     continue;
                 }
