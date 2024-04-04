@@ -125,10 +125,12 @@ struct GridConfig{
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
     bool returnGroundPoints;
-    uint16_t neighborsRadius;
+    uint16_t neighborsIndexThreshold;
     uint16_t minPoints;
     uint16_t ransac_iterations;
     GridType grid_type;
+
+    uint16_t processing_phase;
 
     GridConfig(){
         radialCellSize = 2;
@@ -138,18 +140,20 @@ struct GridConfig{
         cellSizeY = 2;
         cellSizeZ = 10;
 
-        maxX = 50;
-        maxY = 50;
-        maxZ = 50;
+        maxX = 20;
+        maxY = 20;
+        maxZ = 20;
 
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
-        neighborsRadius = 1;
+        neighborsIndexThreshold = 1;
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;
         grid_type = GridType::SQUARE;
+
+        processing_phase = 1;
     }
 };
 
@@ -174,6 +178,7 @@ private:
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double computeSlope(const Eigen::Vector3d& normal);
+    bool neighborCheck(const GridCell& cell, GridCell& neighbor);
     Eigen::Vector3d computeSlopeDirection(const Eigen::Hyperplane< double, int(3) >& plane) const;
     int computeMeanHeight(const std::vector<Index3D> ids);
     double computeMeanPointsHeight(const std::vector<Index3D> ids);
@@ -188,9 +193,7 @@ private:
     std::vector<Index3D> obs_indices;
     std::map<int, std::map<int, std::map<int, GridCell>>> gridCells;
     GridConfig grid_config;
-    std::vector<Index3D> initial_ground_cells;
     std::vector<Index3D> ground_cells;
-    std::vector<Index3D> actual_ground_cells;
     std::vector<Index3D> non_ground_cells;
     std::vector<Index3D> undefined_cells;
     std::vector<Index3D> unknown_cells;

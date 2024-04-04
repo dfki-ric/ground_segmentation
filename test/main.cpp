@@ -59,7 +59,7 @@ int main (int argc, char** argv)
     config.cellSizeY = 1;
     config.cellSizeZ = 1;
 
-    config.neighborsRadius = 1;
+    config.neighborsIndexThreshold = 1;
 
     config.startCellDistanceThreshold = 5;
     config.slopeThresholdDegrees = 30;
