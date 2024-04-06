@@ -672,7 +672,49 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         }
     }
 
-   for (const auto& id : non_ground_cells){
+    double grid_cell_radius = std::sqrt(grid_config.cellSizeX*grid_config.cellSizeX +
+                                          grid_config.cellSizeY*grid_config.cellSizeY);
+
+    for (auto id : unknown_cells){
+        GridCell& cell = gridCells[id.x][id.y][id.z];
+        if (cell.terrain_type == TerrainType::UNKNOWN){
+            pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+            size_t nearest_index{0};
+            std::vector<int> point_indices(1);
+            std::vector<float> point_distances(1);
+            Eigen::Vector3d ground_normal = Eigen::Vector3d::UnitZ();
+
+            ground_normal.normalize();
+            kdtree.setInputCloud(ground_points);
+            for (pcl::PointCloud<pcl::PointXYZ>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+                Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+                pcl::PointXYZ search_point;
+                search_point.x = it->x;
+                search_point.y = it->y;
+                search_point.z = it->z;
+                if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0){
+                    nearest_index = point_indices[0];
+                }
+                Eigen::Vector3d ground_point(ground_points->points.at(nearest_index).x,
+                                             ground_points->points.at(nearest_index).y,
+                                             ground_points->points.at(nearest_index).z);
+
+                if ((ground_point-obstacle_point).norm() > grid_cell_radius){
+                    continue;
+                }
+
+                double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+                if (distance < grid_config.groundInlierThreshold){
+                    ground_points->points.push_back(*it);
+                }
+                else {
+                    non_ground_points->points.push_back(*it);
+                }
+            }
+        }
+    }
+
+    for (const auto& id : non_ground_cells){
         GridCell& cell = gridCells[id.x][id.y][id.z];
 
         pcl::PointCloud<pcl::PointXYZ>::Ptr close_ground_points(new pcl::PointCloud<pcl::PointXYZ>());
