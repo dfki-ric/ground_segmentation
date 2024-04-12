@@ -350,7 +350,7 @@ std::vector<Index3D> PointCloudGrid::getGroundCells(){
                 cell.eigenvalues = eigen_solver.eigenvalues();
                 // Compute the ratio of eigenvalues to determine point distribution
                 double ratio = cell.eigenvalues[2] / cell.eigenvalues.sum();
-                if (ratio > 0.80){ 
+                if (ratio > 0.950){ 
                     //The points form a line  
                     cell.primitive_type = PrimitiveType::LINE; 
                     
@@ -672,7 +672,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         }
     }
    
-    if (grid_config.processing_phase == 2){
+    if (grid_config.processing_phase == 1){
 
         double grid_cell_radius = std::sqrt(grid_config.cellSizeX*grid_config.cellSizeX +   
                                             grid_config.cellSizeY*grid_config.cellSizeY);
@@ -705,9 +705,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                                                  ground_points->points.at(nearest_index).y,
                                                  ground_points->points.at(nearest_index).z);
 
-                    if ((ground_point-obstacle_point).norm() > 0.5){
-                        continue;
-                    }
+                    Eigen::Vector3d diff = ground_point - obstacle_point;
+
+                    if (diff.norm() > 0.5){continue;}
 
                     Eigen::Vector3d ground_normal(cloud_normals->points[nearest_index].normal_x,
                                                   cloud_normals->points[nearest_index].normal_y,
@@ -721,9 +721,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     if (distance < grid_config.groundInlierThreshold){
                         ground_points->points.push_back(*it);
                     }
-                    else {
-                        non_ground_points->points.push_back(*it);
-                    }
+                    //else{
+                    //    non_ground_points->points.push_back(*it);
+                    //}
                 }
             }
         }
