@@ -682,7 +682,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
         ne.setSearchMethod(tree);
         pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
-        ne.setRadiusSearch(0.5);
+        ne.setRadiusSearch(0.2);
         ne.compute(*cloud_normals);
         
         kdtree.setInputCloud(ground_points);
@@ -712,18 +712,15 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                     Eigen::Vector3d ground_normal(cloud_normals->points[nearest_index].normal_x,
                                                   cloud_normals->points[nearest_index].normal_y,
                                                   cloud_normals->points[nearest_index].normal_z);
-                    if (ground_normal(2) < 0) {
-                        ground_normal *= -1; // flip the normal direction
-                    }
                     ground_normal.normalize();
 
                     double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
                     if (distance < grid_config.groundInlierThreshold){
                         ground_points->points.push_back(*it);
                     }
-                    //else{
-                    //    non_ground_points->points.push_back(*it);
-                    //}
+                    else{
+                        non_ground_points->points.push_back(*it);
+                    }
                 }
             }
         }
