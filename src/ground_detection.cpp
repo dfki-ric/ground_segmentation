@@ -150,7 +150,12 @@ bool PointCloudGrid::neighborCheck(const GridCell& cell, GridCell& neighbor){
         Eigen::Vector3d ground_point(cell.points->points.at(nearest_index).x,
                                         cell.points->points.at(nearest_index).y,
                                         cell.points->points.at(nearest_index).z);
-        double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+
+        Eigen::Vector3d diff = obstacle_point - ground_point;
+        
+        ground_normal.normalize();
+
+        double distance = std::abs(diff.dot(ground_normal)); 
         if (distance < grid_config.groundInlierThreshold){
             count++;
         }
@@ -656,7 +661,9 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                                             ground_inliers->points.at(nearest_index).y,
                                             ground_inliers->points.at(nearest_index).z);
 
-                double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+                Eigen::Vector3d diff = obstacle_point - ground_point;
+
+                double distance = std::abs(diff.dot(ground_normal)); 
 
                 if (distance > grid_config.groundInlierThreshold){
                     non_ground_points->points.push_back(*it);
@@ -705,8 +712,8 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                                                  ground_points->points.at(nearest_index).y,
                                                  ground_points->points.at(nearest_index).z);
 
-                    Eigen::Vector3d diff = ground_point - obstacle_point;
-
+                    Eigen::Vector3d diff = obstacle_point - ground_point;
+        
                     if (diff.norm() > 0.5){continue;}
 
                     Eigen::Vector3d ground_normal(cloud_normals->points[nearest_index].normal_x,
@@ -720,7 +727,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
 
                     if (!ground_normal.allFinite()){continue;}
 
-                    double distance = std::abs(ground_normal.dot(diff) / ground_normal.norm()); 
+                    double distance = std::abs(diff.dot(ground_normal)); 
                     if (distance <= grid_config.groundInlierThreshold){
                         ground_points->points.push_back(*it);
                     }
@@ -843,16 +850,18 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
                                             close_ground_points->points.at(nearest_index).y,
                                             close_ground_points->points.at(nearest_index).z);
 
-            double distance = std::abs(ground_normal.dot(obstacle_point - ground_point) / ground_normal.norm()); 
+            Eigen::Vector3d diff = obstacle_point - ground_point;
+
+            double distance = std::abs(diff.dot(ground_normal)); 
 
             if (distance > grid_config.groundInlierThreshold){
                 non_ground_points->points.push_back(*it);
             }
-            else{
-                if (grid_config.returnGroundPoints){
-                    ground_points->points.push_back(*it);
-                }
-            }
+            //else{
+            //    if (grid_config.returnGroundPoints){
+            //        ground_points->points.push_back(*it);
+            //    }
+            //}
         }
 
         statistics.clear();
