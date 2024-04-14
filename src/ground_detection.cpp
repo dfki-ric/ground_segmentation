@@ -256,6 +256,10 @@ Index3D PointCloudGrid::cellClosestToMeanHeight(const std::vector<Index3D>& ids,
         double height_difference = std::abs(cell.height - mean_height);
         int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 3).size();
 
+        if (neighbor_count == 0){
+            continue;
+        }
+
         if (height_difference <= min_height_difference) {
             if (neighbor_count >= max_ground_neighbors){
                 closest_to_mean_height = id;
