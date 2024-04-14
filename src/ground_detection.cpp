@@ -679,7 +679,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr,pcl::PointCloud<pcl::PointXYZ>::Pt
         }
     }
    
-    if (grid_config.processing_phase == 1){
+    if (grid_config.processing_phase == 1 && ground_points->points.size() > 0){
 
         double grid_cell_radius = std::sqrt(grid_config.cellSizeX*grid_config.cellSizeX +   
                                             grid_config.cellSizeY*grid_config.cellSizeY);
