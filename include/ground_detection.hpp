@@ -669,7 +669,6 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         }
     }
 
-/*
     std::queue<Index3D> q;
     std::vector<Index3D> selected_cells;
     selected_cells.insert(selected_cells.end(), selected_cells_first_quadrant.begin(),  selected_cells_first_quadrant.end());
@@ -688,10 +687,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     q.push(closest_to_mean_height_q2);    
     q.push(closest_to_mean_height_q3);    
     q.push(closest_to_mean_height_q4);       
-*/
 
     //TODO
-
+/*    
     std::queue<Index3D> q;
 
     if (selected_cells_first_quadrant.size() > 0){
@@ -717,7 +715,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
         q.push(closest_to_mean_height_q4);
     }
-
+*/
     ground_cells = expandGrid(q);
     return ground_cells;
 }
