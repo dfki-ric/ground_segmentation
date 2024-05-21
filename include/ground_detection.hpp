@@ -303,6 +303,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
         int neighborZ = cell.height + idx[i].z;
 
         GridCell<PointT>& neighbor = gridCells[neighborX][neighborY][neighborZ];
+
         if (neighbor.points->size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < radius && neighbor.terrain_type == type){
             Index3D id;
             id.x = neighbor.row;
@@ -381,10 +382,8 @@ void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
     id.y = cell.col;
     id.z = cell.height;
 
-    double distance = computeGridDistance(robot_cell, cell);
-    if (distance <= grid_config.startCellDistanceThreshold) {
-        // This grid cell is within the specified radius around the robot
-
+    double distance = computeDistance(robot_cell.centroid, cell.centroid);
+    if (distance <= grid_config.startCellDistanceThreshold){
         if (cell.row >= 0 && cell.col > 0){
             selected_cells_first_quadrant.push_back(id);
         }
@@ -961,8 +960,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                                             close_ground_points->points.at(nearest_index).z);
 
             Eigen::Vector3d diff = obstacle_point - ground_point;
-
-            if (diff.norm() > 0.5){continue;}
 
             double distance = std::abs(diff.dot(ground_normal)); 
 
