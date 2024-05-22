@@ -790,9 +790,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
 
     if (grid_config.processing_phase == 1 && ground_points->points.size() > 0){
 
-        double grid_cell_radius = std::sqrt(grid_config.cellSizeX*grid_config.cellSizeX +   
-                                            grid_config.cellSizeY*grid_config.cellSizeY);
-
         pcl::NormalEstimation<PointT, pcl::Normal> ne;
         ne.setInputCloud(ground_points);
         typename pcl::search::KdTree<PointT>::Ptr tree(new pcl::search::KdTree<PointT>);
