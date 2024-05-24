@@ -721,11 +721,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         for (auto& id : ground_cells){
             GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
             if (cell.points->size() < grid_config.minPoints || cell.primitive_type == PrimitiveType::LINE){
-                for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it)
-                {
-                    ground_points->points.push_back(*it);
-                }
-                continue;
+               *ground_points += *cell.points;   
+               continue; 
             }
 
             extract_ground.setInputCloud(cell.points);
@@ -781,10 +778,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                     ground_points->points.push_back(*it);
                 }
             }
-
-            for (typename pcl::PointCloud<PointT>::iterator it = ground_inliers->begin(); it != ground_inliers->end(); ++it){
-                ground_points->points.push_back(*it);
-            }
+            *ground_points += *ground_inliers;
         }
     }
 
@@ -852,9 +846,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
 
         std::vector<Index3D> test = getNeighbors(cell, type_ground, obs_indices, 3);
         if (test.size() == 0){
-            for (typename pcl::PointCloud<PointT>::iterator it = cell.points->points.begin(); it != cell.points->points.end(); ++it){
-                non_ground_points->points.push_back(*it);
-            }
+            *non_ground_points += *cell.points;
             continue;    
         }
         else{
@@ -871,9 +863,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                 extract_ground.setNegative(false);
                 extract_ground.filter(*ground_inliers);
 
-                for (typename pcl::PointCloud<PointT>::iterator it = ground_inliers->points.begin(); it != ground_inliers->points.end(); ++it){
-                    close_ground_points->points.push_back(*it);
-                }
+                *close_ground_points += *ground_inliers;
             }
         }
 
@@ -919,10 +909,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                 extract_ground.setNegative(false);
                 extract_ground.filter(*ground_inliers);
 
-                for (typename pcl::PointCloud<PointT>::iterator it = ground_inliers->points.begin(); it != ground_inliers->points.end(); ++it){
-                    close_ground_points->points.push_back(*it);
-                }
-
+                *close_ground_points += *ground_inliers;
                 ground_normal += (1/(distance+0.001)) * ground_cell.normal.normalized();
             }
             ground_normal /= actual_ground_neighbors.size();
@@ -931,9 +918,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         }
 
         if (close_ground_points->size() == 0){
-            for (typename pcl::PointCloud<PointT>::iterator it = cell.points->points.begin(); it != cell.points->points.end(); ++it){
-                non_ground_points->points.push_back(*it);
-            }
+            *non_ground_points += *cell.points;
             continue;    
         }
 
