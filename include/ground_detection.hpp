@@ -1,4 +1,7 @@
 #pragma once
+
+#include <omp.h>
+
 #include "process_pointcloud.hpp"
 #include "ground_detection_statistics.hpp"
 #include "ground_detection_types.hpp"
@@ -66,7 +69,7 @@ PointCloudGrid<PointT>::PointCloudGrid(const GridConfig& config){
     robot_cell.col = 0;
     robot_cell.height = 0;
     total_ground_cells = 0;
-    
+   
     indices = generateIndices(grid_config.neighborsIndexThreshold);
 
     for (int dx = -1; dx <= 1; ++dx) {
@@ -209,6 +212,8 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
         search_point.x = it->x;
         search_point.y = it->y;
         search_point.z = it->z;
+
+        #pragma omp parallel for    
         if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
             nearest_index = point_indices[0];
         }
@@ -382,6 +387,8 @@ void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
     id.y = cell.col;
     id.z = cell.height;
 
+    if (cell.height > 0){return;}
+
     double distance = computeDistance(robot_cell.centroid, cell.centroid);
     if (distance <= grid_config.startCellDistanceThreshold){
         if (cell.row >= 0 && cell.col > 0){
@@ -414,7 +421,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
             for (auto& heightPair : colPair.second){
                 GridCell<PointT>& cell = heightPair.second;
 
-                if ((cell.points->size() == 0)){continue;}
+                if ((cell.points->size() < 3)){continue;}
 
                 Index3D id;
                 id.x = cell.row;
@@ -717,70 +724,74 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
     pcl::KdTreeFLANN<PointT> kdtree;
 
-    if (grid_config.returnGroundPoints){
-        for (auto& id : ground_cells){
-            GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
-            if (cell.points->size() < grid_config.minPoints || cell.primitive_type == PrimitiveType::LINE){
-               *ground_points += *cell.points;   
-               continue; 
+    #pragma omp parallel for
+    for (auto& id : ground_cells){
+        GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
+        if (cell.points->size() < grid_config.minPoints || cell.primitive_type == PrimitiveType::LINE){
+            *ground_points += *cell.points;   
+            continue; 
+        }
+
+        extract_ground.setInputCloud(cell.points);
+        extract_ground.setIndices(cell.inliers);
+
+        extract_ground.setNegative(false);
+        extract_ground.filter(*ground_inliers);
+
+        extract_ground.setNegative(true);
+        extract_ground.filter(*non_ground_inliers);
+
+        if (ground_inliers->size() == 0){
+            //Something is wrong. This should not happen
+            continue;
+        } 
+
+        size_t nearest_index{0};
+        std::vector<int> point_indices(1);
+        std::vector<float> point_distances(1);
+
+        kdtree.setInputCloud(ground_inliers);
+
+        Eigen::Vector3d ground_normal;
+        if (cell.normal.isApprox(Eigen::Vector3d::Zero())){
+            ground_normal = cell.eigenvectors.col(0);
+        }
+        else{
+            ground_normal = cell.normal;
+        }
+
+        ground_normal.normalize();
+
+        for (typename pcl::PointCloud<PointT>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it){
+            Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+            PointT search_point;
+            search_point.x = it->x;
+            search_point.y = it->y;
+            search_point.z = it->z;
+
+            #pragma omp parallel for
+            if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
+                nearest_index = point_indices[0];
             }
 
-            extract_ground.setInputCloud(cell.points);
-            extract_ground.setIndices(cell.inliers);
+            Eigen::Vector3d ground_point(ground_inliers->points.at(nearest_index).x,
+                                         ground_inliers->points.at(nearest_index).y,
+                                         ground_inliers->points.at(nearest_index).z);
 
-            extract_ground.setNegative(false);
-            extract_ground.filter(*ground_inliers);
+            Eigen::Vector3d diff = obstacle_point - ground_point;
 
-            extract_ground.setNegative(true);
-            extract_ground.filter(*non_ground_inliers);
+            double distance = std::abs(diff.dot(ground_normal)); 
 
-            if (ground_inliers->size() == 0) continue;
-
-            size_t nearest_index{0};
-            std::vector<int> point_indices(1);
-            std::vector<float> point_distances(1);
-
-            kdtree.setInputCloud(ground_inliers);
-
-            Eigen::Vector3d ground_normal;
-            if (cell.normal.isApprox(Eigen::Vector3d::Zero())){
-                ground_normal = cell.eigenvectors.col(0);
+            if (distance > grid_config.groundInlierThreshold){
+                non_ground_points->points.push_back(*it);
             }
             else{
-                ground_normal = cell.normal;
+                ground_points->points.push_back(*it);
             }
-
-            ground_normal.normalize();
-
-            for (typename pcl::PointCloud<PointT>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it){
-                Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-                PointT search_point;
-                search_point.x = it->x;
-                search_point.y = it->y;
-                search_point.z = it->z;
-
-                if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
-                    nearest_index = point_indices[0];
-                }
-
-                Eigen::Vector3d ground_point(ground_inliers->points.at(nearest_index).x,
-                                            ground_inliers->points.at(nearest_index).y,
-                                            ground_inliers->points.at(nearest_index).z);
-
-                Eigen::Vector3d diff = obstacle_point - ground_point;
-
-                double distance = std::abs(diff.dot(ground_normal)); 
-
-                if (distance > grid_config.groundInlierThreshold){
-                    non_ground_points->points.push_back(*it);
-                }
-                else{
-                    ground_points->points.push_back(*it);
-                }
-            }
-            *ground_points += *ground_inliers;
         }
+        *ground_points += *ground_inliers;
     }
+    
 
     if (grid_config.processing_phase == 1 && ground_points->points.size() > 0){
 
@@ -793,6 +804,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         ne.compute(*cloud_normals);
         
         kdtree.setInputCloud(ground_points);
+
+        #pragma omp parallel for
         for (const auto& id : unknown_cells){
             GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
             if (cell.terrain_type == TerrainType::UNKNOWN){
@@ -805,6 +818,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                     search_point.x = it->x;
                     search_point.y = it->y;
                     search_point.z = it->z;
+
+                    #pragma omp parallel for
                     if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0){
                         nearest_index = point_indices[0];
                     }
@@ -839,6 +854,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         }
     }
     
+    #pragma omp parallel for
     for (const auto& id : non_ground_cells){
         GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
 
@@ -870,6 +886,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         std::vector<Index3D> potential_ground_neighbors = getNeighbors(cell, type_ground, indices, 1);
         std::vector<Index3D> actual_ground_neighbors;
 
+        #pragma omp parallel for
         for (const auto& gn : potential_ground_neighbors){
             std::vector<Index3D> explored_neighbors;
             std::queue<Index3D> q;
@@ -923,13 +940,14 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         }
 
         kdtree.setInputCloud(close_ground_points);
+
         for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
             Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
             PointT search_point;
             search_point.x = it->x;
             search_point.y = it->y;
             search_point.z = it->z;
-
+            
             if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
                 nearest_index = point_indices[0];
             }

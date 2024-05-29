@@ -48,7 +48,7 @@ int NUM_ZEROS = 5;
 
 using namespace std;
 
-double VEGETATION_THR = - SENSOR_HEIGHT * 3 / 4;
+double VEGETATION_THR = - SENSOR_HEIGHT + 0.1;
   /** Euclidean Velodyne coordinate, including intensity and ring number, and label. */
 struct PointXYZILID
 {
@@ -84,6 +84,7 @@ void PointXYZILID2XYZI(pcl::PointCloud<PointXYZILID>& src,
 std::vector<int> outlier_classes = {UNLABELED, OUTLIER};
 std::vector<int> ground_classes = {ROAD, PARKING, SIDEWALKR, OTHER_GROUND, LANE_MARKING, VEGETATION, TERRAIN};
 std::vector<int> ground_classes_except_terrain = {ROAD, PARKING, SIDEWALKR, OTHER_GROUND, LANE_MARKING};
+std::vector<int> ground_classes_except_vegetation = {ROAD, PARKING, SIDEWALKR, OTHER_GROUND, LANE_MARKING, TERRAIN};
 
 int count_num_ground(const pcl::PointCloud<PointXYZILID>& pc){
   int num_ground = 0;
@@ -102,6 +103,25 @@ int count_num_ground(const pcl::PointCloud<PointXYZILID>& pc){
   }
   return num_ground;
 }
+
+int count_num_non_ground(const pcl::PointCloud<PointXYZILID>& pc){
+  int num_non_ground = 0;
+
+  std::vector<int>::iterator iter;
+
+  for (auto const& pt: pc.points){
+    iter = std::find(ground_classes_except_vegetation.begin(), ground_classes_except_vegetation.end(), pt.label);
+    if (iter == ground_classes_except_vegetation.end()){ // corresponding class is not in ground_classes_except_vegetation 
+      if (pt.label == VEGETATION){
+        if (pt.z > VEGETATION_THR){
+           num_non_ground ++;
+        }
+      }else num_non_ground ++;
+    }
+  }
+  return num_non_ground;
+}
+
 
 std::map<int, int> set_initial_gt_counts(std::vector<int>& gt_classes){
   map<int, int> gt_counts;
@@ -179,6 +199,25 @@ void calculate_precision_recall(const pcl::PointCloud<PointXYZILID>& pc_curr,
   }else{
     precision = (double)(num_TP)/num_ground_est * 100;
     recall = (double)(num_TP)/num_ground_gt * 100;
+  }
+}
+
+void calculate_precision_recall_non_ground(const pcl::PointCloud<PointXYZILID>& pc_curr,
+                                pcl::PointCloud<PointXYZILID>& non_ground_estimated,
+                                double & precision,
+                                double& recall,
+                                bool consider_outliers=true){
+
+  int num_non_ground_est = non_ground_estimated.points.size();
+  int num_non_ground_gt = count_num_non_ground(pc_curr);
+  int num_TP = count_num_non_ground(non_ground_estimated);
+  if (consider_outliers){
+    int num_outliers_est = count_num_outliers(non_ground_estimated);
+    precision = (double)(num_TP)/(num_non_ground_est - num_outliers_est) * 100;
+    recall = (double)(num_TP)/num_non_ground_gt * 100;
+  }else{
+    precision = (double)(num_TP)/num_non_ground_est * 100;
+    recall = (double)(num_TP)/num_non_ground_gt * 100;
   }
 }
 
