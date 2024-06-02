@@ -63,6 +63,7 @@ struct GridCell {
     Eigen::Vector3d eigenvalues;
     /** The points in the Grid Cell */
     typename pcl::PointCloud<PointT>::Ptr points;
+    typename pcl::PointCloud<PointT>::Ptr ground_points;
 
     /** The plane that has been fitted to the mls at the location of this node */
     Eigen::Hyperplane<double, 3> plane;
@@ -81,6 +82,7 @@ struct GridCell {
     double slopeDirectionAtan2;
 
     GridCell() : points(new pcl::PointCloud<PointT>), 
+                 ground_points(new pcl::PointCloud<PointT>), 
                  inliers(new pcl::PointIndices){
         row = 0;
         col = 0;
