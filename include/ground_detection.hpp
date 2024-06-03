@@ -211,7 +211,7 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
         if (distance < grid_config.groundInlierThreshold){
             count++;
         }
-        if ((count / neighbor.points->size()) > 0.9){   
+        if ((count / neighbor.points->size()) > 0.95){   
             neighbor.terrain_type = TerrainType::GROUND;
             return true;
         }
@@ -369,7 +369,7 @@ void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
     id.y = cell.col;
     id.z = cell.height;
 
-    if (cell.height > 0){return;}
+    if (cell.height >= 0){return;}
 
     double distance = computeDistance(robot_cell.centroid, cell.centroid);
     if (distance <= grid_config.startCellDistanceThreshold){
@@ -516,6 +516,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     }
 
     std::queue<Index3D> q;
+   /*
     if (grid_config.processing_phase == 2){
         std::vector<Index3D> selected_cells;
         selected_cells.insert(selected_cells.end(), selected_cells_first_quadrant.begin(),  selected_cells_first_quadrant.end());
@@ -525,41 +526,55 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
 
         int cells_mean_height = computeMeanHeight(selected_cells);
 
-        Index3D closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_mean_height);
-        Index3D closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_mean_height);
-        Index3D closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_mean_height);
-        Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_mean_height);
+        Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_mean_height);
+        Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_mean_height);
+        Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_mean_height);
+        Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_mean_height);
         
-        q.push(closest_to_mean_height_q1);    
-        q.push(closest_to_mean_height_q2);    
-        q.push(closest_to_mean_height_q3);    
-        q.push(closest_to_mean_height_q4);       
+        GridCell<PointT>& q1c = gridCells[q1.x][q1.y][q1.z];
+        GridCell<PointT>& q2c = gridCells[q2.x][q2.y][q2.z];
+        GridCell<PointT>& q3c = gridCells[q3.x][q3.y][q3.z];
+        GridCell<PointT>& q4c = gridCells[q4.x][q4.y][q4.z];
+
+        if (q1c.height < 0){
+            q.push(q1);   
+        }
+        if (q2c.height < 0){
+            q.push(q2);   
+        }
+        if (q3c.height < 0){
+            q.push(q3);   
+        }
+        if (q4c.height < 0){
+            q.push(q4);   
+        }           
     }
     else{
+    */
         if (selected_cells_first_quadrant.size() > 0){
             int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
-            Index3D closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
-            q.push(closest_to_mean_height_q1);
+            Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
+            q.push(q1);   
         }
         
         if (selected_cells_second_quadrant.size() > 0){
             int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
-            Index3D closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
-            q.push(closest_to_mean_height_q2);
+            Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
+            q.push(q2);   
         }
 
         if (selected_cells_third_quadrant.size() > 0){
             int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
-            Index3D closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
-            q.push(closest_to_mean_height_q3);
+            Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
+            q.push(q3);   
         }
 
         if (selected_cells_fourth_quadrant.size() > 0){
             int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
-            Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
-            q.push(closest_to_mean_height_q4);
+            Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
+            q.push(q4);   
         }
-    }
+    //}
     
     ground_cells = expandGrid(q);
     return ground_cells;
@@ -591,7 +606,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             id.y = neighbor.col;
             id.z = neighbor.height;
 
-            if (indices[i].z !=0 && grid_config.processing_phase == 2){
+            if (indices[i].z != 0 && grid_config.processing_phase == 2){
                 if (!neighborCheck(current_cell,neighbor)){
                     continue;
                 }
