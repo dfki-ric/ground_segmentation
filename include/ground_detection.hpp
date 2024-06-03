@@ -516,7 +516,6 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     }
 
     std::queue<Index3D> q;
-    /*
     if (grid_config.processing_phase == 2){
         std::vector<Index3D> selected_cells;
         selected_cells.insert(selected_cells.end(), selected_cells_first_quadrant.begin(),  selected_cells_first_quadrant.end());
@@ -536,32 +535,31 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         q.push(closest_to_mean_height_q3);    
         q.push(closest_to_mean_height_q4);       
     }
-    */
-    //else{
-    if (selected_cells_first_quadrant.size() > 0){
-        int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
-        Index3D closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
-        q.push(closest_to_mean_height_q1);
-    }
-    
-    if (selected_cells_second_quadrant.size() > 0){
-        int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
-        Index3D closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
-        q.push(closest_to_mean_height_q2);
-    }
+    else{
+        if (selected_cells_first_quadrant.size() > 0){
+            int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
+            Index3D closest_to_mean_height_q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
+            q.push(closest_to_mean_height_q1);
+        }
+        
+        if (selected_cells_second_quadrant.size() > 0){
+            int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
+            Index3D closest_to_mean_height_q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
+            q.push(closest_to_mean_height_q2);
+        }
 
-    if (selected_cells_third_quadrant.size() > 0){
-        int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
-        Index3D closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
-        q.push(closest_to_mean_height_q3);
-    }
+        if (selected_cells_third_quadrant.size() > 0){
+            int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
+            Index3D closest_to_mean_height_q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
+            q.push(closest_to_mean_height_q3);
+        }
 
-    if (selected_cells_fourth_quadrant.size() > 0){
-        int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
-        Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
-        q.push(closest_to_mean_height_q4);
+        if (selected_cells_fourth_quadrant.size() > 0){
+            int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
+            Index3D closest_to_mean_height_q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
+            q.push(closest_to_mean_height_q4);
+        }
     }
-    //}
     
     ground_cells = expandGrid(q);
     return ground_cells;
@@ -593,11 +591,12 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             id.y = neighbor.col;
             id.z = neighbor.height;
 
-            if (indices[i].z !=0){
+            if (indices[i].z !=0 && grid_config.processing_phase == 2){
                 if (!neighborCheck(current_cell,neighbor)){
                     continue;
                 }
             }
+
             if (neighbor.terrain_type == TerrainType::GROUND ){
                 q.push(id);
             }
@@ -764,7 +763,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         GridCell<PointT>& cell = gridCells[id.x][id.y][id.z];
 
         typename pcl::PointCloud<PointT>::Ptr close_ground_points(new pcl::PointCloud<PointT>());
-        std::vector<Index3D> test = getNeighbors(cell, type_ground, obs_indices, 5);
+        std::vector<Index3D> test = getNeighbors(cell, type_ground, obs_indices, 3);
         if (test.size() == 0){
             *non_ground_points += *cell.points;
             continue;    
