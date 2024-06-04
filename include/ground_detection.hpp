@@ -18,6 +18,7 @@ public:
     void setInputCloud(typename pcl::PointCloud<PointT>::Ptr input, const Eigen::Quaterniond& R_body2World);
     std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>::Ptr> segmentPoints();
     std::map<int, std::map<int, std::map<int, GridCell<PointT>>>>& getGridCells();
+    std::vector<GridCell<PointT>> getStartCells();
 
 private:
 
@@ -57,6 +58,8 @@ private:
     GridCell<PointT> robot_cell;
     ProcessPointCloud<PointT> processor;
     GroundDetectionStatistics statistics;
+    std::vector<GridCell<PointT>> start_cells;
+
 };
     
 template<typename PointT>
@@ -123,6 +126,7 @@ void PointCloudGrid<PointT>::cleanUp(){
     selected_cells_second_quadrant.clear();
     selected_cells_third_quadrant.clear();
     selected_cells_fourth_quadrant.clear();
+    start_cells.clear();
 }
 
 template<typename PointT>
@@ -370,11 +374,14 @@ void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
     id.z = cell.height;
 
     if (cell.height >= 0){return;}
-
+    
     double distance = computeDistance(robot_cell.centroid, cell.centroid);
+
     if (distance <= grid_config.startCellDistanceThreshold){
+
         if (cell.row >= 0 && cell.col > 0){
             selected_cells_first_quadrant.push_back(id);
+
         }
         else if (cell.row <= 0 && cell.col > 0){
             selected_cells_second_quadrant.push_back(id);
@@ -555,24 +562,32 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
             int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
             Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant, cells_q1_mean_height);
             q.push(q1);   
+            GridCell<PointT> cell = gridCells[q1.x][q1.y][q1.z];
+            start_cells.push_back(cell);
         }
         
         if (selected_cells_second_quadrant.size() > 0){
             int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
             Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant, cells_q2_mean_height);
-            q.push(q2);   
+            q.push(q2);
+            GridCell<PointT> cell = gridCells[q2.x][q2.y][q2.z]; 
+            start_cells.push_back(cell);
         }
 
         if (selected_cells_third_quadrant.size() > 0){
             int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
             Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
-            q.push(q3);   
+            //q.push(q3);  
+            GridCell<PointT> cell = gridCells[q3.x][q3.y][q3.z];  
+            start_cells.push_back(cell);
         }
 
         if (selected_cells_fourth_quadrant.size() > 0){
             int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
             Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant, cells_q4_mean_height);
             q.push(q4);   
+            GridCell<PointT> cell = gridCells[q4.x][q4.y][q4.z]; 
+            start_cells.push_back(cell);
         }
     //}
     
@@ -664,6 +679,11 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
 }
 
 template<typename PointT>
+std::vector<GridCell<PointT>> PointCloudGrid<PointT>::getStartCells(){
+    return start_cells;
+}
+
+template<typename PointT>
 double PointCloudGrid<PointT>::computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2) {
     Eigen::Vector3d diff = centroid1.head<3>() - centroid2.head<3>();
     return diff.norm();
@@ -680,6 +700,7 @@ void PointCloudGrid<PointT>::setInputCloud(typename pcl::PointCloud<PointT>::Ptr
         this->addPoint(*it);
         index++;
     }
+
     ground_cells = getGroundCells();
 }
 
