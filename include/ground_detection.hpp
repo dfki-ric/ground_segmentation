@@ -577,7 +577,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         if (selected_cells_third_quadrant.size() > 0){
             int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
             Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant, cells_q3_mean_height);
-            //q.push(q3);  
+            q.push(q3);  
             GridCell<PointT> cell = gridCells[q3.x][q3.y][q3.z];  
             start_cells.push_back(cell);
         }
