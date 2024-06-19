@@ -648,7 +648,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
 
         GridCell<PointT>& current_cell = copy[idx.x][idx.y][idx.z];
 
-        if (current_cell.explored == true){
+        if (current_cell.explored == true || current_cell.points->size() == 0 ){
             continue;
         }
         current_cell.explored = true;
