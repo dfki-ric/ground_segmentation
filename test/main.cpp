@@ -17,6 +17,8 @@
 //using namespace std::chrono_literals;
 using namespace pointcloud_obstacle_detection;
 
+using PointType = pcl::PointXYZ;
+
 // Function to extract the file extension from a given filename
 std::string getFileExtension(const std::string& filename) {
     size_t lastDotPos = filename.find_last_of(".");
@@ -33,18 +35,18 @@ int main (int argc, char** argv)
     if (argc != 2)
         return (0);
     
-    CloudXYZ cloud (new pcl::PointCloud<pcl::PointXYZ> ());
+    pcl::PointCloud<PointType>::Ptr cloud (new pcl::PointCloud<PointType> ());
 
     std::string ext = getFileExtension(argv[1]);
 
     if (ext == "ply"){
         pcl::PLYReader PLYFileReader;
         const int offset=0;
-        PLYFileReader.read<pcl::PointXYZ>(argv[1],*cloud,offset);
+        PLYFileReader.read<PointType>(argv[1],*cloud,offset);
     }
     else
     if (ext == "pcd"){
-        if (pcl::io::loadPCDFile<pcl::PointXYZ> (argv[1], *cloud) == -1) //* load the file
+        if (pcl::io::loadPCDFile<PointType> (argv[1], *cloud) == -1) //* load the file
         {
             std::cerr << "Couldn't read file: " << argv[1] << std::endl;
             return 0;
@@ -69,7 +71,7 @@ int main (int argc, char** argv)
     config.grid_type = GridType::SQUARE;
 
 
-    PointCloudGrid* ground_detection = new PointCloudGrid(config);
+    PointCloudGrid<PointType>* ground_detection = new PointCloudGrid<PointType>(config);
     GroundDetectionStatistics statistics;
 
     Eigen::Quaterniond R_robot2World(1,0,0,0); 
@@ -78,19 +80,19 @@ int main (int argc, char** argv)
     ground_detection->setInputCloud(cloud, R_robot2World);
 
     std::cout <<"Segmenting points " << std::endl;
-    std::pair<CloudXYZ,CloudXYZ> result = ground_detection->segmentPoints();
+    std::pair<pcl::PointCloud<PointType>::Ptr,pcl::PointCloud<PointType>::Ptr> result = ground_detection->segmentPoints();
 
     pcl::visualization::PCLVisualizer::Ptr viewer2 (new pcl::visualization::PCLVisualizer ("3D Viewer 2"));
     viewer2->setBackgroundColor (0, 0, 0);
     viewer2->addCoordinateSystem (1.0);
     viewer2->initCameraParameters ();
 
-    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> ground(result.first, 0, 255, 0);
-    viewer2->addPointCloud<pcl::PointXYZ>(result.first, ground, "ground");
-    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> obstacle(result.second, 255, 0, 0);
-    viewer2->addPointCloud<pcl::PointXYZ>(result.second, obstacle, "obstacle");
+    pcl::visualization::PointCloudColorHandlerCustom<PointType> ground(result.first, 0, 255, 0);
+    viewer2->addPointCloud<PointType>(result.first, ground, "ground");
+    pcl::visualization::PointCloudColorHandlerCustom<PointType> obstacle(result.second, 255, 0, 0);
+    viewer2->addPointCloud<PointType>(result.second, obstacle, "obstacle");
 
-    std::map<int, std::map<int, std::map<int, GridCell>>>& gridCells = ground_detection->getGridCells();
+    std::map<int, std::map<int, std::map<int, GridCell<PointType>>>>& gridCells = ground_detection->getGridCells();
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
     viewer->setBackgroundColor (0, 0, 0);
@@ -102,7 +104,7 @@ int main (int argc, char** argv)
     for (auto& rowPair : gridCells) {
         for (auto& colPair : rowPair.second) {
             for (auto& heightPair : colPair.second) {
-                GridCell& cell = heightPair.second;
+                GridCell<PointType>& cell = heightPair.second;
 
                 if (cell.points->size() == 0) continue;
 
@@ -123,8 +125,8 @@ int main (int argc, char** argv)
 
                 }
 
-                pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color(cell.points, r, g, b);
-                viewer->addPointCloud<pcl::PointXYZ>(cell.points, color, std::to_string(count));
+                pcl::visualization::PointCloudColorHandlerCustom<PointType> color(cell.points, r, g, b);
+                viewer->addPointCloud<PointType>(cell.points, color, std::to_string(count));
                 viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, std::to_string(count++)); 
 
                 Eigen::Vector4d centroid = cell.centroid;
@@ -136,8 +138,8 @@ int main (int argc, char** argv)
                 }
 
                 // Draw normal at the centroid
-                pcl::PointXYZ centroid_point(centroid[0], centroid[1], centroid[2]);
-                pcl::PointXYZ normal_point(centroid[0] + normal[0], centroid[1] + normal[1], centroid[2] + normal[2]);
+                PointType centroid_point(centroid[0], centroid[1], centroid[2]);
+                PointType normal_point(centroid[0] + normal[0], centroid[1] + normal[1], centroid[2] + normal[2]);
 
                 viewer->addArrow(normal_point, centroid_point, 1.0, 0, 0, false, "normal" + std::to_string(count));
   

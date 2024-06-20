@@ -2,7 +2,7 @@ find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visua
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 
-set(SOURCES ground_detection.cpp process_pointcloud.cpp)
+set(SOURCES process_pointcloud.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
