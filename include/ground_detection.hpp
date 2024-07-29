@@ -93,7 +93,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& rad
 
     for (int dx = -radius; dx <= radius; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
-            for (int dz = -1; dz <= 1; ++dz) {
+            for (int dz = -1; dz <= 0; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
