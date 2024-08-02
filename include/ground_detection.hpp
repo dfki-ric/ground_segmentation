@@ -59,7 +59,6 @@ private:
     ProcessPointCloud<PointT> processor;
     GroundDetectionStatistics statistics;
     std::vector<GridCell<PointT>> start_cells;
-
 };
     
 template<typename PointT>
@@ -91,9 +90,15 @@ template<typename PointT>
 std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& radius){
     std::vector<Index3D> idxs;
 
+    int z_threshold = 0;
+
+    if (grid_config.processing_phase == 2){
+        z_threshold = 1;
+    }
+
     for (int dx = -radius; dx <= radius; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
-            for (int dz = -1; dz <= 0; ++dz) {
+            for (int dz = -1; dz <= z_threshold; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
                 }
@@ -131,30 +136,9 @@ void PointCloudGrid<PointT>::cleanUp(){
 
 template<typename PointT>
 void PointCloudGrid<PointT>::addPoint(const PointT& point){
-    double cell_x = 0;
-    double cell_y = 0;
-    double cell_z = 0;
-
-    if(grid_config.grid_type == GridType::POLAR){
-        Eigen::Vector3d radial_vector(point.x,point.y,point.z);
-        double radial_angle = std::atan2(point.y, point.x);
-
-        cell_x = radial_vector.norm() / grid_config.radialCellSize;
-        cell_y = radial_angle / grid_config.angularCellSize;
-        cell_z = point.z / grid_config.cellSizeZ;
-    }
-    else 
-    if(grid_config.grid_type == GridType::SQUARE){
-        cell_x = point.x / grid_config.cellSizeX;
-        cell_y = point.y / grid_config.cellSizeY;
-        cell_z = point.z / grid_config.cellSizeZ;
-    }
-
-    if((cell_x <= -grid_config.maxX || cell_x > grid_config.maxX) ||
-       (cell_y <= -grid_config.maxY || cell_y > grid_config.maxY) ||
-       (cell_z <= -grid_config.maxZ || cell_z > grid_config.maxZ)){
-        return;
-    }
+    double cell_x = point.x / grid_config.cellSizeX;
+    double cell_y = point.y / grid_config.cellSizeY;
+    double cell_z = point.z / grid_config.cellSizeZ;
 
     int row = static_cast<int>(std::floor(cell_x));
     int col = static_cast<int>(std::floor(cell_y));
@@ -355,6 +339,7 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
     if (cell.inliers->indices.size() / cell.points->size() > 0.98){
         cell.confidence = Confidence::HIGH;
     }
+
     Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
     double distToOrigin = coefficients->values[3];
     cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
@@ -374,14 +359,12 @@ void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
     id.z = cell.height;
 
     if (cell.height >= 0){return;}
-    
+
     double distance = computeDistance(robot_cell.centroid, cell.centroid);
 
     if (distance <= grid_config.startCellDistanceThreshold){
-
         if (cell.row >= 0 && cell.col > 0){
             selected_cells_first_quadrant.push_back(id);
-
         }
         else if (cell.row <= 0 && cell.col > 0){
             selected_cells_second_quadrant.push_back(id);
@@ -612,6 +595,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             int neighborY = current_cell.col + indices[i].y;
             int neighborZ = current_cell.height + indices[i].z; 
             GridCell<PointT>& neighbor = gridCells[neighborX][neighborY][neighborZ];
+ 
             if(neighbor.points->size() == 0 || neighbor.expanded || neighbor.terrain_type == TerrainType::OBSTACLE){
                 continue;
             }
