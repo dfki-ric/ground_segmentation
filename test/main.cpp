@@ -92,7 +92,7 @@ int main (int argc, char** argv)
     pcl::visualization::PointCloudColorHandlerCustom<PointType> obstacle(result.second, 255, 0, 0);
     viewer2->addPointCloud<PointType>(result.second, obstacle, "obstacle");
 
-    std::map<int, std::map<int, std::map<int, GridCell<PointType>>>>& gridCells = ground_detection->getGridCells();
+    PointCloudGrid<PointType>::GridCellsType& gridCells = ground_detection->getGridCells();
 
     pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
     viewer->setBackgroundColor (0, 0, 0);
@@ -101,10 +101,8 @@ int main (int argc, char** argv)
 
     int count{0};
     bool show_grid{true};
-    for (auto& rowPair : gridCells) {
-        for (auto& colPair : rowPair.second) {
-            for (auto& heightPair : colPair.second) {
-                GridCell<PointType>& cell = heightPair.second;
+    for (auto& cellPair : gridCells) {
+                GridCell<PointType>& cell = cellPair.second;
 
                 if (cell.points->size() == 0) continue;
 
@@ -143,8 +141,6 @@ int main (int argc, char** argv)
 
                 viewer->addArrow(normal_point, centroid_point, 1.0, 0, 0, false, "normal" + std::to_string(count));
   
-            }
-        }
     }
 
 

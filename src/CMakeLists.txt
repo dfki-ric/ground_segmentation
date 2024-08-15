@@ -12,6 +12,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     Boost::serialization
     ${PCL_LIBRARIES}
     ${VTK_LIBRARIES}
+    nanoflann::nanoflann
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

@@ -100,6 +100,17 @@ struct Index3D {
         y = std::numeric_limits<int>::min(); 
         z = std::numeric_limits<int>::min();}
     int x, y, z;
+    struct HashFunction
+    {
+        size_t operator()(Index3D const& ind) const {
+            size_t xx=ind.x, yy=ind.y, zz=ind.z;
+            // distribute bits equally over 64bits
+            return (xx) ^ (yy << 21) ^ ((zz<<42) | (zz>>22));
+        }
+    };
+    bool operator==(const Index3D& oth) const {
+        return (x==oth.x) & (y==oth.y) & (z==oth.z); // use non-lazy `&` to avoid branching
+    }
 };
 
 struct GridConfig{
