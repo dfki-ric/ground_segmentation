@@ -90,11 +90,7 @@ template<typename PointT>
 std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& radius){
     std::vector<Index3D> idxs;
 
-    int z_threshold = 0;
-
-    if (grid_config.processing_phase == 2){
-        z_threshold = 1;
-    }
+    int z_threshold = 1;
 
     for (int dx = -radius; dx <= radius; ++dx) {
         for (int dy = -1; dy <= 1; ++dy) {
@@ -177,9 +173,54 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
     std::vector<int> point_indices(1);
     std::vector<float> point_distances(1);
     uint16_t count = 0;
-    
+
+    bool cell_above = true;   
+
+    typename pcl::PointCloud<PointT>::Ptr total_neighbor_points(new pcl::PointCloud<PointT>());
+
+    int step = neighbor.height;
+
+    do {
+        int x = neighbor.row;
+        int y = neighbor.col;
+        int z = step;
+        
+        auto& cell = gridCells[x][y][z];
+
+        if (cell.points->size() == 0){
+            cell_above = false;
+        }
+        else{
+            *total_neighbor_points += *(cell.points);
+            step++;
+        }
+    }
+    while (cell_above == true);
+
+
+    bool cell_below = true;  
+    step = neighbor.height-1;
+
+    do {
+        int x = neighbor.row;
+        int y = neighbor.col;
+        int z = step;
+        
+        auto& cell = gridCells[x][y][z];
+
+        if (cell.points->size() == 0){
+            cell_below = false;
+        }
+        else{
+            *total_neighbor_points += *(cell.points);
+            step--;
+        }
+    }
+    while (cell_below == true);
+
+
     kdtree.setInputCloud(cell.points);
-    for (typename pcl::PointCloud<PointT>::iterator it = neighbor.points->begin(); it != neighbor.points->end(); ++it){
+    for (typename pcl::PointCloud<PointT>::iterator it = total_neighbor_points->begin(); it != total_neighbor_points->end(); ++it){
         Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
         PointT search_point;
         search_point.x = it->x;
@@ -199,7 +240,7 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
         if (distance < grid_config.groundInlierThreshold){
             count++;
         }
-        if ((count / neighbor.points->size()) > 0.95){   
+        if ((count / total_neighbor_points->size()) > 0.95){   
             neighbor.terrain_type = TerrainType::GROUND;
             return true;
         }
