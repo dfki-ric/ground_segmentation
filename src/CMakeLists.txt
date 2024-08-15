@@ -1,6 +1,7 @@
 find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visualization)
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
+find_package(nanoflann)
 
 set(SOURCES process_pointcloud.cpp)
 

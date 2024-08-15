@@ -5,8 +5,32 @@
 #include "process_pointcloud.hpp"
 #include "ground_detection_statistics.hpp"
 #include "ground_detection_types.hpp"
+#include <nanoflann.hpp>
 
 namespace pointcloud_obstacle_detection{
+
+template <typename PointT>
+struct PCLPointCloudAdaptor {
+    typedef pcl::PointCloud<PointT> PointCloudType;
+
+    PointCloudType& cloud;
+
+    PCLPointCloudAdaptor(PointCloudType& cloud) : cloud(cloud) {}
+
+    // Must return the number of data points
+    inline size_t kdtree_get_point_count() const { return cloud.points.size(); }
+
+    // Returns the dim'th component of the idx'th point in the point cloud
+    inline double kdtree_get_pt(const size_t idx, const size_t dim) const {
+        if (dim == 0) return cloud.points[idx].x;
+        else if (dim == 1) return cloud.points[idx].y;
+        else return cloud.points[idx].z;
+    }
+
+    // Optional bounding-box computation
+    template <class BBOX>
+    bool kdtree_get_bbox(BBOX& /*bb*/) const { return false; }
+};
 
 template<typename PointT> 
 class PointCloudGrid {
@@ -21,6 +45,10 @@ public:
     std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>::Ptr> segmentPoints();
     GridCellsType& getGridCells() { return gridCells; }
     std::vector<CellType> getStartCells();
+
+    // Build KD-Tree
+    typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double, PCLPointCloudAdaptor<PointT>>,
+                                                PCLPointCloudAdaptor<PointT>, 3> KDTree;
 
 private:
 
@@ -223,21 +251,34 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
     }
     while (cell_below == true);
 
+    // Wrap the PCL point cloud with nanoflann adaptor
+    PCLPointCloudAdaptor<PointT> pclAdaptor(*cell.points);
+    KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+    tree.buildIndex();
 
-    kdtree.setInputCloud(cell.points);
+    double out_dist_sqr;
+    nanoflann::KNNResultSet<double> resultSet(1);
+    resultSet.init(&nearest_index, &out_dist_sqr);
+
+
+    //kdtree.setInputCloud(cell.points);
     for (typename pcl::PointCloud<PointT>::iterator it = total_neighbor_points->begin(); it != total_neighbor_points->end(); ++it){
         Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-        PointT search_point;
-        search_point.x = it->x;
-        search_point.y = it->y;
-        search_point.z = it->z;
+        //PointT query_point;
+        //query_point.x = it->x;
+        //query_point.y = it->y;
+        //query_point.z = it->z;
 
-        if (kdtree.nearestKSearch(search_point, 1, point_indices, point_distances) > 0) {
-            nearest_index = point_indices[0];
-        }
+        double query_pt[3] = {it->x, it->y, it->z};
+
+        tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+
+        //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
+        //    nearest_index = point_indices[0];
+        //}
         Eigen::Vector3d ground_point(cell.points->points.at(nearest_index).x,
-                                        cell.points->points.at(nearest_index).y,
-                                        cell.points->points.at(nearest_index).z);
+                                     cell.points->points.at(nearest_index).y,
+                                     cell.points->points.at(nearest_index).z);
 
         Eigen::Vector3d diff = obstacle_point - ground_point;
         
@@ -788,17 +829,31 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         std::vector<int> point_indices(1);
         std::vector<float> point_distances(1);
 
-        kdtree.setInputCloud(ground_inliers);
+        // Wrap the PCL point cloud with nanoflann adaptor
+        PCLPointCloudAdaptor<PointT> pclAdaptor(*ground_inliers);
+        KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+        tree.buildIndex();
+
+        double out_dist_sqr;
+        nanoflann::KNNResultSet<double> resultSet(1);
+        resultSet.init(&nearest_index, &out_dist_sqr);
+
+
+        //kdtree.setInputCloud(ground_inliers);
         for (typename pcl::PointCloud<PointT>::iterator it = non_ground_inliers->begin(); it != non_ground_inliers->end(); ++it){
             Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-            PointT query_point;
-            query_point.x = it->x;
-            query_point.y = it->y;
-            query_point.z = it->z;
+            //PointT query_point;
+            //query_point.x = it->x;
+            //query_point.y = it->y;
+            //query_point.z = it->z;
 
-            if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
-                nearest_index = point_indices[0];
-            }
+            double query_pt[3] = {it->x, it->y, it->z};
+
+            tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+
+            //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
+            //    nearest_index = point_indices[0];
+            //}
 
             Eigen::Vector3d nearest_point(ground_inliers->points.at(nearest_index).x,
                                           ground_inliers->points.at(nearest_index).y,
@@ -873,20 +928,32 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
             continue;    
         }
 
-        kdtree.setInputCloud(close_ground_points);
+        // Wrap the PCL point cloud with nanoflann adaptor
+        PCLPointCloudAdaptor<PointT> pclAdaptor(*close_ground_points);
+        KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+        tree.buildIndex();
+
+        double out_dist_sqr;
+        nanoflann::KNNResultSet<double> resultSet(1);
+        resultSet.init(&nearest_index, &out_dist_sqr);
+
+
+        //kdtree.setInputCloud(close_ground_points);
         for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
             Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-            PointT query_point;
-            query_point.x = it->x;
-            query_point.y = it->y;
-            query_point.z = it->z;
-            
-            if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0){
-                nearest_index = point_indices[0];
-            }
-            else{
-                //TODO: Handle this case
-            }
+            //PointT query_point;
+            //query_point.x = it->x;
+            //query_point.y = it->y;
+            //query_point.z = it->z;
+
+            double query_pt[3] = {it->x, it->y, it->z};
+
+            tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+
+            //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
+            //    nearest_index = point_indices[0];
+            //}
+
 
             Eigen::Vector3d nearest_point(close_ground_points->points.at(nearest_index).x,
                                           close_ground_points->points.at(nearest_index).y,
