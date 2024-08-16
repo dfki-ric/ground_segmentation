@@ -96,9 +96,9 @@ private:
 template<typename PointT>
 PointCloudGrid<PointT>::PointCloudGrid(const GridConfig& config){
     grid_config = config;
-    robot_cell.row = 0;
-    robot_cell.col = 0;
-    robot_cell.height = 0;
+    robot_cell.x = 0;
+    robot_cell.y = 0;
+    robot_cell.z = 0;
    
     indices = generateIndices(grid_config.neighborsIndexThreshold);
 
@@ -168,15 +168,15 @@ void PointCloudGrid<PointT>::addPoint(const PointT& point){
     double cell_y = point.y / grid_config.cellSizeY;
     double cell_z = point.z / grid_config.cellSizeZ;
 
-    int row = static_cast<int>(std::floor(cell_x));
-    int col = static_cast<int>(std::floor(cell_y));
-    int height = static_cast<int>(std::floor(cell_z));
+    int x = static_cast<int>(std::floor(cell_x));
+    int y = static_cast<int>(std::floor(cell_y));
+    int z = static_cast<int>(std::floor(cell_z));
 
-    CellType& cell = gridCells[{row,col,height}];
+    CellType& cell = gridCells[{x,y,z}];
     // information is redundant:
-    cell.row = row;
-    cell.col = col;
-    cell.height = height;
+    cell.x = x;
+    cell.y = y;
+    cell.z = z;
     cell.points->push_back(point);
 }
 
@@ -212,11 +212,11 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
 
     typename pcl::PointCloud<PointT>::Ptr total_neighbor_points(new pcl::PointCloud<PointT>());
 
-    int step = neighbor.height;
+    int step = neighbor.z;
 
     do {
-        int x = neighbor.row;
-        int y = neighbor.col;
+        int x = neighbor.x;
+        int y = neighbor.y;
         int z = step;
         
         auto& cell = gridCells[{x, y, z}];
@@ -233,11 +233,11 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
 
 
     bool cell_below = true;  
-    step = neighbor.height-1;
+    step = neighbor.z-1;
 
     do {
-        int x = neighbor.row;
-        int y = neighbor.col;
+        int x = neighbor.x;
+        int y = neighbor.y;
         int z = step;
         
         auto& cell = gridCells[{x, y, z}];
@@ -310,9 +310,9 @@ Eigen::Vector3d PointCloudGrid<PointT>::computeSlopeDirection(const Eigen::Hyper
 template<typename PointT>
 double PointCloudGrid<PointT>::computeGridDistance(const GridCell<PointT>& cell1, const GridCell<PointT>& cell2){
 
-    double dx = cell1.row - cell2.row;
-    double dy = cell1.col - cell2.col;
-    double dz = cell1.height - cell2.height;
+    double dx = cell1.x - cell2.x;
+    double dy = cell1.y - cell2.y;
+    double dz = cell1.z - cell2.z;
     return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
@@ -323,9 +323,9 @@ Index3D PointCloudGrid<PointT>::findLowestCell(const std::vector<Index3D> ids){
     int lowest_index = 0;
 
     for (int i{0}; i < ids.size(); ++i){
-        if (gridCells[ids[i]].height < lowest_height){
+        if (gridCells[ids[i]].z < lowest_height){
             lowest_index = i;
-            lowest_height = gridCells[ids[i]].height;
+            lowest_height = gridCells[ids[i]].z;
         }
     }
     return ids[lowest_index];
@@ -337,7 +337,7 @@ int PointCloudGrid<PointT>::computeMeanHeight(const std::vector<Index3D> ids){
     // Calculate the mean height of selected cells
     double total_height = 0.0;
     for (const Index3D& id : ids) {
-        total_height += gridCells[id].height; // FIXME isn't this just total_height += id.z; ?
+        total_height += gridCells[id].z;
     }
     // Find the cell closest to the mean height
     int mean_height = std::floor(total_height / ids.size());
@@ -377,9 +377,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
     std::vector<Index3D> neighbors;
 
     Index3D cell_id;
-    cell_id.x = cell.row;
-    cell_id.y = cell.col;
-    cell_id.z = cell.height;
+    cell_id.x = cell.x;
+    cell_id.y = cell.y;
+    cell_id.z = cell.z;
 
     for (int i = 0; i < idx.size(); ++i){
         Index3D neighbor_id = cell_id + idx[i];
@@ -387,9 +387,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
 
         if (neighbor.points->size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < radius && neighbor.terrain_type == type){
             Index3D id;
-            id.x = neighbor.row;
-            id.y = neighbor.col;
-            id.z = neighbor.height;
+            id.x = neighbor.x;
+            id.y = neighbor.y;
+            id.z = neighbor.z;
             neighbors.push_back(id);
         }
     }
@@ -427,7 +427,7 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
     pcl::SACSegmentation<PointT> seg;
     seg.setOptimizeCoefficients(true);
     seg.setModelType(pcl::SACMODEL_PLANE);
-    seg.setMethodType(pcl::SAC_MSAC);
+    seg.setMethodType(pcl::SAC_PROSAC);
     seg.setMaxIterations(grid_config.ransac_iterations);
     seg.setInputCloud(cell.points);
     seg.setDistanceThreshold(threshold); // Adjust this threshold based on your needs
@@ -455,25 +455,25 @@ template<typename PointT>
 void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
 
     Index3D id;
-    id.x = cell.row;
-    id.y = cell.col;
-    id.z = cell.height;
+    id.x = cell.x;
+    id.y = cell.y;
+    id.z = cell.z;
 
-    if (cell.height >= 0){return;}
+    if (cell.z >= 0){return;}
 
     double distance = computeDistance(robot_cell.centroid, cell.centroid);
 
     if (distance <= grid_config.startCellDistanceThreshold){
-        if (cell.row >= 0 && cell.col > 0){
+        if (cell.x >= 0 && cell.y > 0){
             selected_cells_first_quadrant.push_back(id);
         }
-        else if (cell.row <= 0 && cell.col > 0){
+        else if (cell.x <= 0 && cell.y > 0){
             selected_cells_second_quadrant.push_back(id);
         }
-        else if (cell.row <= 0 && cell.col < 0){
+        else if (cell.x <= 0 && cell.y < 0){
             selected_cells_third_quadrant.push_back(id);
         }
-        else if (cell.row >= 0 && cell.col < 0) {
+        else if (cell.x >= 0 && cell.y < 0) {
             selected_cells_fourth_quadrant.push_back(id);
         }
     }
@@ -495,10 +495,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
                 //TODO: Why ignored?
                 if ((cell.points->size() < 3)){continue;}
 
-                Index3D id; // FIXME cellPair.first
-                id.x = cell.row;
-                id.y = cell.col;
-                id.z = cell.height;
+                Index3D id = cellPair.first;
 
                 pcl::compute3DCentroid(*(cell.points), cell.centroid);
 
@@ -658,9 +655,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             }
 
             Index3D id;
-            id.x = neighbor.row;
-            id.y = neighbor.col;
-            id.z = neighbor.height;
+            id.x = neighbor.x;
+            id.y = neighbor.y;
+            id.z = neighbor.z;
 
             if (indices[i].z != 0 && grid_config.processing_phase == 2){
                 if (!neighborCheck(current_cell,neighbor)){
@@ -703,9 +700,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
 
             if (neighbor.terrain_type == TerrainType::GROUND){
                 Index3D n;
-                n.x = neighbor.row;
-                n.y = neighbor.col;
-                n.z = neighbor.height;
+                n.x = neighbor.x;
+                n.y = neighbor.y;
+                n.z = neighbor.z;
                 q.push(n);
             }        
         }

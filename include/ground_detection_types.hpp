@@ -49,9 +49,9 @@ enum Confidence {
 
 template<typename PointT> 
 struct GridCell {
-    int row;
-    int col;
-    int height;
+    int x;
+    int y;
+    int z;
     bool expanded;
     bool explored;
     TerrainType terrain_type;
@@ -84,9 +84,9 @@ struct GridCell {
     GridCell() : points(new pcl::PointCloud<PointT>), 
                  ground_points(new pcl::PointCloud<PointT>), 
                  inliers(new pcl::PointIndices){
-        row = 0;
-        col = 0;
-        height = 0;
+        x = 0;
+        y = 0;
+        z = 0;
         expanded = false;
         explored = false;
         confidence = Confidence::LOW;
