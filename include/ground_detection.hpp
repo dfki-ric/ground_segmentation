@@ -375,12 +375,15 @@ template<typename PointT>
 std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& idx, const double& radius){
 
     std::vector<Index3D> neighbors;
-    for (int i = 0; i < idx.size(); ++i){
-        int neighborX = cell.row + idx[i].x;
-        int neighborY = cell.col + idx[i].y;
-        int neighborZ = cell.height + idx[i].z;
 
-        GridCell<PointT>& neighbor = gridCells[{neighborX, neighborY, neighborZ}];
+    Index3D cell_id;
+    cell_id.x = cell.row;
+    cell_id.y = cell.col;
+    cell_id.z = cell.height;
+
+    for (int i = 0; i < idx.size(); ++i){
+        Index3D neighbor_id = cell_id + idx[i];
+        GridCell<PointT>& neighbor = gridCells[neighbor_id];
 
         if (neighbor.points->size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < radius && neighbor.terrain_type == type){
             Index3D id;
@@ -646,12 +649,10 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             continue;
         }
         current_cell.expanded = true;
+
         for (int i = 0; i < indices.size(); ++i){
-            // TODO overload operator+() for Index3D
-            int neighborX = current_cell.row + indices[i].x;
-            int neighborY = current_cell.col + indices[i].y;
-            int neighborZ = current_cell.height + indices[i].z; 
-            GridCell<PointT>& neighbor = gridCells[{neighborX, neighborY, neighborZ}];
+            Index3D neighbor_id = idx + indices[i];
+            GridCell<PointT>& neighbor = gridCells[neighbor_id];
             if(neighbor.points->size() == 0 || neighbor.expanded || neighbor.terrain_type == TerrainType::OBSTACLE){
                 continue;
             }
@@ -694,13 +695,8 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
         current_cell.explored = true;
       
         for (int i = 0; i < indices.size(); ++i){
-
-            int neighborX = current_cell.row + indices[i].x;
-            int neighborY = current_cell.col + indices[i].y;
-            int neighborZ = current_cell.height + indices[i].z;
-
-            GridCell<PointT>& neighbor = copy[neighborX][neighborY][neighborZ];
-
+            Index3D neighbor_id = idx + indices[i];
+            GridCell<PointT>& neighbor = copy[neighbor_id];
             if(neighbor.points->size() == 0 || neighbor.explored){
                 continue;
             }

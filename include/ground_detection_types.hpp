@@ -111,6 +111,15 @@ struct Index3D {
     bool operator==(const Index3D& oth) const {
         return (x==oth.x) & (y==oth.y) & (z==oth.z); // use non-lazy `&` to avoid branching
     }
+ 
+    Index3D operator+(Index3D const& obj)
+    {
+        Index3D res;
+        res.x = x + obj.x;
+        res.y = y + obj.y;
+        res.z = z + obj.z;
+        return res;
+    }
 };
 
 struct GridConfig{
