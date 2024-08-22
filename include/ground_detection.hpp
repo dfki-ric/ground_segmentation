@@ -44,12 +44,13 @@ public:
     void setInputCloud(typename pcl::PointCloud<PointT>::Ptr input, const Eigen::Quaterniond& R_body2World);
     std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>::Ptr> segmentPoints();
     GridCellsType& getGridCells() { return gridCells; }
-    std::vector<CellType> getStartCells();
+    std::vector<Index3D> getStartCellsFront();
+    std::vector<Index3D> getStartCellsBack();
 
     // Build KD-Tree
     typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double, PCLPointCloudAdaptor<PointT>>,
                                                 PCLPointCloudAdaptor<PointT>, 3> KDTree;
-
+    bool checkIndex3DInGrid(const Index3D& index);
 private:
 
     std::vector<Index3D> generateIndices(const uint16_t& radius);
@@ -76,9 +77,7 @@ private:
     std::vector<Index3D> indices;
     std::vector<Index3D> obs_indices;
 
-    //TODO
     GridCellsType gridCells;
-//    std::map<int, std::map<int, std::map<int, GridCell<PointT>>>> gridCells;
     GridConfig grid_config;
     std::vector<Index3D> ground_cells;
     std::vector<Index3D> non_ground_cells;
@@ -90,7 +89,10 @@ private:
     GridCell<PointT> robot_cell;
     ProcessPointCloud<PointT> processor;
     GroundDetectionStatistics statistics;
-    std::vector<Index3D> start_cells;
+
+    std::vector<Index3D> start_cells_front;
+    std::vector<Index3D> start_cells_back;
+
 };
     
 template<typename PointT>
@@ -159,7 +161,9 @@ void PointCloudGrid<PointT>::cleanUp(){
     selected_cells_second_quadrant.clear();
     selected_cells_third_quadrant.clear();
     selected_cells_fourth_quadrant.clear();
-    start_cells.clear();
+
+    start_cells_front.clear();
+    start_cells_back.clear();
 }
 
 template<typename PointT>
@@ -203,6 +207,12 @@ double PointCloudGrid<PointT>::computeSlope(const Eigen::Hyperplane< double, int
 template<typename PointT>
 bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCell<PointT>& neighbor){
     pcl::KdTreeFLANN<PointT> kdtree;
+
+    nanoflann::SearchParams params;
+    params.checks = 10;  // Minimal checks for speed
+    params.eps = 0.5;    // Larger tolerance for faster results
+    params.sorted = false; // No need to sort
+
     size_t nearest_index{0};
     std::vector<int> point_indices(1);
     std::vector<float> point_distances(1);
@@ -215,18 +225,23 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
     int step = neighbor.z;
 
     do {
-        int x = neighbor.x;
-        int y = neighbor.y;
-        int z = step;
-        
-        auto& cell = gridCells[{x, y, z}];
+        Index3D neighbor_id;
+        neighbor_id.x = neighbor.x;
+        neighbor_id.y = neighbor.y;
+        neighbor_id.z = step;
 
-        if (cell.points->size() == 0){
+        if (!checkIndex3DInGrid(neighbor_id)){
             cell_above = false;
         }
         else{
-            *total_neighbor_points += *(cell.points);
-            step++;
+            auto& neighbor_cell = gridCells[neighbor_id];
+            if (neighbor_cell.points->size() == 0){
+                cell_above = false;
+            }
+            else{
+                *total_neighbor_points += *(neighbor_cell.points);
+                step++;
+            }
         }
     }
     while (cell_above == true);
@@ -236,21 +251,30 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
     step = neighbor.z-1;
 
     do {
-        int x = neighbor.x;
-        int y = neighbor.y;
-        int z = step;
-        
-        auto& cell = gridCells[{x, y, z}];
+        Index3D neighbor_id;
+        neighbor_id.x = neighbor.x;
+        neighbor_id.y = neighbor.y;
+        neighbor_id.z = step;
 
-        if (cell.points->size() == 0){
+        if (!checkIndex3DInGrid(neighbor_id)){
             cell_below = false;
         }
         else{
-            *total_neighbor_points += *(cell.points);
-            step--;
+            auto& neighbor_cell = gridCells[neighbor_id];
+            if (neighbor_cell.points->size() == 0){
+                cell_below = false;
+            }
+            else{
+                *total_neighbor_points += *(neighbor_cell.points);
+                step--;
+            }
         }
     }
     while (cell_below == true);
+
+    //if (cell_below == false && cell_above == false){
+    //    return false;
+    //}
 
     // Wrap the PCL point cloud with nanoflann adaptor
     PCLPointCloudAdaptor<PointT> pclAdaptor(*cell.points);
@@ -272,7 +296,7 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
 
         double query_pt[3] = {it->x, it->y, it->z};
 
-        tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+        tree.findNeighbors(resultSet, query_pt, params);
 
         //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
         //    nearest_index = point_indices[0];
@@ -350,6 +374,7 @@ double PointCloudGrid<PointT>::computeMeanPointsHeight(const std::vector<Index3D
     int total_points = 0;
     double mean_height = 0.0;
     for (const Index3D& id : ids) {
+
         GridCell<PointT>& cell = gridCells[id];
 
         // Compute the transformation matrix
@@ -383,6 +408,11 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
 
     for (int i = 0; i < idx.size(); ++i){
         Index3D neighbor_id = cell_id + idx[i];
+
+        if (!checkIndex3DInGrid(neighbor_id)){
+            continue;
+        }
+
         GridCell<PointT>& neighbor = gridCells[neighbor_id];
 
         if (neighbor.points->size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < radius && neighbor.terrain_type == type){
@@ -403,8 +433,8 @@ Index3D PointCloudGrid<PointT>::getCellWithMaxGroundNeighbors(const std::vector<
     Index3D index_with_max_ground_neighbors;
 
     for (const Index3D& id : ids) {
-        const GridCell<PointT>& cell = gridCells[id];
 
+        const GridCell<PointT>& cell = gridCells[id];
         int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 3).size();
 
         if (neighbor_count == 0){
@@ -490,120 +520,116 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     this->cleanUp();
 
     for (auto& cellPair : gridCells){
-                GridCell<PointT>& cell = cellPair.second;
+        GridCell<PointT>& cell = cellPair.second;
 
-                //TODO: Why ignored?
-                if ((cell.points->size() < 3)){continue;}
+        //TODO: Why ignored?
+        if ((cell.points->size() < 3)){continue;}
 
-                Index3D id = cellPair.first;
+        Index3D id = cellPair.first;
 
-                pcl::compute3DCentroid(*(cell.points), cell.centroid);
+        pcl::compute3DCentroid(*(cell.points), cell.centroid);
 
-                if (cell.points->size() <= grid_config.minPoints){
-                    Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
+        if (cell.points->size() <= grid_config.minPoints){
+            Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
 
-                    for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
-                        Eigen::Vector4f diff = (*it).getVector4fMap() - cell.centroid.template cast<float>();
-                        squared_diff_sum += diff.array().square().matrix();                     
-                    }
+            for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
+                Eigen::Vector4f diff = (*it).getVector4fMap() - cell.centroid.template cast<float>();
+                squared_diff_sum += diff.array().square().matrix();                     
+            }
 
-                    Eigen::Vector4f variance = squared_diff_sum / cell.points->size();
+            Eigen::Vector4f variance = squared_diff_sum / cell.points->size();
 
-                    if (variance[0] < variance[2] && variance[1] < variance[2]){
-                        cell.terrain_type = TerrainType::OBSTACLE;
-                        non_ground_cells.push_back(id);                    
-                    }
-                    else{
-                        cell.terrain_type = TerrainType::GROUND;
-                    }
-                    continue;
-                }
+            if (variance[0] < variance[2] && variance[1] < variance[2]){
+                cell.terrain_type = TerrainType::OBSTACLE;
+                non_ground_cells.push_back(id);                    
+            }
+            else{
+                cell.terrain_type = TerrainType::GROUND;
+            }
+            continue;
+        }
 
-                // Compute the covariance matrix
-                Eigen::Matrix3d covariance_matrix;
-                pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
+        // Compute the covariance matrix
+        Eigen::Matrix3d covariance_matrix;
+        pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
 
-                // Compute eigenvectors and eigenvalues
-                Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
-                cell.eigenvectors = eigen_solver.eigenvectors();
-                cell.eigenvalues = eigen_solver.eigenvalues();
+        // Compute eigenvectors and eigenvalues
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix, Eigen::ComputeEigenvectors);
+        cell.eigenvectors = eigen_solver.eigenvectors();
+        cell.eigenvalues = eigen_solver.eigenvalues();
 
-                // Normal is the eigenvector corresponding to the smallest eigenvalue
-                Eigen::Vector3d normal = cell.eigenvectors.col(0);
+        // Normal is the eigenvector corresponding to the smallest eigenvalue
+        Eigen::Vector3d normal = cell.eigenvectors.col(0);
 
-                // Ensure all normals point upward
-                if (normal(2) < 0) {
-                    normal *= -1; // flip the normal direction
-                }
+        // Ensure all normals point upward
+        if (normal(2) < 0) {
+            normal *= -1; // flip the normal direction
+        }
 
-                normal.normalize();
-                cell.normal = normal;
+        normal.normalize();
+        cell.normal = normal;
 
-                // Compute the ratio of eigenvalues to determine point distribution
-                double ratio = cell.eigenvalues[2] / cell.eigenvalues.sum();
-                if (ratio > 0.950){ 
-                    //The points form a line  
-                    cell.primitive_type = PrimitiveType::LINE; 
-                    
-                    Eigen::Vector3d v = cell.eigenvectors.col(2);
-                    // Ensure all normals point upward
-                    if (v(2) < 0) {
-                        v *= -1; // flip the normal direction
-                    }
-                    v = orientation * v;
-                    v.normalize(); //just in case
+        // Compute the ratio of eigenvalues to determine point distribution
+        double ratio = cell.eigenvalues[2] / cell.eigenvalues.sum();
+        if (ratio > 0.950){ 
+            //The points form a line  
+            cell.primitive_type = PrimitiveType::LINE; 
+            
+            Eigen::Vector3d v = cell.eigenvectors.col(2);
+            // Ensure all normals point upward
+            if (v(2) < 0) {
+                v *= -1; // flip the normal direction
+            }
+            v = orientation * v;
+            v.normalize(); //just in case
 
-                    double angle_rad = acos(v.dot(Eigen::Vector3d::UnitZ()));
+            double angle_rad = acos(v.dot(Eigen::Vector3d::UnitZ()));
 
-                    if (angle_rad > ((90-grid_config.slopeThresholdDegrees) * (M_PI / 180))){
-                        cell.terrain_type = TerrainType::GROUND;
-                    }
-                    else{
-                        cell.terrain_type = TerrainType::OBSTACLE;
-                        non_ground_cells.push_back(id);  
-                    }
-                    continue;
-                } 
-                else 
-                if (ratio > 0.4){
-                    //The points form a plane
-                    cell.primitive_type = PrimitiveType::PLANE; 
-                    if (computeSlope(cell.normal) > grid_config.slopeThresholdDegrees ){
-                        cell.terrain_type = TerrainType::OBSTACLE;
-                        non_ground_cells.push_back(id);  
-                        continue;
-                    }
-                } 
-                else{
-                    cell.terrain_type = TerrainType::OBSTACLE;
-                    non_ground_cells.push_back(id);
-                    continue;
-                }
+            if (angle_rad > ((90-grid_config.slopeThresholdDegrees) * (M_PI / 180))){
+                cell.terrain_type = TerrainType::GROUND;
+            }
+            else{
+                cell.terrain_type = TerrainType::OBSTACLE;
+                non_ground_cells.push_back(id);  
+            }
+            continue;
+        } 
+        else 
+        if (ratio > 0.4){
+            //The points form a plane
+            cell.primitive_type = PrimitiveType::PLANE; 
+            if (computeSlope(cell.normal) > grid_config.slopeThresholdDegrees ){
+                cell.terrain_type = TerrainType::OBSTACLE;
+                non_ground_cells.push_back(id);  
+                continue;
+            }
+        } 
+        else{
+            cell.terrain_type = TerrainType::OBSTACLE;
+            non_ground_cells.push_back(id);
+            continue;
+        }
 
-                if (!fitGroundPlane(cell, grid_config.groundInlierThreshold)){
-                    cell.terrain_type = TerrainType::OBSTACLE;
-                    non_ground_cells.push_back(id);
-                    continue;
-                }
+        if (!fitGroundPlane(cell, grid_config.groundInlierThreshold)){
+            cell.terrain_type = TerrainType::OBSTACLE;
+            non_ground_cells.push_back(id);
+            continue;
+        }
 
-                if (cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
-                    cell.terrain_type = TerrainType::GROUND;
+        if (cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
+            cell.terrain_type = TerrainType::GROUND;
 
-                    if (cell.confidence == Confidence::HIGH){
-                       selectStartCell(cell);
-                    }
-                }
-                else{
-                    cell.terrain_type = TerrainType::OBSTACLE;
-                    non_ground_cells.push_back(id);
-                }
+            if (cell.confidence == Confidence::HIGH){
+                selectStartCell(cell);
+            }
+        }
+        else{
+            cell.terrain_type = TerrainType::OBSTACLE;
+            non_ground_cells.push_back(id);
+        }
     }
 
     std::queue<Index3D> q;
-
-
-    std::vector<Index3D> start_cells_front;
-    std::vector<Index3D> start_cells_back;
 
     if (selected_cells_first_quadrant.size() > 0){
         Index3D q1 = getCellWithMaxGroundNeighbors(selected_cells_first_quadrant);
@@ -641,14 +667,20 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
     while (!q.empty()){
         Index3D idx = q.front();
         q.pop();
+
         GridCell<PointT>& current_cell = gridCells[idx];
-        if (current_cell.expanded == true || current_cell.points->size() == 0){
+        if (current_cell.expanded || current_cell.points->size() == 0){
             continue;
         }
         current_cell.expanded = true;
 
         for (int i = 0; i < indices.size(); ++i){
             Index3D neighbor_id = idx + indices[i];
+
+            if (!checkIndex3DInGrid(neighbor_id)){
+                continue;
+            }    
+    
             GridCell<PointT>& neighbor = gridCells[neighbor_id];
             if(neighbor.points->size() == 0 || neighbor.expanded || neighbor.terrain_type == TerrainType::OBSTACLE){
                 continue;
@@ -693,6 +725,11 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
       
         for (int i = 0; i < indices.size(); ++i){
             Index3D neighbor_id = idx + indices[i];
+
+            if (!checkIndex3DInGrid(neighbor_id)){
+                continue;
+            }    
+                
             GridCell<PointT>& neighbor = copy[neighbor_id];
             if(neighbor.points->size() == 0 || neighbor.explored){
                 continue;
@@ -712,9 +749,15 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
 }
 
 template<typename PointT>
-std::vector<GridCell<PointT>> PointCloudGrid<PointT>::getStartCells(){
-    return start_cells;
+std::vector<Index3D> PointCloudGrid<PointT>::getStartCellsFront(){
+    return start_cells_front;
 }
+
+template<typename PointT>
+std::vector<Index3D> PointCloudGrid<PointT>::getStartCellsBack(){
+    return start_cells_back;
+}
+
 
 template<typename PointT>
 double PointCloudGrid<PointT>::computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2) {
@@ -756,6 +799,16 @@ std::pair<size_t,PointT> PointCloudGrid<PointT>::findLowestPoint(const GridCell<
 }
 
 template<typename PointT>
+bool PointCloudGrid<PointT>::checkIndex3DInGrid(const Index3D& index){
+    if (auto search = gridCells.find(index); search != gridCells.end()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>::Ptr> PointCloudGrid<PointT>::segmentPoints(){
 
     typename pcl::PointCloud<PointT>::Ptr ground_points(new pcl::PointCloud<PointT>());
@@ -767,6 +820,11 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     const TerrainType type_ground = TerrainType::GROUND;
     const TerrainType type_obstacle = TerrainType::OBSTACLE;
     pcl::KdTreeFLANN<PointT> kdtree;
+
+    nanoflann::SearchParams params;
+    params.checks = 10;  // Minimal checks for speed
+    params.eps = 0.5;    // Larger tolerance for faster results
+    params.sorted = false; // No need to sort
 
     for (auto& id : ground_cells){
         GridCell<PointT>& cell = gridCells[id];
@@ -815,7 +873,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
 
             double query_pt[3] = {it->x, it->y, it->z};
 
-            tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+            tree.findNeighbors(resultSet, query_pt, params);
 
             //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
             //    nearest_index = point_indices[0];
@@ -844,7 +902,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         GridCell<PointT>& cell = gridCells[id];
 
         typename pcl::PointCloud<PointT>::Ptr close_ground_points(new pcl::PointCloud<PointT>());
-        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices, 3);
+        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices, 6);
         if (ground_neighbors.size() == 0){
             *non_ground_points += *cell.points;
             continue;    
@@ -895,30 +953,30 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         }
 
         // Wrap the PCL point cloud with nanoflann adaptor
-        PCLPointCloudAdaptor<PointT> pclAdaptor(*close_ground_points);
-        KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
-        tree.buildIndex();
+        //PCLPointCloudAdaptor<PointT> pclAdaptor(*close_ground_points);
+        //KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+        //tree.buildIndex();
 
-        double out_dist_sqr;
-        nanoflann::KNNResultSet<double> resultSet(1);
-        resultSet.init(&nearest_index, &out_dist_sqr);
+        //double out_dist_sqr;
+        //nanoflann::KNNResultSet<double> resultSet(1);
+        //resultSet.init(&nearest_index, &out_dist_sqr);
 
 
-        //kdtree.setInputCloud(close_ground_points);
+        kdtree.setInputCloud(close_ground_points);
         for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
             Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
-            //PointT query_point;
-            //query_point.x = it->x;
-            //query_point.y = it->y;
-            //query_point.z = it->z;
+            PointT query_point;
+            query_point.x = it->x;
+            query_point.y = it->y;
+            query_point.z = it->z;
 
-            double query_pt[3] = {it->x, it->y, it->z};
+            //double query_pt[3] = {it->x, it->y, it->z};
 
-            tree.findNeighbors(resultSet, query_pt, nanoflann::SearchParams(10));
+            //tree.findNeighbors(resultSet, query_pt, params);
 
-            //if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
-            //    nearest_index = point_indices[0];
-            //}
+            if (kdtree.nearestKSearch(query_point, 1, point_indices, point_distances) > 0) {
+                nearest_index = point_indices[0];
+            }
 
 
             Eigen::Vector3d nearest_point(close_ground_points->points.at(nearest_index).x,
