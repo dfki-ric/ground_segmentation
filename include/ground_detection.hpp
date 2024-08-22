@@ -636,9 +636,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         start_cells_front.push_back(q1);
     }
 
-    if (selected_cells_fourth_quadrant.size() > 0){
-        Index3D q4 = getCellWithMaxGroundNeighbors(selected_cells_fourth_quadrant);
-        start_cells_front.push_back(q4);
+    if (selected_cells_third_quadrant.size() > 0){
+        Index3D q3 = getCellWithMaxGroundNeighbors(selected_cells_third_quadrant);
+        start_cells_front.push_back(q3);
     }
 
     if (selected_cells_second_quadrant.size() > 0){
@@ -646,16 +646,20 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         start_cells_back.push_back(q2);
     }
 
-    if (selected_cells_third_quadrant.size() > 0){
-        Index3D q3 = getCellWithMaxGroundNeighbors(selected_cells_third_quadrant);
-        start_cells_back.push_back(q3);
+    if (selected_cells_fourth_quadrant.size() > 0){
+        Index3D q4 = getCellWithMaxGroundNeighbors(selected_cells_fourth_quadrant);
+        start_cells_back.push_back(q4);
     }
 
-    Index3D seed_id_front = findLowestCell(start_cells_front);
-    Index3D seed_id_back  = findLowestCell(start_cells_back);
-
-    q.push(seed_id_front);
-    q.push(seed_id_back);
+    if (start_cells_front.size() > 0){
+        Index3D seed_id_front = findLowestCell(start_cells_front);
+        q.push(seed_id_front);
+    }
+    if (start_cells_back.size() > 0){
+        Index3D seed_id_back = findLowestCell(start_cells_back);
+        q.push(seed_id_back);
+    }
+ 
     ground_cells = expandGrid(q);
     return ground_cells;
 }
