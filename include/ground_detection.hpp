@@ -44,8 +44,7 @@ public:
     void setInputCloud(typename pcl::PointCloud<PointT>::Ptr input, const Eigen::Quaterniond& R_body2World);
     std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>::Ptr> segmentPoints();
     GridCellsType& getGridCells() { return gridCells; }
-    std::vector<Index3D> getStartCellsFront();
-    std::vector<Index3D> getStartCellsBack();
+    std::vector<Index3D> getSeedCells();
 
     // Build KD-Tree
     typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double, PCLPointCloudAdaptor<PointT>>,
@@ -67,7 +66,7 @@ private:
     Index3D findLowestCell(const std::vector<Index3D> ids);
     int computeMeanHeight(const std::vector<Index3D> ids);
     double computeMeanPointsHeight(const std::vector<Index3D> ids);
-    Index3D getCellWithMaxGroundNeighbors(const std::vector<Index3D>& ids);
+    Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);    
     bool fitGroundPlane(GridCell<PointT>& cell, const double& inlier_threshold);
     void selectStartCell(GridCell<PointT>& cell);
     std::pair<size_t,PointT>  findLowestPoint(const GridCell<PointT>& cell);
@@ -90,8 +89,7 @@ private:
     ProcessPointCloud<PointT> processor;
     GroundDetectionStatistics statistics;
 
-    std::vector<Index3D> start_cells_front;
-    std::vector<Index3D> start_cells_back;
+    std::vector<Index3D> seed_cells;
 
 };
     
@@ -124,10 +122,10 @@ template<typename PointT>
 std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& radius){
     std::vector<Index3D> idxs;
 
-    int z_threshold = 1;
+    int z_threshold = 0;
 
     for (int dx = -radius; dx <= radius; ++dx) {
-        for (int dy = -1; dy <= 1; ++dy) {
+        for (int dy = -radius; dy <= radius; ++dy) {
             for (int dz = -1; dz <= z_threshold; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
@@ -162,8 +160,7 @@ void PointCloudGrid<PointT>::cleanUp(){
     selected_cells_third_quadrant.clear();
     selected_cells_fourth_quadrant.clear();
 
-    start_cells_front.clear();
-    start_cells_back.clear();
+    seed_cells.clear();
 }
 
 template<typename PointT>
@@ -426,29 +423,33 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
     return neighbors;
 }
 
-template<typename PointT>
-Index3D PointCloudGrid<PointT>::getCellWithMaxGroundNeighbors(const std::vector<Index3D>& ids){
-
+ template<typename PointT>
+Index3D PointCloudGrid<PointT>::cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height){
+ 
+    int min_height_difference = std::numeric_limits<int>::max();
     int max_ground_neighbors = std::numeric_limits<int>::min();
-    Index3D index_with_max_ground_neighbors;
-
+    Index3D closest_to_mean_height;
+ 
     for (const Index3D& id : ids) {
-
         const GridCell<PointT>& cell = gridCells[id];
+
+        double height_difference = std::abs(cell.z - mean_height);
         int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 3).size();
 
         if (neighbor_count == 0){
             continue;
         }
 
-        if (neighbor_count >= max_ground_neighbors){
-            index_with_max_ground_neighbors = id;
-            max_ground_neighbors = neighbor_count;
+        if (height_difference <= min_height_difference) {
+            if (neighbor_count >= max_ground_neighbors){
+                closest_to_mean_height = id;
+                min_height_difference = height_difference;
+                max_ground_neighbors = neighbor_count;
+            }
         }
     }
-    return index_with_max_ground_neighbors;
+    return closest_to_mean_height;
 }
-
 template<typename PointT>
 bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double& threshold){
 
@@ -631,33 +632,42 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
 
     std::queue<Index3D> q;
 
+    std::vector<Index3D> start_cells_front;
+    std::vector<Index3D> start_cells_back;
+
     if (selected_cells_first_quadrant.size() > 0){
-        Index3D q1 = getCellWithMaxGroundNeighbors(selected_cells_first_quadrant);
+        int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
+        Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant,cells_q1_mean_height);
         start_cells_front.push_back(q1);
     }
 
     if (selected_cells_third_quadrant.size() > 0){
-        Index3D q3 = getCellWithMaxGroundNeighbors(selected_cells_third_quadrant);
+        int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
+        Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant,cells_q3_mean_height);
         start_cells_front.push_back(q3);
     }
 
     if (selected_cells_second_quadrant.size() > 0){
-        Index3D q2 = getCellWithMaxGroundNeighbors(selected_cells_second_quadrant);
+        int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
+        Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant,cells_q2_mean_height);
         start_cells_back.push_back(q2);
     }
 
     if (selected_cells_fourth_quadrant.size() > 0){
-        Index3D q4 = getCellWithMaxGroundNeighbors(selected_cells_fourth_quadrant);
+        int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
+        Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant,cells_q4_mean_height);
         start_cells_back.push_back(q4);
     }
 
     if (start_cells_front.size() > 0){
         Index3D seed_id_front = findLowestCell(start_cells_front);
         q.push(seed_id_front);
+        seed_cells.push_back(seed_id_front);
     }
     if (start_cells_back.size() > 0){
         Index3D seed_id_back = findLowestCell(start_cells_back);
         q.push(seed_id_back);
+        seed_cells.push_back(seed_id_back);
     }
  
     ground_cells = expandGrid(q);
@@ -753,15 +763,9 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
 }
 
 template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::getStartCellsFront(){
-    return start_cells_front;
+std::vector<Index3D> PointCloudGrid<PointT>::getSeedCells(){
+    return seed_cells;
 }
-
-template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::getStartCellsBack(){
-    return start_cells_back;
-}
-
 
 template<typename PointT>
 double PointCloudGrid<PointT>::computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2) {
