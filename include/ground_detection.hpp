@@ -52,7 +52,7 @@ public:
     bool checkIndex3DInGrid(const Index3D& index);
 private:
 
-    std::vector<Index3D> generateIndices(const uint16_t& radius);
+    std::vector<Index3D> generateIndices(const uint16_t& z_threshold);
     void cleanUp();
     void addPoint(const PointT& point);
     std::vector<Index3D> getGroundCells();
@@ -100,32 +100,21 @@ PointCloudGrid<PointT>::PointCloudGrid(const GridConfig& config){
     robot_cell.y = 0;
     robot_cell.z = 0;
    
-    indices = generateIndices(grid_config.neighborsIndexThreshold);
-
-    for (int dx = -1; dx <= 1; ++dx) {
-       for (int dy = -1; dy <= 1; ++dy) {
-            for (int dz = -1; dz <= 0; ++dz) {
-                if (dx == 0 && dy == 0 && dz == 0){
-                    continue;
-                }
-                Index3D idx;
-                idx.x = dx;
-                idx.y = dy;
-                idx.z = dz;
-                obs_indices.push_back(idx);
-            }
-       }
+    if (grid_config.processing_phase == 2){
+        indices = generateIndices(1);
     }
+    else{
+        indices = generateIndices(0);
+    }
+    obs_indices = generateIndices(0);
 }
 
 template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& radius){
+std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t& z_threshold){
     std::vector<Index3D> idxs;
 
-    int z_threshold = 0;
-
-    for (int dx = -radius; dx <= radius; ++dx) {
-        for (int dy = -radius; dy <= radius; ++dy) {
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
             for (int dz = -1; dz <= z_threshold; ++dz) {
                 if (dx == 0 && dy == 0 && dz == 0){
                     continue;
@@ -459,7 +448,7 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
     seg.setOptimizeCoefficients(true);
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_PROSAC);
-    seg.setMaxIterations(grid_config.ransac_iterations);
+    seg.setMaxIterations(1000);
     seg.setInputCloud(cell.points);
     seg.setDistanceThreshold(threshold); // Adjust this threshold based on your needs
     seg.segment(*inliers, *coefficients);
@@ -530,7 +519,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
 
         pcl::compute3DCentroid(*(cell.points), cell.centroid);
 
-        if (cell.points->size() <= grid_config.minPoints){
+        if (cell.points->size() <= 5){
             Eigen::Vector4f squared_diff_sum(0, 0, 0, 0);
 
             for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
@@ -700,11 +689,6 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
                 continue;
             }
 
-            Index3D id;
-            id.x = neighbor.x;
-            id.y = neighbor.y;
-            id.z = neighbor.z;
-
             if (indices[i].z != 0 && grid_config.processing_phase == 2){
                 if (!neighborCheck(current_cell,neighbor)){
                     continue;
@@ -712,7 +696,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             }
 
             if (neighbor.terrain_type == TerrainType::GROUND ){
-                q.push(id);
+                q.push(neighbor_id);
             }
         }
         result.emplace_back(idx);
@@ -750,11 +734,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::explore(std::queue<Index3D> q){
             }
 
             if (neighbor.terrain_type == TerrainType::GROUND){
-                Index3D n;
-                n.x = neighbor.x;
-                n.y = neighbor.y;
-                n.z = neighbor.z;
-                q.push(n);
+                q.push(neighbor_id);
             }        
         }
         result.emplace_back(idx);
@@ -837,7 +817,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     for (auto& id : ground_cells){
         GridCell<PointT>& cell = gridCells[id];
 
-        if ((cell.points->size() <= grid_config.minPoints || cell.primitive_type == PrimitiveType::LINE) && cell.terrain_type == TerrainType::GROUND){
+        if ((cell.points->size() <= 5 || cell.primitive_type == PrimitiveType::LINE) && cell.terrain_type == TerrainType::GROUND){
             *ground_points += *cell.points; 
             *(cell.ground_points) = *cell.points; 
             continue; 
@@ -910,7 +890,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         GridCell<PointT>& cell = gridCells[id];
 
         typename pcl::PointCloud<PointT>::Ptr close_ground_points(new pcl::PointCloud<PointT>());
-        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices, 6);
+        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices, 3);
         if (ground_neighbors.size() == 0){
             *non_ground_points += *cell.points;
             continue;    
