@@ -596,6 +596,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         } 
         else{
             cell.terrain_type = TerrainType::OBSTACLE;
+            cell.primitive_type = PrimitiveType::NOISE;
             non_ground_cells.push_back(id);
             continue;
         }
@@ -679,9 +680,18 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
 
         for (int i = 0; i < indices.size(); ++i){
             Index3D neighbor_id = idx + indices[i];
-
             if (!checkIndex3DInGrid(neighbor_id)){
-                continue;
+                if (grid_config.processing_phase == 2){
+                    continue;
+                }
+                int height = neighbor_id.z;
+                neighbor_id.z = height + 1;
+                if (!checkIndex3DInGrid(neighbor_id)){
+                    neighbor_id.z = height - 1;
+                    if (!checkIndex3DInGrid(neighbor_id)){
+                        continue;
+                    }
+                }
             }    
     
             GridCell<PointT>& neighbor = gridCells[neighbor_id];
@@ -978,6 +988,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
                 non_ground_points->points.push_back(*it);
             }
             else{
+                //Why are these not added to ground points? Probably this is the reason of the assertion?
                 ground_points->points.push_back(*it);
             }
         }
