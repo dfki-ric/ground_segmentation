@@ -629,36 +629,43 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
         Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant,cells_q1_mean_height);
         start_cells_front.push_back(q1);
+        q.push(q1);
     }
 
     if (selected_cells_third_quadrant.size() > 0){
         int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
         Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant,cells_q3_mean_height);
         start_cells_front.push_back(q3);
+                q.push(q3);
+
     }
 
     if (selected_cells_second_quadrant.size() > 0){
         int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
         Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant,cells_q2_mean_height);
         start_cells_back.push_back(q2);
+                q.push(q2);
+
     }
 
     if (selected_cells_fourth_quadrant.size() > 0){
         int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
         Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant,cells_q4_mean_height);
         start_cells_back.push_back(q4);
+                q.push(q4);
+
     }
 
-    if (start_cells_front.size() > 0){
-        Index3D seed_id_front = findLowestCell(start_cells_front);
-        q.push(seed_id_front);
-        seed_cells.push_back(seed_id_front);
-    }
-    if (start_cells_back.size() > 0){
-        Index3D seed_id_back = findLowestCell(start_cells_back);
-        q.push(seed_id_back);
-        seed_cells.push_back(seed_id_back);
-    }
+    //if (start_cells_front.size() > 0){
+    //    Index3D seed_id_front = findLowestCell(start_cells_front);
+    //    q.push(seed_id_front);
+    //    seed_cells.push_back(seed_id_front);
+    //}
+    //if (start_cells_back.size() > 0){
+    //    Index3D seed_id_back = findLowestCell(start_cells_back);
+    //    q.push(seed_id_back);
+    //    seed_cells.push_back(seed_id_back);
+    //}
  
     ground_cells = expandGrid(q);
     return ground_cells;
@@ -958,7 +965,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         //double out_dist_sqr;
         //nanoflann::KNNResultSet<double> resultSet(1);
         //resultSet.init(&nearest_index, &out_dist_sqr);
-
 
         kdtree.setInputCloud(close_ground_points);
         for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
