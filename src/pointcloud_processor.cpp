@@ -1,6 +1,6 @@
 // PCL lib Functions for processing point clouds 
 
-#include "process_pointcloud.hpp"
+#include "pointcloud_processor.hpp"
 
 namespace pointcloud_obstacle_detection{
 

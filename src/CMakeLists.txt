@@ -3,7 +3,7 @@ find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 find_package(nanoflann)
 
-set(SOURCES process_pointcloud.cpp)
+set(SOURCES pointcloud_processor.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 

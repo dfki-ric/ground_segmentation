@@ -2,7 +2,7 @@
 
 #include <omp.h>
 
-#include "process_pointcloud.hpp"
+#include "pointcloud_processor.hpp"
 #include "ground_detection_types.hpp"
 #include <nanoflann.hpp>
 
@@ -80,7 +80,7 @@ private:
     std::vector<Index3D> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell<PointT> robot_cell;
-    ProcessPointCloud<PointT> processor;
+    ProcessCloudProcessor<PointT> processor;
 
     std::vector<Index3D> seed_cells;
 
