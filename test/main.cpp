@@ -72,7 +72,6 @@ int main (int argc, char** argv)
 
 
     PointCloudGrid<PointType>* ground_detection = new PointCloudGrid<PointType>(config);
-    GroundDetectionStatistics statistics;
 
     Eigen::Quaterniond R_robot2World(1,0,0,0); 
     

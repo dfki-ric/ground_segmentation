@@ -141,6 +141,7 @@ struct GridConfig{
     uint16_t neighborsIndexThreshold;
     uint16_t minPoints;
     uint16_t ransac_iterations;
+    uint16_t num_seed_cells;
     GridType grid_type;
 
     uint16_t processing_phase;
@@ -164,6 +165,7 @@ struct GridConfig{
         returnGroundPoints = true;
         minPoints = 5;
         ransac_iterations = 50;
+        num_seed_cells = 2;
         grid_type = GridType::SQUARE;
 
         processing_phase = 1;
