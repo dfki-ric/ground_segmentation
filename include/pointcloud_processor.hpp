@@ -17,6 +17,8 @@
 #include <chrono>
 #include <unordered_set>
 
+#include "FEC.hpp"
+
 namespace pointcloud_obstacle_detection {
 
 template <typename PointT>
@@ -26,7 +28,11 @@ public:
                                                       Eigen::Vector4f minPoint, 
                                                       Eigen::Vector4f maxPoint);
 
-    std::vector< typename pcl::PointCloud<PointT>::Ptr> euclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    std::vector< typename pcl::PointCloud<PointT>::Ptr> euclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, 
+                                                                            float clusterTolerance, int minSize, int maxSize);
+
+    std::vector< typename pcl::PointCloud<PointT>::Ptr> fastEuclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, 
+                                                                                float clusterTolerance, int minSize, int maxSize);
 
     void savePcd( typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
@@ -56,7 +62,8 @@ public:
   }
 
   template <typename PointT>
-  std::vector< typename pcl::PointCloud<PointT>::Ptr>  ProcessCloudProcessor<PointT>::euclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
+  std::vector< typename pcl::PointCloud<PointT>::Ptr>  ProcessCloudProcessor<PointT>::euclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, 
+                                                                                                          float clusterTolerance, int minSize, int maxSize)
   {
       std::vector< typename pcl::PointCloud<PointT>::Ptr>  clusters;
       typename pcl::search::KdTree<PointT>::Ptr tree (new pcl::search::KdTree<PointT>);
@@ -83,6 +90,28 @@ public:
         clusters.push_back(cloud_cluster); 
       }
       return clusters;
+  }
+
+  template <typename PointT>
+  std::vector< typename pcl::PointCloud<PointT>::Ptr> ProcessCloudProcessor<PointT>::fastEuclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, 
+                                                                              float clusterTolerance, int minSize, int maxSize){
+      std::vector<pcl::PointIndices> cluster_indices;
+      cluster_indices = FEC(cloud, minSize, clusterTolerance, maxSize);
+      
+      std::vector< typename pcl::PointCloud<PointT>::Ptr>  clusters;
+      for (const auto& cluster : cluster_indices)
+      {
+        typename pcl::PointCloud<PointT>::Ptr cloud_cluster (new pcl::PointCloud<PointT>);
+        for (const auto& idx : cluster.indices) {
+          cloud_cluster->push_back((*cloud)[idx]);
+        } 
+        cloud_cluster->width = cloud_cluster->size();
+        cloud_cluster->height = 1;
+        cloud_cluster->is_dense = true;
+        clusters.push_back(cloud_cluster); 
+      }
+      return clusters;
+
   }
 
   template <typename PointT>
