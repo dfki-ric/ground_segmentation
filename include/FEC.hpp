@@ -28,12 +28,12 @@ struct PointIndex_NumberTag
     float nNumberTag;
 };
 
-bool NumberTag(const PointIndex_NumberTag& p0, const PointIndex_NumberTag& p1)
+inline bool NumberTag(const PointIndex_NumberTag& p0, const PointIndex_NumberTag& p1)
 {
     return p0.nNumberTag < p1.nNumberTag;
 }
 
-std::vector<pcl::PointIndices> FEC(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int min_component_size, double tolorance, int max_n) {
+inline std::vector<pcl::PointIndices> FEC(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int min_component_size, double tolorance, int max_n) {
 
     unsigned long i, j;
     if (cloud->size() < min_component_size)

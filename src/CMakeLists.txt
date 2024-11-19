@@ -1,9 +1,9 @@
 find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visualization)
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
-find_package(nanoflann)
+find_package(nanoflann REQUIRED)
 
-set(SOURCES pointcloud_processor.cpp)
+set(SOURCES pointcloud_processor.cpp ground_detection.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 

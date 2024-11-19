@@ -5,6 +5,7 @@
 #include "pointcloud_processor.hpp"
 #include "ground_detection_types.hpp"
 #include <nanoflann.hpp>
+#include <unordered_map>
 
 namespace pointcloud_obstacle_detection{
 

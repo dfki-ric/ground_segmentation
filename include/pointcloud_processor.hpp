@@ -23,6 +23,7 @@ namespace pointcloud_obstacle_detection {
 
 template <typename PointT>
 class ProcessCloudProcessor{
+
 public:
     typename pcl::PointCloud<PointT>::Ptr filterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, bool downSampleInputCloud, float filterRes, 
                                                       Eigen::Vector4f minPoint, 
@@ -37,7 +38,7 @@ public:
     void savePcd( typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
 };
-  
+
   template <typename PointT>
   typename pcl::PointCloud<PointT>::Ptr ProcessCloudProcessor<PointT>::filterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
   {
