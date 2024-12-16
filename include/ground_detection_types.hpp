@@ -123,51 +123,25 @@ struct Index3D {
 };
 
 struct GridConfig{
-    double radialCellSize; // meters
-    double angularCellSize; // meters
-
     double cellSizeX; // meters
     double cellSizeY; // meters
     double cellSizeZ; // meters
 
-    double maxX;
-    double maxY;
-    double maxZ;
-
     double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
-    bool returnGroundPoints;
-    uint16_t neighborsIndexThreshold;
-    uint16_t minPoints;
-    uint16_t ransac_iterations;
     uint16_t num_seed_cells;
-    GridType grid_type;
 
     uint16_t processing_phase;
 
     GridConfig(){
-        radialCellSize = 2;
-        angularCellSize = 0.349066;
-
         cellSizeX = 2;
         cellSizeY = 2;
         cellSizeZ = 10;
-
-        maxX = 20;
-        maxY = 20;
-        maxZ = 20;
-
         startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
-        neighborsIndexThreshold = 1;
-        returnGroundPoints = true;
-        minPoints = 5;
-        ransac_iterations = 50;
         num_seed_cells = 2;
-        grid_type = GridType::SQUARE;
-
         processing_phase = 1;
     }
 };

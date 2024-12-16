@@ -54,22 +54,12 @@ int main (int argc, char** argv)
     }
 
     GridConfig config;
-
-    //config.radialCellSize = 1;
-    //config.angularCellSize = 0.3;
     config.cellSizeX = 1;
     config.cellSizeY = 1;
     config.cellSizeZ = 1;
-
-    config.neighborsIndexThreshold = 1;
-
     config.startCellDistanceThreshold = 5;
     config.slopeThresholdDegrees = 30;
     config.groundInlierThreshold = 0.1;
-    config.returnGroundPoints = true;
-    config.minPoints = 5;
-    config.grid_type = GridType::SQUARE;
-
 
     PointCloudGrid<PointType>* ground_detection = new PointCloudGrid<PointType>(config);
 
