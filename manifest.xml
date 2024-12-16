@@ -13,4 +13,5 @@
   </keywords>
   <depend package="base/types" />
   <depend package="slam/pcl" />
+  <depend package="external/nanoflann" />
 </package>
