@@ -3,11 +3,9 @@ find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(VTK REQUIRED)
 find_package(nanoflann REQUIRED)
 
-set(SOURCES pointcloud_processor.cpp ground_detection.cpp)
+add_library(${PROJECT_NAME} INTERFACE)
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} INTERFACE
     Boost::system
     Boost::filesystem
     Boost::serialization
@@ -16,13 +14,13 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     nanoflann::nanoflann
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     ${PCL_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC
+target_compile_definitions(${PROJECT_NAME} INTERFACE
     NUMERIC_DEPRECATE=1
 )
 
