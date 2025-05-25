@@ -66,7 +66,8 @@ private:
     bool fitGroundPlane(GridCell<PointT>& cell, const double& inlier_threshold);
     std::pair<size_t,PointT> findLowestPoint(const GridCell<PointT>& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
-
+    std::string classifySparsityBoundingBox(const GridCell<PointT>& cell, typename pcl::PointCloud<PointT>::Ptr cloud);
+    std::string classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf);
     std::vector<Index3D> indices;
     std::vector<Index3D> obs_indices;
 
@@ -162,6 +163,29 @@ double PointCloudGrid<PointT>::computeSlope(const Eigen::Hyperplane< double, int
     planeNormal = orientation * planeNormal;
     planeNormal.normalize();
     return acos(std::abs(planeNormal.dot(zNormal)));
+}
+
+template<typename PointT>
+std::string PointCloudGrid<PointT>::classifySparsityBoundingBox(const GridCell<PointT>& cell, typename pcl::PointCloud<PointT>::Ptr cloud) {
+    if (cell.points->empty() || cloud->empty()) return "Empty";
+
+    PointT min_pt, max_pt;
+    pcl::getMinMax3D(*cell.points, min_pt, max_pt);
+
+    double volume = (max_pt.x - min_pt.x) *
+                    (max_pt.y - min_pt.y) *
+                    (max_pt.z - min_pt.z);
+
+    if (volume <= 0.0) return "Degenerate";
+
+    double sparsity = volume / static_cast<double>(cloud->size());
+
+    if (sparsity < 0.001)
+        return "Low sparsity";
+    else if (sparsity < 0.01)
+        return "Medium sparsity";
+    else
+        return "High sparsity";
 }
 
 template<typename PointT>
@@ -386,7 +410,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     for (auto& cellPair : gridCells){
         GridCell<PointT>& cell = cellPair.second;
 
-        //TODO: Why ignored?
+        //Too few points
         if ((cell.points->size() < 3)){continue;}
 
         Index3D id = cellPair.first;
@@ -508,6 +532,47 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
     
     ground_cells = expandGrid(q);
     return ground_cells;
+}
+template<typename PointT>
+std::string PointCloudGrid<PointT>::classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf) {
+    if (!cloud || cloud->empty()) return "Empty";
+
+    // Bounding Box Volume per Point
+    PointT min_pt, max_pt;
+    pcl::getMinMax3D(*cloud, min_pt, max_pt);
+    double volume = (max_pt.x - min_pt.x) * (max_pt.y - min_pt.y) * (max_pt.z - min_pt.z);
+    double volumePerPoint = volume / cloud->size();
+
+    // Avg Nearest Neighbor Distance
+    pcl::KdTreeFLANN<PointT> kdtree;
+    kdtree.setInputCloud(cloud);
+    double totalDist = 0.0;
+    std::vector<int> idx(2);
+    std::vector<float> dist(2);
+    for (size_t i = 0; i < cloud->size(); ++i) {
+        if (kdtree.nearestKSearch(cloud->points[i], 2, idx, dist) > 1)
+            totalDist += std::sqrt(dist[1]);
+    }
+    double avgNN = totalDist / cloud->size();
+
+    // Voxel Density
+    typename pcl::PointCloud<PointT>::Ptr voxelCloud(new pcl::PointCloud<PointT>);
+    pcl::VoxelGrid<PointT> vg;
+    vg.setInputCloud(cloud);
+    vg.setLeafSize(voxel_leaf, voxel_leaf, voxel_leaf);
+    vg.filter(*voxelCloud);
+    double voxelDensity = voxelCloud->size() / (double) cloud->size();
+
+    // Normalize metrics
+    double nn_score = std::min(1.0, std::max(0.0, (avgNN - 0.02) / (0.2 - 0.02)));
+    double volume_score = std::min(1.0, std::max(0.0, (volumePerPoint - 1e-5) / (1e-2 - 1e-5)));
+    double density_score = 1.0 - std::min(1.0, voxelDensity);
+
+    double final_score = (nn_score + volume_score + density_score) / 3.0;
+
+    if (final_score < 0.33) return "Low sparsity";
+    if (final_score < 0.66) return "Medium sparsity";
+    return "High sparsity";
 }
 
 template<typename PointT>
@@ -647,6 +712,15 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         if (ground_inliers->size() == 0){
             continue;
         } 
+
+        auto score1 = classifySparsityBoundingBox(cell, ground_inliers);
+        auto score2 = classifySparsityBoundingBox(cell, non_ground_inliers);
+
+        if (score1 == score2){
+            non_ground_cells.push_back(id);
+            continue;
+        }
+
 
         size_t nearest_index{0};
         std::vector<int> point_indices(1);
