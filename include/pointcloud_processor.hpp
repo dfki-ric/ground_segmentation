@@ -27,7 +27,8 @@ class ProcessCloudProcessor{
 public:
     typename pcl::PointCloud<PointT>::Ptr filterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, bool downSampleInputCloud, float filterRes, 
                                                       Eigen::Vector4f minPoint, 
-                                                      Eigen::Vector4f maxPoint);
+                                                      Eigen::Vector4f maxPoint,
+                                                      bool invertCropBox);
 
     std::vector< typename pcl::PointCloud<PointT>::Ptr> euclideanClustering(typename pcl::PointCloud<PointT>::Ptr cloud, 
                                                                             float clusterTolerance, int minSize, int maxSize);
@@ -40,26 +41,33 @@ public:
 };
 
   template <typename PointT>
-  typename pcl::PointCloud<PointT>::Ptr ProcessCloudProcessor<PointT>::filterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, bool downSampleInputCloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
+  typename pcl::PointCloud<PointT>::Ptr ProcessCloudProcessor<PointT>::filterCloud(
+      typename pcl::PointCloud<PointT>::Ptr cloud,
+      bool downSampleInputCloud,
+      float filterRes,
+      Eigen::Vector4f minPoint,
+      Eigen::Vector4f maxPoint,
+      bool invertCropBox
+  )
   {
-    typename pcl::PointCloud<PointT>::Ptr cloud_filtered(new pcl::PointCloud<PointT>());
-    pcl::CropBox<PointT> roi;
-    roi.setMin(minPoint);
-    roi.setMax(maxPoint);
-    
-    if (downSampleInputCloud){
-      pcl::VoxelGrid<PointT> sor;
-      sor.setInputCloud (cloud);
-      sor.setLeafSize (filterRes, filterRes, filterRes);
-      sor.filter (*cloud_filtered);
-      roi.setInputCloud(cloud_filtered);
-    }
-    else{
-      roi.setInputCloud(cloud);
-    }
+      typename pcl::PointCloud<PointT>::Ptr cloud_filtered(new pcl::PointCloud<PointT>());
+      pcl::CropBox<PointT> roi;
+      roi.setMin(minPoint);
+      roi.setMax(maxPoint);
+      roi.setNegative(invertCropBox);
+
+      if (downSampleInputCloud){
+          pcl::VoxelGrid<PointT> sor;
+          sor.setInputCloud (cloud);
+          sor.setLeafSize (filterRes, filterRes, filterRes);
+          sor.filter (*cloud_filtered);
+          roi.setInputCloud(cloud_filtered);
+      }
+      else{
+          roi.setInputCloud(cloud);
+      }
       roi.filter(*cloud_filtered);
       return cloud_filtered;
-
   }
 
   template <typename PointT>
