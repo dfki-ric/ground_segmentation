@@ -64,7 +64,6 @@ private:
     int computeMeanHeight(const std::vector<Index3D> ids);
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);    
     bool fitGroundPlane(GridCell<PointT>& cell, const double& inlier_threshold);
-    void selectStartCell(GridCell<PointT>& cell);
     std::pair<size_t,PointT> findLowestPoint(const GridCell<PointT>& cell);
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
 
@@ -75,16 +74,9 @@ private:
     GridConfig grid_config;
     std::vector<Index3D> ground_cells;
     std::vector<Index3D> non_ground_cells;
-    std::vector<Index3D> selected_cells_first_quadrant;
-    std::vector<Index3D> selected_cells_second_quadrant;
-    std::vector<Index3D> selected_cells_third_quadrant;
-    std::vector<Index3D> selected_cells_fourth_quadrant;
     Eigen::Quaterniond orientation;
     GridCell<PointT> robot_cell;
     ProcessCloudProcessor<PointT> processor;
-
-    std::vector<Index3D> seed_cells;
-
 };
     
 template<typename PointT>
@@ -133,11 +125,6 @@ template<typename PointT>
 void PointCloudGrid<PointT>::cleanUp(){
     ground_cells.clear();
     non_ground_cells.clear();
-    selected_cells_first_quadrant.clear();
-    selected_cells_second_quadrant.clear();
-    selected_cells_third_quadrant.clear();
-    selected_cells_fourth_quadrant.clear();
-    seed_cells.clear();
 }
 
 template<typename PointT>
@@ -380,43 +367,11 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
         return false;
     }
 
-    if (cell.inliers->indices.size() / cell.points->size() > 0.98){
-        cell.confidence = Confidence::HIGH;
-    }
-
     Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
     double distToOrigin = coefficients->values[3];
     cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
     cell.slope = computeSlope(cell.plane);
     return true;
-}
-
-template<typename PointT>
-void PointCloudGrid<PointT>::selectStartCell(GridCell<PointT>& cell){
-
-    Index3D id;
-    id.x = cell.x;
-    id.y = cell.y;
-    id.z = cell.z;
-
-    if (cell.z >= 0){return;}
-
-    double distance = computeDistance(robot_cell.centroid, cell.centroid);
-
-    if (distance <= grid_config.startCellDistanceThreshold){
-        if (cell.x >= 0 && cell.y > 0){
-            selected_cells_first_quadrant.push_back(id);
-        }
-        else if (cell.x <= 0 && cell.y > 0){
-            selected_cells_second_quadrant.push_back(id);
-        }
-        else if (cell.x <= 0 && cell.y < 0){
-            selected_cells_third_quadrant.push_back(id);
-        }
-        else if (cell.x >= 0 && cell.y < 0) {
-            selected_cells_fourth_quadrant.push_back(id);
-        }
-    }
 }
 
 template<typename PointT>
@@ -521,10 +476,6 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
 
         if (cell.slope < (grid_config.slopeThresholdDegrees * (M_PI / 180)) ){
             cell.terrain_type = TerrainType::GROUND;
-
-            if (cell.confidence == Confidence::HIGH){
-                selectStartCell(cell);
-            }
         }
         else{
             cell.terrain_type = TerrainType::OBSTACLE;
@@ -534,55 +485,27 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
 
     std::queue<Index3D> q;
 
-    std::vector<Index3D> start_cells_front;
-    std::vector<Index3D> start_cells_back;
+    // Look for lowest populated cell at x=0, y=0
+    bool found = false;
+    int lowest_z = std::numeric_limits<int>::max();
+    Index3D best_robot_cell;
 
-    if (selected_cells_first_quadrant.size() > 0){
-        int cells_q1_mean_height = computeMeanHeight(selected_cells_first_quadrant);
-        Index3D q1 = cellClosestToMeanHeight(selected_cells_first_quadrant,cells_q1_mean_height);
-        start_cells_front.push_back(q1);
-    }
-
-    if (selected_cells_third_quadrant.size() > 0){
-        int cells_q3_mean_height = computeMeanHeight(selected_cells_third_quadrant);
-        Index3D q3 = cellClosestToMeanHeight(selected_cells_third_quadrant,cells_q3_mean_height);
-        start_cells_front.push_back(q3);
-    }
-
-    if (selected_cells_second_quadrant.size() > 0){
-        int cells_q2_mean_height = computeMeanHeight(selected_cells_second_quadrant);
-        Index3D q2 = cellClosestToMeanHeight(selected_cells_second_quadrant,cells_q2_mean_height);
-        start_cells_back.push_back(q2);
-    }
-
-    if (selected_cells_fourth_quadrant.size() > 0){
-        int cells_q4_mean_height = computeMeanHeight(selected_cells_fourth_quadrant);
-        Index3D q4 = cellClosestToMeanHeight(selected_cells_fourth_quadrant,cells_q4_mean_height);
-        start_cells_back.push_back(q4);
-    }
-
-    if (grid_config.num_seed_cells < 4){
-        if (start_cells_front.size() > 0){
-            Index3D seed_id_front = findLowestCell(start_cells_front);
-            q.push(seed_id_front);
-            seed_cells.push_back(seed_id_front);
-        }
-        if (start_cells_back.size() > 0){
-            Index3D seed_id_back = findLowestCell(start_cells_back);
-            q.push(seed_id_back);
-            seed_cells.push_back(seed_id_back);
+    for (const auto& [idx, cell] : gridCells) {
+        if (idx.x == 0 && idx.y == 0 && !cell.points->empty()) {
+            if (idx.z < lowest_z) {
+                lowest_z = idx.z;
+                best_robot_cell = idx;
+                found = true;
+            }
         }
     }
-    else{
-        for (const auto& cell : start_cells_front) {
-            q.push(cell);
-        }
 
-        for (const auto& cell : start_cells_back) {
-            q.push(cell);
-        }
+    if (found) {
+        GridCell<PointT>& robot_cell = gridCells[best_robot_cell];
+        robot_cell.terrain_type = TerrainType::GROUND;
+        q.push(best_robot_cell);
     }
- 
+    
     ground_cells = expandGrid(q);
     return ground_cells;
 }
@@ -635,11 +558,6 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
         result.emplace_back(idx);
     }
     return result;
-}
-
-template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::getSeedCells(){
-    return seed_cells;
 }
 
 template<typename PointT>
