@@ -717,10 +717,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         auto score2 = classifySparsityBoundingBox(cell, non_ground_inliers);
 
         if (score1 == score2){
-            non_ground_cells.push_back(id);
             continue;
         }
-
 
         size_t nearest_index{0};
         std::vector<int> point_indices(1);
