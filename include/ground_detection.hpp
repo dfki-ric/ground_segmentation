@@ -55,7 +55,7 @@ private:
     void cleanUp();
     void addPoint(const PointT& point);
     std::vector<Index3D> getGroundCells();
-    std::vector<Index3D> getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& indices, const double& radius);
+    std::vector<Index3D> getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& indices);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double computeSlope(const Eigen::Vector3d& normal);
@@ -317,7 +317,7 @@ int PointCloudGrid<PointT>::computeMeanHeight(const std::vector<Index3D> ids){
 }
 
 template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& idx, const double& radius){
+std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& idx){
 
     std::vector<Index3D> neighbors;
 
@@ -335,7 +335,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
 
         GridCell<PointT>& neighbor = gridCells[neighbor_id];
 
-        if (neighbor.points->size() > 0 && computeDistance(cell.centroid,neighbor.centroid) < radius && neighbor.terrain_type == type){
+        if (neighbor.points->size() > 0 && neighbor.terrain_type == type){
             Index3D id;
             id.x = neighbor.x;
             id.y = neighbor.y;
@@ -357,7 +357,7 @@ Index3D PointCloudGrid<PointT>::cellClosestToMeanHeight(const std::vector<Index3
         const GridCell<PointT>& cell = gridCells[id];
 
         double height_difference = std::abs(cell.z - mean_height);
-        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices, 3).size();
+        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices).size();
 
         if (neighbor_count == 0){
             continue;
@@ -763,50 +763,39 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         GridCell<PointT>& cell = gridCells[id];
 
         typename pcl::PointCloud<PointT>::Ptr close_ground_points(new pcl::PointCloud<PointT>());
-        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices, 3);
-        if (ground_neighbors.size() == 0){
+        Eigen::Vector3d ground_normal = Eigen::Vector3d::Zero();
+
+        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices);
+        if (ground_neighbors.empty()) {
             *non_ground_points += *cell.points;
-            continue;    
-        }
-        else{
-            for (const auto& gp : ground_neighbors){
+            continue;
+        } else {
+            double weight_sum = 0.0;
+            for (const auto& gp : ground_neighbors) {
                 GridCell<PointT>& ground_cell = gridCells[gp];
+                double distance = computeDistance(cell.centroid, ground_cell.centroid);
+                double weight = 1.0 / (distance + 0.001);
+                ground_normal += weight * ground_cell.normal;
+                weight_sum += weight;
                 *close_ground_points += *(ground_cell.ground_points);
+            }
+            // Normalize by sum of weights, not just neighbor count
+            if (weight_sum > 0) {
+                ground_normal /= weight_sum;
+                ground_normal = orientation * ground_normal;
+                if (ground_normal.norm() > 1e-6) {
+                    ground_normal.normalize();
+                } else {
+                    ground_normal = Eigen::Vector3d::UnitZ();
+                }
+            } else {
+                ground_normal = Eigen::Vector3d::UnitZ();
             }
         }
 
-        std::vector<Index3D> potential_ground_neighbors = getNeighbors(cell, type_ground, indices, 1);
-        std::vector<Index3D> actual_ground_neighbors;
-
-        for (const auto& gn : potential_ground_neighbors){
-            GridCell<PointT>& ground_cell = gridCells[gn];
-            if (!ground_cell.expanded){
-                continue;
-            }        
-            actual_ground_neighbors.push_back(gn);
-        }
-
-        Eigen::Vector3d ground_normal;
         size_t nearest_index{0};
         std::vector<int> point_indices(1);
         std::vector<float> point_distances(1);
-
-        if (actual_ground_neighbors.size() == 0){
-            ground_normal = Eigen::Vector3d::UnitZ();
-        }
-        else{
-            for (const auto& gp : actual_ground_neighbors){
-                GridCell<PointT>& ground_cell = gridCells[gp];
-
-                double distance = computeDistance(cell.centroid, ground_cell.centroid);
-
-               *close_ground_points += *(ground_cell.ground_points);
-                ground_normal += (1/(distance+0.001)) * ground_cell.normal;
-            }
-            ground_normal /= actual_ground_neighbors.size();
-            ground_normal = orientation * ground_normal;
-            ground_normal.normalize(); 
-        }
 
         if (close_ground_points->size() == 0){
             *non_ground_points += *cell.points;
