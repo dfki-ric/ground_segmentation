@@ -326,7 +326,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
     cell_id.y = cell.y;
     cell_id.z = cell.z;
 
-    for (int i = 0; i < idx.size(); ++i){
+    for (uint i = 0; i < idx.size(); ++i){
         Index3D neighbor_id = cell_id + idx[i];
 
         if (!checkIndex3DInGrid(neighbor_id)){
@@ -578,7 +578,6 @@ std::string PointCloudGrid<PointT>::classifyCombinedSparsity(typename pcl::Point
 template<typename PointT>
 std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
     std::vector<Index3D> result;
-    int count{0};
     while (!q.empty()){
         Index3D idx = q.front();
         q.pop();
@@ -589,7 +588,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
         }
         current_cell.expanded = true;
 
-        for (int i = 0; i < indices.size(); ++i){
+        for (u_int i = 0; i < indices.size(); ++i){
             Index3D neighbor_id = idx + indices[i];
             if (!checkIndex3DInGrid(neighbor_id)){
                 if (grid_config.processing_phase == 2){
