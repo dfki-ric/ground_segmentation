@@ -127,10 +127,8 @@ struct GridConfig{
     double cellSizeY; // meters
     double cellSizeZ; // meters
 
-    double startCellDistanceThreshold; // meters
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
-    uint16_t num_seed_cells;
 
     uint16_t processing_phase;
 
@@ -138,10 +136,8 @@ struct GridConfig{
         cellSizeX = 2;
         cellSizeY = 2;
         cellSizeZ = 10;
-        startCellDistanceThreshold = 20; // meters
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
-        num_seed_cells = 2;
         processing_phase = 1;
     }
 };

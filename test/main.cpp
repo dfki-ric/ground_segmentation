@@ -57,7 +57,6 @@ int main (int argc, char** argv)
     config.cellSizeX = 1;
     config.cellSizeY = 1;
     config.cellSizeZ = 1;
-    config.startCellDistanceThreshold = 5;
     config.slopeThresholdDegrees = 30;
     config.groundInlierThreshold = 0.1;
 
