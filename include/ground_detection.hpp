@@ -68,6 +68,7 @@ private:
     std::vector<Index3D> expandGrid(std::queue<Index3D> q);
     std::string classifySparsityBoundingBox(const GridCell<PointT>& cell, typename pcl::PointCloud<PointT>::Ptr cloud);
     std::string classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf);
+    bool classifySparsityNormalDist(const GridCell<PointT>& cell);
     std::vector<Index3D> indices;
     std::vector<Index3D> obs_indices;
 
@@ -186,6 +187,25 @@ std::string PointCloudGrid<PointT>::classifySparsityBoundingBox(const GridCell<P
         return "Medium sparsity";
     else
         return "High sparsity";
+}
+
+template<typename PointT>
+bool PointCloudGrid<PointT>::classifySparsityNormalDist(const GridCell<PointT>& cell) {
+    if (cell.points->empty()) return false;
+    
+    // Assume cell.centroid and cell.normal are Eigen::Vector3d and cell.normal is normalized
+    double sum_abs_proj = 0.0;
+
+    for (const auto& pt : cell.points->points) {
+        Eigen::Vector3d diff(pt.x - cell.centroid[0], pt.y - cell.centroid[1], pt.z - cell.centroid[2]);
+        double proj = diff.dot(cell.normal); // projection along normal
+        sum_abs_proj += std::abs(proj);
+    }
+
+    double mean_abs_proj = sum_abs_proj / cell.points->size();
+
+    // Threshold: tune for your use case (0.1 = flat/ground)
+    return (mean_abs_proj < 0.1);
 }
 
 template<typename PointT>
@@ -605,7 +625,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
             }    
     
             GridCell<PointT>& neighbor = gridCells[neighbor_id];
-            if(neighbor.points->size() == 0 || neighbor.expanded || neighbor.terrain_type == TerrainType::OBSTACLE){
+            if(neighbor.points->size() == 0 || neighbor.expanded){
                 continue;
             }
 
@@ -830,7 +850,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
             }
         }
     }
-
     return std::make_pair(ground_points, non_ground_points);
 }
 
