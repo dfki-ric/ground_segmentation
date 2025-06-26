@@ -716,6 +716,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         auto score2 = classifySparsityBoundingBox(cell, non_ground_inliers);
 
         if (score1 == score2){
+            *non_ground_points += *non_ground_inliers;
             continue;
         }
 
