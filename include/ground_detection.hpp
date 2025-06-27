@@ -210,7 +210,29 @@ bool PointCloudGrid<PointT>::classifySparsityNormalDist(const GridCell<PointT>& 
 
 template<typename PointT>
 bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCell<PointT>& neighbor){
-    pcl::KdTreeFLANN<PointT> kdtree;
+    if (cell.points->empty() || neighbor.points->empty()) return false;
+
+    typename pcl::PointCloud<PointT>::Ptr total_neighbor_points(new pcl::PointCloud<PointT>());
+    // Scan upward (z+)
+    for (int z = neighbor.z; checkIndex3DInGrid({neighbor.x, neighbor.y, z}); ++z) {
+        auto& nb = gridCells[{neighbor.x, neighbor.y, z}];
+        if (nb.points->empty()) break;
+        *total_neighbor_points += *(nb.points);
+    }
+    // Scan downward (z-)
+    for (int z = neighbor.z - 1; checkIndex3DInGrid({neighbor.x, neighbor.y, z}); --z) {
+        auto& nb = gridCells[{neighbor.x, neighbor.y, z}];
+        if (nb.points->empty()) break;
+        *total_neighbor_points += *(nb.points);
+    }
+
+    size_t N = total_neighbor_points->size();
+    if (N == 0) return false;
+
+    // Wrap the PCL point cloud with nanoflann adaptor
+    PCLPointCloudAdaptor<PointT> pclAdaptor(*cell.points);
+    KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+    tree.buildIndex();
 
     nanoflann::SearchParams params;
     params.checks = 10;  // Minimal checks for speed
@@ -220,73 +242,13 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
     size_t nearest_index{0};
     std::vector<int> point_indices(1);
     std::vector<float> point_distances(1);
-    uint16_t count = 0;
-
-    bool cell_above = true;   
-
-    typename pcl::PointCloud<PointT>::Ptr total_neighbor_points(new pcl::PointCloud<PointT>());
-
-    int step = neighbor.z;
-
-    do {
-        Index3D neighbor_id;
-        neighbor_id.x = neighbor.x;
-        neighbor_id.y = neighbor.y;
-        neighbor_id.z = step;
-
-        if (!checkIndex3DInGrid(neighbor_id)){
-            cell_above = false;
-        }
-        else{
-            auto& neighbor_cell = gridCells[neighbor_id];
-            if (neighbor_cell.points->size() == 0){
-                cell_above = false;
-            }
-            else{
-                *total_neighbor_points += *(neighbor_cell.points);
-                step++;
-            }
-        }
-    }
-    while (cell_above == true);
-
-
-    bool cell_below = true;  
-    step = neighbor.z-1;
-
-    do {
-        Index3D neighbor_id;
-        neighbor_id.x = neighbor.x;
-        neighbor_id.y = neighbor.y;
-        neighbor_id.z = step;
-
-        if (!checkIndex3DInGrid(neighbor_id)){
-            cell_below = false;
-        }
-        else{
-            auto& neighbor_cell = gridCells[neighbor_id];
-            if (neighbor_cell.points->size() == 0){
-                cell_below = false;
-            }
-            else{
-                *total_neighbor_points += *(neighbor_cell.points);
-                step--;
-            }
-        }
-    }
-    while (cell_below == true);
-
-    // Wrap the PCL point cloud with nanoflann adaptor
-    PCLPointCloudAdaptor<PointT> pclAdaptor(*cell.points);
-    KDTree tree(3, pclAdaptor, nanoflann::KDTreeSingleIndexAdaptorParams(10));
-    tree.buildIndex();
-
+    uint16_t ground_count = 0; 
     double out_dist_sqr;
     nanoflann::KNNResultSet<double> resultSet(1);
     resultSet.init(&nearest_index, &out_dist_sqr);
 
     for (typename pcl::PointCloud<PointT>::iterator it = total_neighbor_points->begin(); it != total_neighbor_points->end(); ++it){
-        Eigen::Vector3d obstacle_point(it->x,it->y,it->z);
+        Eigen::Vector3d neighbor_point(it->x,it->y,it->z);
         double query_pt[3] = {it->x, it->y, it->z};
 
         tree.findNeighbors(resultSet, query_pt, params);
@@ -295,16 +257,17 @@ bool PointCloudGrid<PointT>::neighborCheck(const GridCell<PointT>& cell, GridCel
                                      cell.points->points.at(nearest_index).y,
                                      cell.points->points.at(nearest_index).z);
 
-        Eigen::Vector3d diff = obstacle_point - ground_point;
+        Eigen::Vector3d diff = neighbor_point - ground_point;
         
         double distance = std::abs(diff.dot(cell.normal)); 
         if (distance < grid_config.groundInlierThreshold){
-            count++;
+            ground_count++;
         }
-        if ((count / total_neighbor_points->size()) > 0.95){   
-            neighbor.terrain_type = TerrainType::GROUND;
-            return true;
-        }
+    }
+
+    if (ground_count > 0.95 * N) {
+        neighbor.terrain_type = TerrainType::GROUND;
+        return true;
     }
     return false;
 }
@@ -608,20 +571,10 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
         }
         current_cell.expanded = true;
 
-        for (u_int i = 0; i < indices.size(); ++i){
+        for (size_t i = 0; i < indices.size(); ++i){
             Index3D neighbor_id = idx + indices[i];
             if (!checkIndex3DInGrid(neighbor_id)){
-                if (grid_config.processing_phase == 2){
-                    continue;
-                }
-                int height = neighbor_id.z;
-                neighbor_id.z = height + 1;
-                if (!checkIndex3DInGrid(neighbor_id)){
-                    neighbor_id.z = height - 1;
-                    if (!checkIndex3DInGrid(neighbor_id)){
-                        continue;
-                    }
-                }
+                continue;
             }    
     
             GridCell<PointT>& neighbor = gridCells[neighbor_id];
