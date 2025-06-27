@@ -54,7 +54,7 @@ private:
     std::vector<Index3D> generateIndices(const uint16_t& z_threshold);
     void cleanUp();
     void addPoint(const PointT& point);
-    std::vector<Index3D> getGroundCells();
+    void getGroundCells();
     std::vector<Index3D> getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& indices);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
@@ -65,7 +65,7 @@ private:
     Index3D cellClosestToMeanHeight(const std::vector<Index3D>& ids, const int mean_height);    
     bool fitGroundPlane(GridCell<PointT>& cell, const double& inlier_threshold);
     std::pair<size_t,PointT> findLowestPoint(const GridCell<PointT>& cell);
-    std::vector<Index3D> expandGrid(std::queue<Index3D> q);
+    void expandGrid(std::queue<Index3D> q);
     std::string classifySparsityBoundingBox(const GridCell<PointT>& cell, typename pcl::PointCloud<PointT>::Ptr cloud);
     std::string classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf);
     bool classifySparsityNormalDist(const GridCell<PointT>& cell);
@@ -382,10 +382,10 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
 }
 
 template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
+void PointCloudGrid<PointT>::getGroundCells(){
 
     if (gridCells.empty()){
-        return ground_cells;
+        return;
     }
 
     this->cleanUp();
@@ -513,8 +513,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getGroundCells(){
         q.push(best_robot_cell);
     }
     
-    ground_cells = expandGrid(q);
-    return ground_cells;
+    expandGrid(q);
 }
 template<typename PointT>
 std::string PointCloudGrid<PointT>::classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf) {
@@ -559,8 +558,7 @@ std::string PointCloudGrid<PointT>::classifyCombinedSparsity(typename pcl::Point
 }
 
 template<typename PointT>
-std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
-    std::vector<Index3D> result;
+void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
     while (!q.empty()){
         Index3D idx = q.front();
         q.pop();
@@ -592,9 +590,8 @@ std::vector<Index3D> PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
                 q.push(neighbor_id);
             }
         }
-        result.emplace_back(idx);
+        ground_cells.emplace_back(idx);
     }
-    return result;
 }
 
 template<typename PointT>
@@ -662,7 +659,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     params.eps = 0.5;    // Larger tolerance for faster results
     params.sorted = false; // No need to sort
 
-    ground_cells = getGroundCells();
+    getGroundCells();
     for (auto& id : ground_cells){
         GridCell<PointT>& cell = gridCells[id];
 
