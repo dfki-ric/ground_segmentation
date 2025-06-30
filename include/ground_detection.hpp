@@ -55,7 +55,7 @@ private:
     void cleanUp();
     void addPoint(const PointT& point);
     void getGroundCells();
-    std::vector<Index3D> getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& indices);
+    std::vector<Index3D> getNeighbors(const GridCell<PointT>& cell, const TerrainType& type, const std::vector<Index3D>& neighbor_offsets);
     double computeDistance(const Eigen::Vector4d& centroid1, const Eigen::Vector4d& centroid2);
     double computeSlope(const Eigen::Hyperplane< double, int(3) >& plane) const;
     double computeSlope(const Eigen::Vector3d& normal);
@@ -69,8 +69,8 @@ private:
     std::string classifySparsityBoundingBox(const GridCell<PointT>& cell, typename pcl::PointCloud<PointT>::Ptr cloud);
     std::string classifyCombinedSparsity(typename pcl::PointCloud<PointT>::Ptr cloud, float voxel_leaf);
     bool classifySparsityNormalDist(const GridCell<PointT>& cell);
-    std::vector<Index3D> indices;
-    std::vector<Index3D> obs_indices;
+    std::vector<Index3D> neighbor_offsets;
+    std::vector<Index3D> obs_neighbor_offsets;
 
     GridCellsType gridCells;
     GridConfig grid_config;
@@ -89,12 +89,12 @@ PointCloudGrid<PointT>::PointCloudGrid(const GridConfig& config){
     robot_cell.z = 0;
    
     if (grid_config.processing_phase == 2){
-        indices = generateIndices(1);
+        neighbor_offsets = generateIndices(1);
     }
     else{
-        indices = generateIndices(0);
+        neighbor_offsets = generateIndices(0);
     }
-    obs_indices = generateIndices(0);
+    obs_neighbor_offsets = generateIndices(1);
 }
 
 template<typename PointT>
@@ -340,7 +340,7 @@ Index3D PointCloudGrid<PointT>::cellClosestToMeanHeight(const std::vector<Index3
         const GridCell<PointT>& cell = gridCells[id];
 
         double height_difference = std::abs(cell.z - mean_height);
-        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, indices).size();
+        int neighbor_count = getNeighbors(cell, TerrainType::GROUND, neighbor_offsets).size();
 
         if (neighbor_count == 0){
             continue;
@@ -569,8 +569,8 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
         }
         current_cell.expanded = true;
 
-        for (size_t i = 0; i < indices.size(); ++i){
-            Index3D neighbor_id = idx + indices[i];
+        for (size_t i = 0; i < neighbor_offsets.size(); ++i){
+            Index3D neighbor_id = idx + neighbor_offsets[i];
             if (!checkIndex3DInGrid(neighbor_id)){
                 continue;
             }    
@@ -580,7 +580,7 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q){
                 continue;
             }
 
-            if (indices[i].z != 0 && grid_config.processing_phase == 2){
+            if (neighbor_offsets[i].z != 0 && grid_config.processing_phase == 2){
                 if (!neighborCheck(current_cell,neighbor)){
                     continue;
                 }
@@ -660,8 +660,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     params.sorted = false; // No need to sort
 
     getGroundCells();
-    for (auto& id : ground_cells){
-        GridCell<PointT>& cell = gridCells[id];
+    for (auto& cell_id : ground_cells){
+        GridCell<PointT>& cell = gridCells[cell_id];
 
         if ((cell.points->size() <= 5 || cell.primitive_type == PrimitiveType::LINE) && cell.terrain_type == TerrainType::GROUND){
             *ground_points += *cell.points; 
@@ -686,8 +686,61 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         auto score2 = classifySparsityBoundingBox(cell, non_ground_inliers);
 
         if (score1 == score2){
-            *non_ground_points += *non_ground_inliers;
-            continue;
+            Eigen::Vector4d centroid;
+            pcl::compute3DCentroid(*(ground_inliers), centroid);
+
+            // For each candidate ground cell:
+            double cell_z = centroid[2];
+            std::vector<double> neighbor_zs;
+            for (const auto& offset : neighbor_offsets) {
+                Index3D nidx = cell_id + offset;
+                if (!checkIndex3DInGrid(nidx)) continue;
+                const auto& ncell = gridCells[nidx];
+
+                if (ncell.terrain_type == TerrainType::GROUND){
+                    typename pcl::PointCloud<PointT>::Ptr ninliers(new pcl::PointCloud<PointT>());
+                    Eigen::Vector4d ncentroid;
+
+                    extract_ground.setInputCloud(ncell.points);
+                    extract_ground.setIndices(ncell.inliers);
+
+                    extract_ground.setNegative(false);
+                    extract_ground.filter(*ninliers);
+
+                    pcl::compute3DCentroid(*(ninliers), ncentroid);
+                    neighbor_zs.push_back(ncell.centroid[2]);
+                }
+            }
+
+            if (neighbor_zs.empty()){ 
+                *non_ground_points += *cell.points;
+                continue;
+            }
+
+            double local_ref = *std::min_element(neighbor_zs.begin(), neighbor_zs.end());
+
+            if (cell_z - local_ref > 0.3){
+                *non_ground_points += *cell.points;
+                continue;
+            } 
+
+            bool reject_as_floating = false;
+            int bz = cell_id.z - 1;
+            while (true) {
+                Index3D below(cell_id.x, cell_id.y, bz);
+                if (!checkIndex3DInGrid(below)) break;  // Out of bound: stop looping
+                const auto& bcell = gridCells[below];
+                if (!bcell.points->empty() && bcell.terrain_type != TerrainType::GROUND) {
+                    // Found an occupied non-ground cell below—reject as floating!
+                    reject_as_floating = true;
+                    break;
+                }
+                --bz;
+            }
+            if (reject_as_floating) {
+                *non_ground_points += *cell.points;
+                continue;
+            }
         }
 
         size_t nearest_index{0};
@@ -729,13 +782,13 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
         *(cell.ground_points) += *ground_inliers;
     }
 
-    for (const auto& id : non_ground_cells){
-        GridCell<PointT>& cell = gridCells[id];
+    for (const auto& cell_id : non_ground_cells){
+        GridCell<PointT>& cell = gridCells[cell_id];
 
         typename pcl::PointCloud<PointT>::Ptr close_ground_points(new pcl::PointCloud<PointT>());
         Eigen::Vector3d ground_normal = Eigen::Vector3d::Zero();
 
-        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_indices);
+        std::vector<Index3D> ground_neighbors = getNeighbors(cell, type_ground, obs_neighbor_offsets);
         if (ground_neighbors.empty()) {
             *non_ground_points += *cell.points;
             continue;
@@ -763,14 +816,14 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
             }
         }
 
-        size_t nearest_index{0};
-        std::vector<int> point_indices(1);
-        std::vector<float> point_distances(1);
-
         if (close_ground_points->size() == 0){
             *non_ground_points += *cell.points;
             continue;    
         }
+
+        size_t nearest_index{0};
+        std::vector<int> point_indices(1);
+        std::vector<float> point_distances(1);
 
         kdtree.setInputCloud(close_ground_points);
         for (typename pcl::PointCloud<PointT>::iterator it = cell.points->begin(); it != cell.points->end(); ++it){
