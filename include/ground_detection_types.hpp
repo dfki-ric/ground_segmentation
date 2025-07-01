@@ -53,6 +53,7 @@ struct GridCell {
     int y;
     int z;
     bool expanded;
+    bool in_queue;
     bool explored;
     TerrainType terrain_type;
     PrimitiveType primitive_type;
@@ -87,6 +88,7 @@ struct GridCell {
         x = 0;
         y = 0;
         z = 0;
+        in_queue = false;
         expanded = false;
         explored = false;
         confidence = Confidence::LOW;
@@ -129,6 +131,7 @@ struct GridConfig{
 
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
+    double maxCentroidHeightDiff;
 
     uint16_t processing_phase;
 
@@ -138,6 +141,7 @@ struct GridConfig{
         cellSizeZ = 10;
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
+        maxCentroidHeightDiff = 0.5;
         processing_phase = 1;
     }
 };
