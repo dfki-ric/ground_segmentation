@@ -132,6 +132,8 @@ struct GridConfig{
     double slopeThresholdDegrees; //degrees
     double groundInlierThreshold;
     double maxCentroidHeightDiff;
+    double centroidSearchRadius;
+    double distToGround;
 
     uint16_t processing_phase;
 
@@ -142,6 +144,8 @@ struct GridConfig{
         slopeThresholdDegrees = 30; //degrees
         groundInlierThreshold = 0.1; // meters
         maxCentroidHeightDiff = 0.5;
+        centroidSearchRadius = 5.0;
+        distToGround = 0.0;
         processing_phase = 1;
     }
 };
