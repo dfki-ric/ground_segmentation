@@ -272,8 +272,7 @@ void PointCloudGrid<PointT>::getGroundCells(){
         //Too few points
         if ((cell.points->size() < 3)){continue;}
 
-        Index3D id = cellPair.first;
-
+        Index3D cell_id = cellPair.first;
         pcl::compute3DCentroid(*(cell.points), cell.centroid);
 
         if (cell.points->size() <= 5){
@@ -288,7 +287,7 @@ void PointCloudGrid<PointT>::getGroundCells(){
 
             if (variance[0] < variance[2] && variance[1] < variance[2]){
                 cell.terrain_type = TerrainType::OBSTACLE;
-                non_ground_cells.push_back(id);                    
+                non_ground_cells.push_back(cell_id);                    
             }
             else{
                 cell.terrain_type = TerrainType::GROUND;
@@ -299,8 +298,8 @@ void PointCloudGrid<PointT>::getGroundCells(){
                 centroid3d.z = cell.centroid[2];
 
                 centroid_cloud->points.push_back(centroid3d);
-                centroid_indices.push_back(id);
-                index_to_centroid_idx[id] = centroid_cloud->size() - 1;
+                centroid_indices.push_back(cell_id);
+                index_to_centroid_idx[cell_id] = centroid_cloud->size() - 1;
             }
             continue;
         }
@@ -344,12 +343,12 @@ void PointCloudGrid<PointT>::getGroundCells(){
                 centroid3d.z = cell.centroid[2];
 
                 centroid_cloud->points.push_back(centroid3d);
-                centroid_indices.push_back(id);
-                index_to_centroid_idx[id] = centroid_cloud->size() - 1;
+                centroid_indices.push_back(cell_id);
+                index_to_centroid_idx[cell_id] = centroid_cloud->size() - 1;
             }
             else{
                 cell.terrain_type = TerrainType::OBSTACLE;
-                non_ground_cells.push_back(id);  
+                non_ground_cells.push_back(cell_id);  
             }
             continue;
         } 
@@ -358,20 +357,20 @@ void PointCloudGrid<PointT>::getGroundCells(){
             cell.primitive_type = PrimitiveType::PLANE; 
             if (std::abs(computeSlope(cell.normal)) > grid_config.slopeThresholdDegrees ){
                 cell.terrain_type = TerrainType::OBSTACLE;
-                non_ground_cells.push_back(id);  
+                non_ground_cells.push_back(cell_id);  
                 continue;
             }
         } 
         else{
             cell.terrain_type = TerrainType::OBSTACLE;
             cell.primitive_type = PrimitiveType::NOISE;
-            non_ground_cells.push_back(id);
+            non_ground_cells.push_back(cell_id);
             continue;
         }
 
         if (!fitGroundPlane(cell, grid_config.groundInlierThreshold)){
             cell.terrain_type = TerrainType::OBSTACLE;
-            non_ground_cells.push_back(id);
+            non_ground_cells.push_back(cell_id);
             continue;
         }
 
@@ -384,12 +383,12 @@ void PointCloudGrid<PointT>::getGroundCells(){
             centroid3d.z = cell.centroid[2];
 
             centroid_cloud->points.push_back(centroid3d);
-            centroid_indices.push_back(id);
-            index_to_centroid_idx[id] = centroid_cloud->size() - 1;
+            centroid_indices.push_back(cell_id);
+            index_to_centroid_idx[cell_id] = centroid_cloud->size() - 1;
         }
         else{
             cell.terrain_type = TerrainType::OBSTACLE;
-            non_ground_cells.push_back(id);
+            non_ground_cells.push_back(cell_id);
         }
     }
 
