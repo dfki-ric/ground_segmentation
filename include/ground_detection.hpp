@@ -74,7 +74,6 @@ private:
     std::unordered_map<Index3D, size_t, Index3D::HashFunction> index_to_centroid_idx;
 
 };
-    
 template<typename PointT>
 PointCloudGrid<PointT>::PointCloudGrid(const GridConfig& config){
 
@@ -220,7 +219,7 @@ std::vector<Index3D> PointCloudGrid<PointT>::getNeighbors(const GridCell<PointT>
             continue;
         }
 
-        GridCell<PointT>& neighbor = gridCells[neighbor_id];
+        const GridCell<PointT>& neighbor = gridCells[neighbor_id];
 
         if (neighbor.points->size() > 0 && neighbor.terrain_type == type){
             Index3D id;
@@ -253,8 +252,8 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT>& cell, const double
 
     Eigen::Vector3d plane_normal(coefficients->values[0], coefficients->values[1], coefficients->values[2]);
     double distToOrigin = coefficients->values[3];
-    cell.plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
-    cell.slope = computeSlope(cell.plane);
+    auto plane = Eigen::Hyperplane<double, 3>(plane_normal, distToOrigin);
+    cell.slope = computeSlope(plane);
     return true;
 }
 
@@ -528,8 +527,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     typename pcl::PointCloud<PointT>::Ptr non_ground_inliers(new pcl::PointCloud<PointT>());
 
     pcl::ExtractIndices<PointT> extract_ground;
-    const TerrainType type_ground = TerrainType::GROUND;
-    const TerrainType type_obstacle = TerrainType::OBSTACLE;
 
     getGroundCells();
     for (auto& cell_id : ground_cells){
@@ -538,7 +535,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
 
         if ((cell.points->size() <= 5 || cell.primitive_type == PrimitiveType::LINE) && cell.terrain_type == TerrainType::GROUND){
             *ground_points += *cell.points; 
-            *(cell.ground_points) = *cell.points; 
             continue; 
         }
 
@@ -620,7 +616,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,typename pcl::PointCloud<PointT>
     }
 
     for (const auto& cell_id : non_ground_cells){
-        GridCell<PointT>& cell = gridCells[cell_id];
+        const GridCell<PointT>& cell = gridCells[cell_id];
         *non_ground_points += *cell.points;
     }
     return std::make_pair(ground_points, non_ground_points);

@@ -29,22 +29,10 @@ enum TerrainType {
     OBSTACLE
 };
 
-enum GridType {
-    SQUARE,
-    POLAR,
-    HEXAGONAL
-};
-
 enum PrimitiveType {
     LINE,
     PLANE,
     NOISE
-};
-
-enum Confidence {
-    HIGH,
-    MEDIUM,
-    LOW
 };
 
 template<typename PointT> 
@@ -57,17 +45,12 @@ struct GridCell {
     bool explored;
     TerrainType terrain_type;
     PrimitiveType primitive_type;
-    Confidence confidence;
     Eigen::Vector4d centroid;
     pcl::PointIndices::Ptr inliers;
     Eigen::Matrix3d eigenvectors;
     Eigen::Vector3d eigenvalues;
     /** The points in the Grid Cell */
     typename pcl::PointCloud<PointT>::Ptr points;
-    typename pcl::PointCloud<PointT>::Ptr ground_points;
-
-    /** The plane that has been fitted to the mls at the location of this node */
-    Eigen::Hyperplane<double, 3> plane;
 
     /** slope of the plane */
     double slope;
@@ -75,15 +58,7 @@ struct GridCell {
     /** Normal of the plane*/
     Eigen::Vector3d normal;
 
-    /** normalized direction of the slope. Only valid if slope > 0 */
-    Eigen::Vector3d slopeDirection;
-
-    /** The atan2(slopeDirection.y(), slopeDirection.x()), i.e. angle of slopeDirection projected on the xy plane.
-     * Precomputed for performance reasons */
-    double slopeDirectionAtan2;
-
     GridCell() : points(new pcl::PointCloud<PointT>), 
-                 ground_points(new pcl::PointCloud<PointT>), 
                  inliers(new pcl::PointIndices){
         x = 0;
         y = 0;
@@ -91,7 +66,6 @@ struct GridCell {
         in_queue = false;
         expanded = false;
         explored = false;
-        confidence = Confidence::LOW;
     }
 };
 
