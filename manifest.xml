@@ -1,13 +1,13 @@
 <package>
-  <description brief="Detect obstacles as point cloud clusters in a region of interest"></description>
-  <author>mulo01@dfki.de</author>
-  <maintainer>mulo01@dfki.de</maintainer>
+  <description brief="A C++ library for ground_segmentation of pointcloud"></description>
+  <author>haider_khan.lodhi@dfki.de</author>
+  <maintainer email="haider_khan.lodhi@dfki.de"></maintainer>
   <stage>0</stage>
-  <license></license>
+  <license>BSD 3-Clause</license>
   <url>http://</url>
   <logo>http://</logo>
   <keywords>
-    <keyword>Obstacle Detection</keyword>
+    <keyword>Ground Segmentation</keyword>
     <keyword>Perception</keyword>
     <keyword>Pointcloud</keyword>
   </keywords>

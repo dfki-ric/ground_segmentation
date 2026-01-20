@@ -25,20 +25,20 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE
 )
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-	    DESTINATION include/${PROJECT_NAME}
-	    FILES_MATCHING PATTERN "*.hpp"
+  DESTINATION include/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.hpp"
 )
 
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
 )
 
 # Export the library interface
 install(EXPORT ${PROJECT_NAME}-targets
-        NAMESPACE ${PROJECT_NAME}::
-	    DESTINATION lib/cmake/${PROJECT_NAME}
+    NAMESPACE ${PROJECT_NAME}::
+  DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 set(PKG_CONFIG_DEPS
@@ -55,6 +55,6 @@ set(PKGCONFIG_CFLAGS)
 
 configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)
 install(FILES
-	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
-	DESTINATION lib/pkgconfig
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
+  DESTINATION lib/pkgconfig
 )
