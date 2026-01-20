@@ -204,7 +204,7 @@ sudo apt install libpcl-dev libeigen3-dev libgtest-dev
 ```bash
 mkdir -p build
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE
 make
 ```
 
