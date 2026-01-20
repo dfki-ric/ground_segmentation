@@ -459,7 +459,12 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
   // Wrap the PCL point cloud with nanoflann adaptor
   PCLPointCloudAdaptor<PointT> pclAdaptor(*centroid_cloud);
 
+#if NANOFLANN_VERSION >= 0x150
+  nanoflann::SearchParameters search_params;
+#else
   nanoflann::SearchParams search_params;
+#endif
+
   search_params.eps = 0.0;      // Larger tolerance for faster results
   search_params.sorted = false;   // No need to sort
 
@@ -484,7 +489,15 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
     const PointT & curr_centroid = centroid_cloud->points.at(curr_centroid_idx);
 
     // Prepare radius search
-    std::vector<std::pair<unsigned int, double>> neighbors;     // pair<index, squared distance>
+#if NANOFLANN_VERSION >= 0x150
+using Neighbor = nanoflann::ResultItem<unsigned int, double>;
+#else
+using Neighbor = std::pair<unsigned int, double>;
+#endif
+
+    std::vector<Neighbor> neighbors;
+
+
     double query_pt[3] = {static_cast<double>(curr_centroid.x),
       static_cast<double>(curr_centroid.y),
       static_cast<double>(curr_centroid.z)};

@@ -1,43 +1,105 @@
-find_package(PCL REQUIRED COMPONENTS io common filters kdtree segmentation visualization)
-find_package(Boost REQUIRED COMPONENTS serialization)
+cmake_minimum_required(VERSION 3.16)
+project(ground_segmentation VERSION 0.1.0 LANGUAGES CXX)
+
+# -------------------------------------------------------------------
+# Dependencies (BUILD time only)
+# -------------------------------------------------------------------
+
+find_package(PCL REQUIRED COMPONENTS
+  common
+  io
+  filters
+  kdtree
+  segmentation
+  visualization
+)
+
+find_package(Boost REQUIRED COMPONENTS serialization filesystem system)
 find_package(VTK REQUIRED)
 find_package(nanoflann REQUIRED)
 
+# -------------------------------------------------------------------
+# Interface library
+# -------------------------------------------------------------------
+
 add_library(${PROJECT_NAME} INTERFACE)
 
-target_link_libraries(${PROJECT_NAME} INTERFACE
-    Boost::system
-    Boost::filesystem
-    Boost::serialization
-    ${PCL_LIBRARIES}
-    ${VTK_LIBRARIES}
-    nanoflann::nanoflann
+add_library(${PROJECT_NAME}::${PROJECT_NAME}
+  ALIAS ${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-    ${PCL_INCLUDE_DIRS}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
 )
 
 target_compile_definitions(${PROJECT_NAME} INTERFACE
-    NUMERIC_DEPRECATE=1
+  NUMERIC_DEPRECATE=1
 )
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-  DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.hpp"
+# -------------------------------------------------------------------
+# Link dependencies (IMPORTED TARGETS ONLY)
+# -------------------------------------------------------------------
+
+target_link_libraries(${PROJECT_NAME} INTERFACE
+  Boost::serialization
+  Boost::filesystem
+  Boost::system
+  ${PCL_LIBRARIES}
+  ${VTK_LIBRARIES}
+  nanoflann::nanoflann
 )
 
-install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
+# -------------------------------------------------------------------
+# Install headers
+# -------------------------------------------------------------------
+
+
+# ------------------------------------------------------------
+# Install headers (REQUIRED for INTERFACE libraries)
+# ------------------------------------------------------------
+
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+  DESTINATION include
 )
 
-# Export the library interface
-install(EXPORT ${PROJECT_NAME}-targets
-    NAMESPACE ${PROJECT_NAME}::
+# -------------------------------------------------------------------
+# Export targets
+# -------------------------------------------------------------------
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+)
+
+install(
+  EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION lib/cmake/${PROJECT_NAME}
+)
+
+# -------------------------------------------------------------------
+# Package config files
+# -------------------------------------------------------------------
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  cmake/${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
+)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION lib/cmake/${PROJECT_NAME}
 )
 

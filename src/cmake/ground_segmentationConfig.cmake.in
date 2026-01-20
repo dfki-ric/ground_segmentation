@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(PCL REQUIRED)
+find_dependency(Boost REQUIRED)
+find_dependency(VTK REQUIRED)
+find_dependency(nanoflann REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/ground_segmentationTargets.cmake")
