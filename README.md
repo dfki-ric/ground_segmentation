@@ -7,7 +7,6 @@ It follows the methodology described in the paper:
 > *GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds*  
 > Lodhi, M. H. K., Hertzberg, C., DFKI Robotics Innovation Center
 
----
 
 ## Motivation
 
@@ -19,8 +18,6 @@ Reliable ground segmentation is a fundamental prerequisite for:
 
 False positives (classifying ground as obstacles) can directly compromise safety and downstream decision-making.  
 GSeg3D is explicitly designed to **maximize precision while maintaining robust recall**, even in cluttered, unstructured, or vegetation-rich environments.
-
----
 
 ## Algorithm Overview
 
@@ -40,7 +37,6 @@ GSeg3D performs **two-phase grid-based ground segmentation**:
 
 This dual-phase strategy achieves a strong balance between **precision and recall**, which is critical for safety-critical systems.
 
----
 
 ## Processing Pipeline
 
@@ -68,8 +64,6 @@ Each phase follows the same four core steps:
    - Works even when grid resolution is finer than LiDAR scan-line spacing
    - Phase II additionally enforces height-difference constraints
 
----
-
 ## Key Design Contributions
 
 ### KD-Tree–Based Ground Expansion
@@ -93,7 +87,6 @@ Each candidate cell undergoes:
 
 Only physically plausible and spatially coherent cells are labeled as ground.
 
----
 
 ## Implementation Details
 
@@ -120,8 +113,6 @@ std::pair<
 > segmentPoints();
 ```
 
----
-
 ## Typical Configuration (from Paper)
 
 ```yaml
@@ -135,8 +126,6 @@ distToGround: 1.723 # (e.g. Based on pointcloud data from SemanticKITTI)
 robotRadius: 2.7
 ```
 
----
-
 ## Performance Summary (SemanticKITTI)
 
 - **Precision:** ~96–99% (low variance)
@@ -149,7 +138,6 @@ GSeg3D consistently demonstrates **stable, high-precision performance** across:
 - Highways
 - Unstructured terrain
 
----
 
 ## Dependencies
 
@@ -157,16 +145,12 @@ GSeg3D consistently demonstrates **stable, high-precision performance** across:
 - **Eigen**
 - **nanoflann**
 
----
-
 ## Intended Use
 
 - Safety-critical autonomous driving
 - Outdoor mobile robotics
 - Traversability analysis
 - Mapping and perception pipelines
-
----
 
 ## Notes & Future Work
 
@@ -176,12 +160,99 @@ GSeg3D consistently demonstrates **stable, high-precision performance** across:
   - Temporal fusion
   - GPU acceleration
 
----
+## Tests & Visualisation
+
+This directory contains **unit tests** and a **visual debugging tool** for the
+`PointCloudGrid` ground segmentation implementation.
+
+The code uses **PCL**, **Eigen**, and **GoogleTest** and is intended for quick
+validation of grid indexing, ground classification logic, and phase-based
+segmentation behaviour.
+
+### Contents
+
+- `test_pointcloud_grid.cpp`  
+  GoogleTest-based **unit tests** covering:
+  - Grid indexing and hashing
+  - Flat ground detection
+  - Vertical structures as obstacles
+  - Phase 1 vs Phase 2 behaviour
+  - Orientation / gravity influence
+  - Robustness against empty inputs
+
+- `test_visual_segmentation.cpp`  
+  A **visual inspection tool** that:
+  - Loads a `.pcd` or `.ply` point cloud
+  - Runs **phase 1 + phase 2** ground segmentation
+  - Displays ground (green) and obstacles (red) using PCLVisualizer
+
+### Dependencies
+
+- CMake ≥ 3.10  
+- PCL  
+- Eigen3  
+- GoogleTest  
+
+Example (Ubuntu):
+
+```bash
+sudo apt install libpcl-dev libeigen3-dev libgtest-dev
+```
+
+### Build Instructions
+
+```bash
+mkdir -p build
+cd build
+cmake ..
+make
+```
+
+### Running Unit Tests
+
+```bash
+ctest --output-on-failure
+```
+
+or
+
+```bash
+./test_pointcloud_grid
+```
+
+### Visual Ground Segmentation Tool
+
+```bash
+./test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg]
+```
+
+#### Examples
+
+```bash
+./test_visual_segmentation scene.pcd
+./test_visual_segmentation scene.pcd 1.0 30
+./test_visual_segmentation map.ply 0.5 25
+```
+
+#### Colour Coding
+
+- Green → Ground points  
+- Red → Obstacles / non-ground points  
+
+Close the viewer window to exit.
+
+### Notes
+
+- Phase 1 allows vertical and slanted propagation from the robot seed cell.
+- Phase 2 refines ground classification using only previously detected ground.
+- Orientation (`Eigen::Quaterniond`) is interpreted as sensor → world rotation.
+
+## License
+
+Same license as the parent project.
 
 ## Citation
 
 If you use this work, please cite the **GSeg3D** paper.
-
----
 
 © DFKI Robotics Innovation Center

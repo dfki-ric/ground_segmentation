@@ -5,6 +5,7 @@
 
 #include <pcl/common/common.h>
 #include <pcl/common/centroid.h>
+#include <pcl/filters/filter.h>   // REQUIRED for removeNaNFromPointCloud
 
 #include <Eigen/Dense>
 
@@ -13,6 +14,7 @@
 #include <chrono>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "ground_detection.hpp"
 
@@ -29,13 +31,13 @@ void removeNaNs(pcl::PointCloud<PointType>::Ptr & cloud)
 {
   std::vector<int> indices;
   pcl::removeNaNFromPointCloud(*cloud, *cloud, indices);
-  cloud->is_dense = true;
 }
 
 int main(int argc, char ** argv)
 {
-  if (argc != 2) {
-    std::cerr << "Usage: " << argv[0] << " <cloud.{pcd|ply}>\n";
+  if (argc < 2) {
+    std::cerr << "Usage: " << argv[0]
+              << " <cloud.{pcd|ply}> [cell_size] [slope_deg]\n";
     return EXIT_FAILURE;
   }
 
@@ -63,121 +65,96 @@ int main(int argc, char ** argv)
 
   removeNaNs(cloud);
 
-  std::cout << "Loaded cloud with "
-            << cloud->size() << " points\n";
+  if (cloud->empty()) {
+    std::cerr << "Input cloud is empty after NaN removal\n";
+    return EXIT_FAILURE;
+  }
+
+  std::cout << "Loaded cloud with " << cloud->size() << " points\n";
+
+  /* ---------------- Grid configuration ---------------- */
 
   GridConfig config;
-  config.cellSizeX = 1.0;
-  config.cellSizeY = 1.0;
+  config.cellSizeX = (argc >= 3) ? std::stod(argv[2]) : 1.0;
+  config.cellSizeY = config.cellSizeX;
   config.cellSizeZ = 1.0;
-  config.slopeThresholdDegrees = 30.0;
+
+  config.slopeThresholdDegrees = (argc >= 4) ? std::stod(argv[3]) : 30.0;
   config.groundInlierThreshold = 0.1;
   config.centroidSearchRadius = 3.0;
   config.distToGround = 0.0;
+
+  /* ---------------- Phase 1 ---------------- */
+
   config.processing_phase = 1;
 
   auto ground_detector =
     std::make_unique<PointCloudGrid<PointType>>(config);
 
-  Eigen::Quaterniond R_robot2World =
+  Eigen::Quaterniond q_sensor_to_world =
     Eigen::Quaterniond::Identity();
 
-  std::cout << "Running ground segmentation...\n";
-  ground_detector->setInputCloud(cloud, R_robot2World);
+  std::cout << "Running ground segmentation phase 1...\n";
 
-  auto result = ground_detector->segmentPoints();
-  auto ground_cloud = result.first;
-  auto obstacle_cloud = result.second;
+  ground_detector->setInputCloud(cloud, q_sensor_to_world);
+  auto phase1 = ground_detector->segmentPoints();
+
+  pcl::PointCloud<PointType>::Ptr ground_cloud = phase1.first;
+  pcl::PointCloud<PointType>::Ptr obstacle_cloud = phase1.second;
+
+  if (ground_cloud->empty()) {
+    std::cerr << "No ground points after phase 1 – aborting\n";
+    return EXIT_FAILURE;
+  }
+
+  /* ---------------- Phase 2 ---------------- */
+
+  config.processing_phase = 2;
+
+  ground_detector =
+    std::make_unique<PointCloudGrid<PointType>>(config);
+
+  std::cout << "Running ground segmentation phase 2...\n";
+
+  ground_detector->setInputCloud(ground_cloud, q_sensor_to_world);
+  auto phase2 = ground_detector->segmentPoints();
+
+  // Accumulate obstacles from both phases
+  ground_cloud = phase2.first;
+  *obstacle_cloud += *phase2.second;
 
   std::cout << "Ground points:   " << ground_cloud->size() << "\n";
   std::cout << "Obstacle points: " << obstacle_cloud->size() << "\n";
 
-  pcl::visualization::PCLVisualizer::Ptr viewer_seg(
-    new pcl::visualization::PCLVisualizer("Segmentation Result"));
+  /* ---------------- Visualisation ---------------- */
 
-  viewer_seg->setBackgroundColor(0.05, 0.05, 0.05);
-  viewer_seg->addCoordinateSystem(1.0);
+  pcl::visualization::PCLVisualizer::Ptr viewer(
+    new pcl::visualization::PCLVisualizer("Ground Segmentation Result"));
+
+  viewer->setBackgroundColor(0.05, 0.05, 0.05);
+  viewer->addCoordinateSystem(1.0);
+  viewer->setUseVbos(true);
 
   pcl::visualization::PointCloudColorHandlerCustom<PointType>
-  ground_color(ground_cloud, 0, 255, 0);
-  viewer_seg->addPointCloud(
+    ground_color(ground_cloud, 0, 255, 0);
+  viewer->addPointCloud(
     ground_cloud, ground_color, "ground");
 
   pcl::visualization::PointCloudColorHandlerCustom<PointType>
-  obstacle_color(obstacle_cloud, 255, 0, 0);
-  viewer_seg->addPointCloud(
+    obstacle_color(obstacle_cloud, 255, 0, 0);
+  viewer->addPointCloud(
     obstacle_cloud, obstacle_color, "obstacles");
 
-  viewer_seg->setPointCloudRenderingProperties(
+  viewer->setPointCloudRenderingProperties(
     pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "ground");
-  viewer_seg->setPointCloudRenderingProperties(
+  viewer->setPointCloudRenderingProperties(
     pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "obstacles");
 
-  pcl::visualization::PCLVisualizer::Ptr viewer_grid(
-    new pcl::visualization::PCLVisualizer("Grid Cells & Normals"));
+  std::cout << "Close the viewer window to exit.\n";
 
-  viewer_grid->setBackgroundColor(0.05, 0.05, 0.05);
-  viewer_grid->addCoordinateSystem(1.0);
-
-  auto & gridCells = ground_detector->getGridCells();
-
-  int id = 0;
-  for (const auto & cellPair : gridCells) {
-    const GridCell<PointType> & cell = cellPair.second;
-
-    if (!cell.points || cell.points->empty()) {
-      continue;
-    }
-
-    uint8_t r, g, b;
-    if (cell.terrain_type == TerrainType::GROUND) {
-      r = 0; g = 255; b = 0;
-    } else {
-      r = 255; g = 0; b = 0;
-    }
-
-    const std::string cid = "cell_" + std::to_string(id);
-
-    pcl::visualization::PointCloudColorHandlerCustom<PointType>
-    cell_color(cell.points, r, g, b);
-
-    viewer_grid->addPointCloud(
-      cell.points, cell_color, cid);
-
-    viewer_grid->setPointCloudRenderingProperties(
-      pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, cid);
-
-    // Normal visualization (if available)
-    if (cell.normal.norm() > 1e-6) {
-      Eigen::Vector3d n = cell.normal;
-      if (n.z() < 0.0) {n *= -1.0;}
-
-      const Eigen::Vector4d & c = cell.centroid;
-      PointType p0(c.x(), c.y(), c.z());
-      PointType p1(
-        c.x() + n.x(),
-        c.y() + n.y(),
-        c.z() + n.z());
-
-      viewer_grid->addArrow(
-        p1, p0,
-        1.0, 0.0, 0.0,
-        false,
-        "normal_" + std::to_string(id));
-    }
-
-    ++id;
-  }
-
-  std::cout << "Close both windows to exit.\n";
-
-  while (!viewer_seg->wasStopped() &&
-    !viewer_grid->wasStopped())
-  {
-    viewer_seg->spinOnce(50);
-    viewer_grid->spinOnce(50);
-    std::this_thread::sleep_for(
-      std::chrono::milliseconds(50));
+  while (!viewer->wasStopped()) {
+    viewer->spinOnce(50);
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
   return EXIT_SUCCESS;
