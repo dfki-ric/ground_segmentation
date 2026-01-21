@@ -14,7 +14,6 @@ find_package(PCL REQUIRED COMPONENTS
   visualization
 )
 
-find_package(Boost REQUIRED COMPONENTS serialization filesystem system)
 find_package(VTK REQUIRED)
 find_package(nanoflann REQUIRED)
 
@@ -42,9 +41,6 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE
 # -------------------------------------------------------------------
 
 target_link_libraries(${PROJECT_NAME} INTERFACE
-  Boost::serialization
-  Boost::filesystem
-  Boost::system
   ${PCL_LIBRARIES}
   ${VTK_LIBRARIES}
   nanoflann::nanoflann
