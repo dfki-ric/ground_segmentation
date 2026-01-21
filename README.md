@@ -204,27 +204,26 @@ make
 ### Running Unit Tests
 
 ```bash
-ctest --output-on-failure
+ctest --test-dir test/ --output-on-failure
 ```
 
 or
 
 ```bash
-./test_pointcloud_grid
+./test/test_pointcloud_grid
 ```
 
 ### Visual Ground Segmentation Tool
 
 ```bash
-./test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg]
+./build/test/test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg]
 ```
 
-#### Examples
+#### Example
 
 ```bash
-./test_visual_segmentation scene.pcd
-./test_visual_segmentation scene.pcd 1.0 30
-./test_visual_segmentation map.ply 0.5 25
+wget https://zenodo.org/records/13771864/files/utah.ply
+./build/test/test_visual_segmentation ../../../utah.ply 1.0 15
 ```
 
 #### Colour Coding
