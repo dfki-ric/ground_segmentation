@@ -138,13 +138,6 @@ GSeg3D consistently demonstrates **stable, high-precision performance** across:
 - Highways
 - Unstructured terrain
 
-
-## Dependencies
-
-- **PCL** (segmentation, centroid, covariance)
-- **Eigen**
-- **nanoflann**
-
 ## Intended Use
 
 - Safety-critical autonomous driving
@@ -188,7 +181,7 @@ segmentation behaviour.
 
 ### Dependencies
 
-- CMake ≥ 3.10  
+- CMake
 - PCL  
 - Eigen3  
 - GoogleTest  
