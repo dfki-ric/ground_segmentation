@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 {
   if (argc < 2) {
     std::cerr << "Usage: " << argv[0]
-              << " <cloud.{pcd|ply}> [cell_size] [slope_deg]\n";
+          << " <cloud.{pcd|ply}> [cell_size] [slope_deg] [dist_to_ground]\n";
     return EXIT_FAILURE;
   }
 
@@ -82,7 +82,7 @@ int main(int argc, char ** argv)
   config.slopeThresholdDegrees = (argc >= 4) ? std::stod(argv[3]) : 30.0;
   config.groundInlierThreshold = 0.1;
   config.centroidSearchRadius = 3.0;
-  config.distToGround = 0.0;
+  config.distToGround = (argc >= 5) ? std::stod(argv[4]) : 0.0;
 
   /* ---------------- Phase 1 ---------------- */
 
@@ -110,6 +110,7 @@ int main(int argc, char ** argv)
   /* ---------------- Phase 2 ---------------- */
 
   config.processing_phase = 2;
+  config.cellSizeZ = 0.2;
 
   ground_detector =
     std::make_unique<PointCloudGrid<PointType>>(config);

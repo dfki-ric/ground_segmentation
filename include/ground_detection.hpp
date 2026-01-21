@@ -521,7 +521,7 @@ using Neighbor = std::pair<unsigned int, double>;
 
       if (grid_config.processing_phase == 2) {
         // Reject neighbor if centroid height difference is too large
-        double dz = std::abs(current_cell.centroid[2] - neighbor.centroid[2]);
+        double dz = std::abs(curr_centroid.z - neighbor.centroid[2]);
         if (dz > grid_config.groundInlierThreshold) {
           continue;
         }
