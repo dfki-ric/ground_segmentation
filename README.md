@@ -92,6 +92,29 @@ Only physically plausible and spatially coherent cells are labeled as ground.
 
 To generate the HTML documentation for this library:
 
+### Dependencies
+
+- CMake
+- PCL  
+- Eigen3  
+- GoogleTest  
+
+Example (Ubuntu):
+
+```bash
+sudo apt update
+sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev
+```
+
+### Build Instructions
+
+```bash
+mkdir -p build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+make
+```
+
 ### Generating Documentation
 
 1. Make sure you have **Doxygen** and **Graphviz** installed:
@@ -103,9 +126,6 @@ sudo apt install doxygen graphviz
 2. From the root of the project, run CMake and build the `doc` target:
 
 ```bash
-mkdir -p build
-cd build
-cmake ..
 cmake --build . --target doc
 ```
 
@@ -113,6 +133,37 @@ cmake --build . --target doc
 
 > The main page will include the README and automatically list the header files and classes.
 
+### Running Unit Tests
+
+```bash
+ctest --test-dir test/ --output-on-failure
+```
+
+or
+
+```bash
+./test/test_pointcloud_grid
+```
+
+### Visual Ground Segmentation Tool
+
+```bash
+./test/test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg] [dist_to_ground]
+```
+
+#### Example
+
+```bash
+wget https://zenodo.org/records/13771864/files/utah.ply
+./test/test_visual_segmentation utah.ply 1.0 15 -0.5
+```
+
+#### Colour Coding
+
+- Green → Ground points  
+- Red → Obstacles / non-ground points  
+
+Close the viewer window to exit.
 
 ### Core Class
 
@@ -202,60 +253,6 @@ segmentation behaviour.
   - Loads a `.pcd` or `.ply` point cloud
   - Runs **phase 1 + phase 2** ground segmentation
   - Displays ground (green) and obstacles (red) using PCLVisualizer
-
-### Dependencies
-
-- CMake
-- PCL  
-- Eigen3  
-- GoogleTest  
-
-Example (Ubuntu):
-
-```bash
-sudo apt install libpcl-dev libeigen3-dev libgtest-dev doxygen graphviz
-```
-
-### Build Instructions
-
-```bash
-mkdir -p build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=RELEASE
-make
-```
-
-### Running Unit Tests
-
-```bash
-ctest --test-dir test/ --output-on-failure
-```
-
-or
-
-```bash
-./test/test_pointcloud_grid
-```
-
-### Visual Ground Segmentation Tool
-
-```bash
-./build/test/test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg] [dist_to_ground]
-```
-
-#### Example
-
-```bash
-wget https://zenodo.org/records/13771864/files/utah.ply
-./build/test/test_visual_segmentation utah.ply 1.0 15 -0.5
-```
-
-#### Colour Coding
-
-- Green → Ground points  
-- Red → Obstacles / non-ground points  
-
-Close the viewer window to exit.
 
 ### Notes
 
