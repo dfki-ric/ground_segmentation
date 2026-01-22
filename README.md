@@ -7,6 +7,7 @@ It follows the methodology described in the paper:
 > *GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds*  
 > Lodhi, M. H. K., Hertzberg, C., DFKI Robotics Innovation Center
 
+![GSeg3D](images/gseg3d.gif)
 
 ## Motivation
 
