@@ -1,4 +1,4 @@
-# GSeg3D / PointCloudGrid  
+# GSeg3D  
 **High-Precision Grid-Based Ground Segmentation for Safety-Critical Robotics**
 
 This module implements the core algorithmic components of **GSeg3D**, a high-precision, grid-based ground segmentation method for LiDAR point clouds designed for **safety-critical autonomous driving and robotics applications**.  
