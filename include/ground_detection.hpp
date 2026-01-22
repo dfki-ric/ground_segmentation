@@ -440,7 +440,7 @@ void PointCloudGrid<PointT>::getGroundCells()
     PointT centroid3d;
     centroid3d.x = 0;
     centroid3d.y = 0;
-    centroid3d.z = -grid_config.distToGround;     // Use your actual robot base height if needed
+    centroid3d.z = grid_config.distToGround;     // Use your actual robot base height if needed
 
     centroid_cloud->points.push_back(centroid3d);
     centroid_indices.push_back(best_robot_cell);
