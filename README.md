@@ -122,7 +122,7 @@ cellSizeZ: 1.5   # Phase I
 slopeThresholdDegrees: 30.0
 groundInlierThreshold: 0.125
 centroidSearchRadius: 5.0
-distToGround: 1.723 # (e.g. Based on pointcloud data from SemanticKITTI)
+distToGround: -1.723 # (e.g. Based on pointcloud data from SemanticKITTI)
 robotRadius: 2.7
 ```
 
