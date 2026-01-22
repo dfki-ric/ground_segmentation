@@ -111,7 +111,7 @@ cmake --build . --target doc
 
 3. After building, open the generated HTML documentation `doc/html/index.html` in your browser
 
-> The main page will include this README and automatically list your header files and classes.
+> The main page will include the README and automatically list the header files and classes.
 
 
 ### Core Class
@@ -265,10 +265,13 @@ Close the viewer window to exit.
 
 ## License
 
-Same license as the parent project.
+BSD-3 Clause License.
 
 ## Citation
 
-If you use this work, please cite the **GSeg3D** paper.
+If you use this work, please cite:
+
+Muhammad Haider Khan Lodhi and Christoph Hertzberg, "GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds," in *2025 7th International Conference on Robotics and Computer Vision (ICRCV)*, pp. 119-126, 2025. doi: [10.1109/ICRCV67407.2025.11349133](https://doi.org/10.1109/ICRCV67407.2025.11349133)
+
 
 © DFKI Robotics Innovation Center
