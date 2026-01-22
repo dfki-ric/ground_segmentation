@@ -90,6 +90,30 @@ Only physically plausible and spatially coherent cells are labeled as ground.
 
 ## Implementation Details
 
+To generate the HTML documentation for this library:
+
+### Generating Documentation
+
+1. Make sure you have **Doxygen** and **Graphviz** installed:
+
+```bash
+sudo apt install doxygen graphviz
+```
+
+2. From the root of the project, run CMake and build the `doc` target:
+
+```bash
+mkdir -p build
+cd build
+cmake ..
+cmake --build . --target doc
+```
+
+3. After building, open the generated HTML documentation `doc/html/index.html` in your browser
+
+> The main page will include this README and automatically list your header files and classes.
+
+
 ### Core Class
 
 ```cpp
@@ -189,7 +213,7 @@ segmentation behaviour.
 Example (Ubuntu):
 
 ```bash
-sudo apt install libpcl-dev libeigen3-dev libgtest-dev
+sudo apt install libpcl-dev libeigen3-dev libgtest-dev doxygen graphviz
 ```
 
 ### Build Instructions
