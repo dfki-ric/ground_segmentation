@@ -1,5 +1,5 @@
 # GSeg3D  
-**High-Precision Grid-Based Ground Segmentation for Safety-Critical Robotics**
+**High-Precision Grid-Based Ground Segmentation for Safety-Critical Autonomous Driving and Robotics Applications**
 
 This module implements the core algorithmic components of **GSeg3D**, a high-precision, grid-based ground segmentation method for LiDAR point clouds designed for **safety-critical autonomous driving and robotics applications**.  
 It follows the methodology described in the paper:
@@ -18,7 +18,7 @@ Reliable ground segmentation is a fundamental prerequisite for:
 - Mapping and localization
 
 False positives (classifying ground as obstacles) can directly compromise safety and downstream decision-making.  
-GSeg3D is explicitly designed to **maximize precision while maintaining robust recall**, even in cluttered, unstructured, or vegetation-rich environments.
+GSeg3D is explicitly designed to **maximize precision while maintaining robust recall**, even in cluttered and unstructured environments.
 
 ## Algorithm Overview
 
