@@ -55,6 +55,10 @@ public:
       PCLPointCloudAdaptor<PointT>, 3> KDTree;
   bool checkIndex3DInGrid(const Index3D & index);
 
+  void setDistToGround(double z)
+  {
+    grid_config.distToGround = z;
+  }
 private:
   std::vector<Index3D> generateIndices(const uint16_t & z_threshold);
   void cleanUp();
@@ -419,38 +423,34 @@ void PointCloudGrid<PointT>::getGroundCells()
 
   std::queue<Index3D> q;
 
-  bool found = false;
   Index3D best_robot_cell;
-  int z_start = 0;       // Your starting z value
-  int z_min = -100;      // The lowest z to check
 
-  for (int z = z_start; z >= z_min; --z) {
-    Index3D idx{0, 0, z};
-    if (checkIndex3DInGrid(idx) && !gridCells[idx].points->empty()) {
-      best_robot_cell = idx;
-      found = true;
-      break;       // stop at the first populated cell
-    }
-  }
+  // Compute z index directly from distToGround
+  int z = static_cast<int>(std::floor(grid_config.distToGround / grid_config.cellSizeZ));
+  best_robot_cell = Index3D{0, 0, z};
 
-  if (found) {
-    GridCell<PointT> & robot_cell = gridCells[best_robot_cell];
-    robot_cell.terrain_type = TerrainType::GROUND;
+  // Ensure the cell exists (even if empty)
+  GridCell<PointT> & robot_cell = gridCells[best_robot_cell];
 
-    PointT centroid3d;
-    centroid3d.x = 0;
-    centroid3d.y = 0;
-    centroid3d.z = grid_config.distToGround;     // Use your actual robot base height if needed
+  // Mark semantics
+  robot_cell.terrain_type = TerrainType::GROUND;
 
-    centroid_cloud->points.push_back(centroid3d);
-    centroid_indices.push_back(best_robot_cell);
-    index_to_centroid_idx[best_robot_cell] = centroid_cloud->size() - 1;
+  // IMPORTANT: allow expansion even without points
+  robot_cell.expanded = false;
+  robot_cell.in_queue = true;
 
-    robot_cell.in_queue = true;     // <--- Set if using the in_queue pattern
+  // Add centroid ONLY for KD-tree seeding
+  PointT centroid3d;
+  centroid3d.x = 0.0;
+  centroid3d.y = 0.0;
+  centroid3d.z = grid_config.distToGround;
 
-    q.push(best_robot_cell);
-    expandGrid(q);
-  }
+  centroid_cloud->points.push_back(centroid3d);
+  centroid_indices.push_back(best_robot_cell);
+  index_to_centroid_idx[best_robot_cell] = centroid_cloud->size() - 1;
+
+  q.push(best_robot_cell);
+  expandGrid(q);
 }
 
 template<typename PointT>
@@ -481,7 +481,7 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
     GridCell<PointT> & current_cell = gridCells[idx];
     current_cell.in_queue = false;     // Mark as not in queue now that we're processing it
 
-    if (current_cell.expanded || current_cell.points->empty()) {continue;}
+    if (current_cell.expanded) {continue;}
     current_cell.expanded = true;
 
     // Find current centroid index
