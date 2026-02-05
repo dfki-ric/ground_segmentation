@@ -99,12 +99,13 @@ To generate the HTML documentation for this library:
 - PCL  
 - Eigen3  
 - GoogleTest  
+- NanoFlann
 
 Example (Ubuntu):
 
 ```bash
 sudo apt update
-sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev
+sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev
 ```
 
 ### Build Instructions
