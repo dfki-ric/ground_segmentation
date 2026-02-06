@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(ground_segmentation VERSION 0.1.0 LANGUAGES CXX)
 
-# -------------------------------------------------------------------
-# Dependencies (BUILD time only)
-# -------------------------------------------------------------------
-
 find_package(PCL REQUIRED COMPONENTS
   common
   io
@@ -16,10 +12,6 @@ find_package(PCL REQUIRED COMPONENTS
 
 find_package(VTK REQUIRED)
 find_package(nanoflann REQUIRED)
-
-# -------------------------------------------------------------------
-# Interface library
-# -------------------------------------------------------------------
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -36,33 +28,16 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE
   NUMERIC_DEPRECATE=1
 )
 
-# -------------------------------------------------------------------
-# Link dependencies (IMPORTED TARGETS ONLY)
-# -------------------------------------------------------------------
-
 target_link_libraries(${PROJECT_NAME} INTERFACE
   ${PCL_LIBRARIES}
   ${VTK_LIBRARIES}
   nanoflann::nanoflann
 )
 
-# -------------------------------------------------------------------
-# Install headers
-# -------------------------------------------------------------------
-
-
-# ------------------------------------------------------------
-# Install headers (REQUIRED for INTERFACE libraries)
-# ------------------------------------------------------------
-
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/include/
   DESTINATION include
 )
-
-# -------------------------------------------------------------------
-# Export targets
-# -------------------------------------------------------------------
 
 install(
   TARGETS ${PROJECT_NAME}
@@ -74,10 +49,6 @@ install(
   NAMESPACE ${PROJECT_NAME}::
   DESTINATION lib/cmake/${PROJECT_NAME}
 )
-
-# -------------------------------------------------------------------
-# Package config files
-# -------------------------------------------------------------------
 
 include(CMakePackageConfigHelpers)
 

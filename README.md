@@ -93,6 +93,10 @@ Only physically plausible and spatially coherent cells are labeled as ground.
 
 To generate the HTML documentation for this library:
 
+### System Requirements
+
+OS: Ubuntu 22.04, Ubuntu 24.04
+
 ### Dependencies
 
 - CMake
@@ -100,12 +104,13 @@ To generate the HTML documentation for this library:
 - Eigen3  
 - GoogleTest  
 - NanoFlann
+- JDK 17
 
 Example (Ubuntu):
 
 ```bash
 sudo apt update
-sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev
+sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev openjdk-17-jre
 ```
 
 ### Build Instructions
