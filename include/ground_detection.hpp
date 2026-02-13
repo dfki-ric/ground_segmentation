@@ -499,7 +499,7 @@ void PointCloudGrid<PointT>::getGroundCells()
       continue;
     } else if (ratio > 0.4) {
       cell.primitive_type = PrimitiveType::PLANE;
-      if (std::abs(computeSlope(cell.normal)) > grid_config.slopeThresholdDegrees) {
+      if (std::abs(computeSlope(cell.normal)) > (grid_config.slopeThresholdDegrees * (M_PI / 180.0))) {
         cell.terrain_type = TerrainType::OBSTACLE;
         non_ground_cells.push_back(cell_id);
         continue;
