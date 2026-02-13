@@ -1,3 +1,14 @@
+/**
+ * @file ProcessCloudProcessor.hpp
+ * @brief Preprocessing utilities for point cloud filtering and clustering.
+ *
+ * Includes:
+ *  - ROI filtering
+ *  - Voxel downsampling
+ *  - Euclidean clustering
+ *  - PCD I/O
+ */
+
 #pragma once
 
 #include <pcl/io/pcd_io.h>

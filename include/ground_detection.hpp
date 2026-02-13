@@ -1,3 +1,17 @@
+/**
+ * @file PointCloudGrid.hpp
+ * @brief Grid-based ground segmentation implementation.
+ *
+ * Implements:
+ *  - 3D voxelization
+ *  - PCA-based primitive detection
+ *  - RANSAC plane fitting
+ *  - Slope filtering
+ *  - KD-tree region growing
+ *
+ * Designed for safety-critical robotics applications.
+ */
+
 #pragma once
 
 #include "ground_detection_types.hpp"
@@ -6,6 +20,15 @@
 
 namespace ground_segmentation
 {
+
+/**
+ * @struct PCLPointCloudAdaptor
+ * @brief nanoflann adaptor for PCL point clouds.
+ *
+ * Allows fast KD-tree construction without copying data.
+ *
+ * @tparam PointT PCL point type
+ */
 
 template<typename PointT>
 struct PCLPointCloudAdaptor
@@ -33,21 +56,57 @@ struct PCLPointCloudAdaptor
   bool kdtree_get_bbox(BBOX & /*bb*/) const {return false;}
 };
 
+
+/**
+ * @class PointCloudGrid
+ * @brief Core grid-based ground segmentation algorithm.
+ *
+ * Pipeline:
+ *   1) Voxelize point cloud into 3D grid
+ *   2) Compute PCA per cell
+ *   3) Classify primitives (line/plane/noise)
+ *   4) Fit plane model (RANSAC)
+ *   5) Apply slope threshold
+ *   6) Seed region at robot cell
+ *   7) Expand via centroid KD-tree
+ *
+ * Outputs separated ground and non-ground clouds.
+ *
+ * @tparam PointT PCL point type
+ */
+
 template<typename PointT>
 class PointCloudGrid
 {
 
 public:
-  PointCloudGrid(const GridConfig & config);
-  void clear();
+
   typedef GridCell<PointT> CellType;
   typedef std::unordered_map<Index3D, CellType, Index3D::HashFunction> GridCellsType;
+
+  PointCloudGrid(const GridConfig & config);
+  void clear();
   void setInputCloud(
     typename pcl::PointCloud<PointT>::Ptr input,
     const Eigen::Quaterniond & R_body2World);
+  GridCellsType & getGridCells() {return gridCells;}
+
+  /**
+   * @brief Final segmentation step.
+   *
+   * Splits:
+   *   - Ground points
+   *   - Non-ground points
+   *
+   * Applies:
+   *   - Inlier extraction
+   *   - Sparsity checks
+   *   - Floating cell rejection
+   *
+   * @return pair<ground_cloud, non_ground_cloud>
+   */
   std::pair<typename pcl::PointCloud<PointT>::Ptr,
     typename pcl::PointCloud<PointT>::Ptr> segmentPoints();
-  GridCellsType & getGridCells() {return gridCells;}
 
   // Build KD-Tree
   typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double,
@@ -60,16 +119,70 @@ public:
     grid_config.distToGround = z;
   }
 private:
+  /**
+   * @brief Generate neighbor offsets for region growing.
+   *
+   * @param z_threshold Defines vertical expansion range.
+   *
+   * Phase 1 → z_threshold = 0 (horizontal only)
+   * Phase 2 → z_threshold = 1 (vertical connectivity allowed)
+   */
   std::vector<Index3D> generateIndices(const uint16_t & z_threshold);
   void cleanUp();
   void addPoint(const PointT & point);
+
+  /**
+   * @brief Classify grid cells into ground or obstacle.
+   *
+   * Steps:
+   *   - Reject sparse cells
+   *   - PCA eigenvalue analysis
+   *   - Primitive classification
+   *   - Plane fitting
+   *   - Slope thresholding
+   *   - Robot-seeded region growing
+   */
   void getGroundCells();
+
   std::vector<Index3D> getNeighbors(
     const GridCell<PointT> & cell, const TerrainType & type,
     const std::vector<Index3D> & neighbor_offsets);
+
+  /**
+   * @brief Compute slope angle between surface normal and global Z-axis.
+   *
+   * @param normal Estimated plane normal
+   * @return slope angle in radians
+   *
+   * Uses body-to-world orientation to ensure gravity alignment.
+   */
   double computeSlope(const Eigen::Hyperplane<double, int(3)> & plane) const;
   double computeSlope(const Eigen::Vector3d & normal);
+
+  /**
+   * @brief Fit a planar model to cell points using PROSAC.
+   *
+   * @param cell Grid cell
+   * @param threshold RANSAC inlier threshold (meters)
+   *
+   * @return true if plane successfully estimated
+   *
+   * Sets:
+   *   - cell.inliers
+   *   - cell.slope
+   */
   bool fitGroundPlane(GridCell<PointT> & cell, const double & inlier_threshold);
+
+  /**
+   * @brief Region growing from robot cell using centroid KD-tree.
+   *
+   * Expands only to:
+   *   - Cells classified as GROUND
+   *   - Within centroidSearchRadius
+   *   - Within vertical threshold (Phase 2)
+   *
+   * Ensures ground continuity and prevents floating ground artifacts.
+   */
   void expandGrid(std::queue<Index3D> q);
   std::string classifySparsityBoundingBox(
     const GridCell<PointT> & cell,
