@@ -128,7 +128,7 @@ sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev op
 
 ```bash
 git clone git@github.com:dfki-ric/ground_segmentation.git
-mkdir -p build
+cd ground_segmentation && mkdir -p build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE
 make
@@ -174,7 +174,7 @@ or
 
 ```bash
 wget https://zenodo.org/records/13771864/files/utah.ply
-./test/test_visual_segmentation utah.ply 1.0 15 -0.5
+./test/test_visual_segmentation utah.ply 1.0 30 -0.5
 ```
 
 #### Colour Coding
