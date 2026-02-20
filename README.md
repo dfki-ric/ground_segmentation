@@ -127,6 +127,7 @@ sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev op
 ### Build Instructions
 
 ```bash
+git clone git@github.com:dfki-ric/ground_segmentation.git
 mkdir -p build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE
