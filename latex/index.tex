@@ -1,0 +1,307 @@
+\chapter{GSeg3D}
+\hypertarget{index}{}\label{index}\index{GSeg3D@{GSeg3D}}
+\label{index_md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2README}%
+\Hypertarget{index_md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2README}%
+{\bfseries{High-\/\+Precision Grid-\/\+Based Ground Segmentation for Safety-\/\+Critical Autonomous Driving and Robotics Applications}}
+
+This module implements the core algorithmic components of {\bfseries{GSeg3D}}, a high-\/precision, grid-\/based ground segmentation method for Li\+DAR point clouds designed for {\bfseries{safety-\/critical autonomous driving and robotics applications}}. ~\newline
+ It follows the methodology described in the paper\+:
+
+\begin{quote}
+{\bfseries{GSeg3D\+: A High-\/\+Precision Grid-\/\+Based Algorithm for Safety-\/\+Critical Ground Segmentation in Li\+DAR Point Clouds}} ~\newline
+ Muhammad Haider Khan Lodhi and Christoph Hertzberg ~\newline
+ {\itshape Proceedings of the 7th International Conference on Robotics and Computer Vision (ICRCV)}, ~\newline
+ Hong Kong, China, October 24–26, 2025. ~\newline
+ IEEE, 2025. ~\newline
+ DOI\+: \href{https://doi.org/10.1109/ICRCV67407.2025.11349133}{\texttt{ https\+://doi.\+org/10.\+1109/\+ICRCV67407.\+2025.\+11349133}} \end{quote}
+This demo video uses the \href{https://www.semantic-kitti.org/index.html}{\texttt{ Semantic\+KITTI}} dataset for evaluation and visualization. \hypertarget{index_autotoc_md6}{}\doxysection{\texorpdfstring{ROS2}{ROS2}}\label{index_autotoc_md6}
+The official ROS 2 wrapper for {\bfseries{GSeg3D}} is available here\+:
+
+\href{https://github.com/dfki-ric/ground_segmentation_ros2}{\texttt{ ROS 2 Node Implementation}}\hypertarget{index_autotoc_md7}{}\doxysection{\texorpdfstring{Motivation}{Motivation}}\label{index_autotoc_md7}
+Reliable ground segmentation is a fundamental prerequisite for\+:
+\begin{DoxyItemize}
+\item Obstacle detection
+\item Traversability estimation
+\item Navigation and planning
+\item Mapping and localization
+\end{DoxyItemize}
+
+False positives (classifying ground as obstacles) can directly compromise safety and downstream decision-\/making. ~\newline
+ GSeg3D is explicitly designed to {\bfseries{maximize precision while maintaining robust recall}}, even in cluttered and unstructured environments.\hypertarget{index_autotoc_md8}{}\doxysection{\texorpdfstring{Algorithm Overview}{Algorithm Overview}}\label{index_autotoc_md8}
+GSeg3D performs {\bfseries{two-\/phase grid-\/based ground segmentation}}\+:\hypertarget{index_autotoc_md9}{}\doxysubsection{\texorpdfstring{Phase I – Coarse Segmentation}{Phase I – Coarse Segmentation}}\label{index_autotoc_md9}
+
+\begin{DoxyItemize}
+\item Uses {\bfseries{larger vertical grid cells}}
+\item Aggressively captures elevated structures as non-\/ground
+\item Ensures high initial precision
+\item May temporarily over-\/segment ground in cluttered areas
+\end{DoxyItemize}\hypertarget{index_autotoc_md10}{}\doxysubsection{\texorpdfstring{Phase II – Refinement}{Phase II – Refinement}}\label{index_autotoc_md10}
+
+\begin{DoxyItemize}
+\item Uses {\bfseries{smaller vertical grid cells}}
+\item Re-\/evaluates ground points from Phase I
+\item Corrects false positives and false negatives from Phase I
+\item Enforces vertical consistency constraints
+\end{DoxyItemize}
+
+This dual-\/phase strategy achieves a strong balance between {\bfseries{precision and recall}}, which is critical for safety-\/critical systems.\hypertarget{index_autotoc_md11}{}\doxysection{\texorpdfstring{Processing Pipeline}{Processing Pipeline}}\label{index_autotoc_md11}
+Each phase follows the same four core steps\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Grid Representation}}
+\begin{DoxyItemize}
+\item The point cloud is discretized into a regular 3D grid
+\item Each point is assigned to a cell based on configurable cell sizes
+\end{DoxyItemize}
+\item {\bfseries{Local Eigen Classification}}
+\begin{DoxyItemize}
+\item Per-\/cell covariance matrix and eigen decomposition
+\item Cells classified as\+:
+\begin{DoxyItemize}
+\item {\ttfamily LINE} (dominant linear structure)
+\item {\ttfamily PLANE} (surface-\/like structure)
+\item {\ttfamily NOISE} (scattered points)
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item {\bfseries{Surface Gradient Analysis}}
+\begin{DoxyItemize}
+\item Robust plane fitting using {\bfseries{PCL SACSegmentation (PROSAC)}}
+\item Slope estimation relative to gravity (world frame)
+\item Planar cells exceeding slope thresholds are rejected as ground
+\end{DoxyItemize}
+\item {\bfseries{Ground Region Expansion}}
+\begin{DoxyItemize}
+\item Candidate ground cell centroids are indexed using a {\bfseries{KD-\/tree (nanoflann)}}
+\item Radius-\/based neighborhood expansion ensures connectivity
+\item Works even when grid resolution is finer than Li\+DAR scan-\/line spacing
+\item Phase II additionally enforces height-\/difference constraints
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md12}{}\doxysection{\texorpdfstring{Key Design Contributions}{Key Design Contributions}}\label{index_autotoc_md12}
+\hypertarget{index_autotoc_md13}{}\doxysubsection{\texorpdfstring{KD-\/\+Tree–\+Based Ground Expansion}{KD-Tree–Based Ground Expansion}}\label{index_autotoc_md13}
+Traditional grid-\/neighbor expansion fails at high grid resolutions due to scan-\/line gaps. ~\newline
+ GSeg3D overcomes this by\+:
+\begin{DoxyItemize}
+\item Indexing ground centroids in a KD-\/tree
+\item Performing radius-\/based spatial expansion
+\item Enabling fine grid resolutions without loss of connectivity or recall
+\end{DoxyItemize}\hypertarget{index_autotoc_md14}{}\doxysubsection{\texorpdfstring{Robust Seed Initialization}{Robust Seed Initialization}}\label{index_autotoc_md14}
+
+\begin{DoxyItemize}
+\item Synthetic seed points are injected directly beneath the robot
+\item Ensures reliable ground initialization even with occlusions or sparse data
+\item Synthetic points are removed before final output and evaluation
+\end{DoxyItemize}\hypertarget{index_autotoc_md15}{}\doxysubsection{\texorpdfstring{Multi-\/\+Step Ground Verification}{Multi-Step Ground Verification}}\label{index_autotoc_md15}
+Each candidate cell undergoes\+:
+\begin{DoxyItemize}
+\item Plane inlier / outlier separation
+\item Bounding-\/box sparsity analysis
+\item Neighborhood height consistency checks
+\item Floating-\/cell rejection (non-\/ground below)
+\end{DoxyItemize}
+
+Only physically plausible and spatially coherent cells are labeled as ground.\hypertarget{index_autotoc_md16}{}\doxysection{\texorpdfstring{Implementation Details}{Implementation Details}}\label{index_autotoc_md16}
+To generate the HTML documentation for this library\+:\hypertarget{index_autotoc_md17}{}\doxysubsection{\texorpdfstring{System Requirements}{System Requirements}}\label{index_autotoc_md17}
+OS\+: Ubuntu 22.\+04, Ubuntu 24.\+04\hypertarget{index_autotoc_md18}{}\doxysubsection{\texorpdfstring{Dependencies}{Dependencies}}\label{index_autotoc_md18}
+
+\begin{DoxyItemize}
+\item CMake
+\item PCL ~\newline
+
+\item Eigen3 ~\newline
+
+\item Google\+Test ~\newline
+
+\item Nano\+Flann
+\item JDK 17
+\end{DoxyItemize}
+
+Example (Ubuntu)\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt\ update}
+\DoxyCodeLine{sudo\ apt\ install\ cmake\ libpcl-\/dev\ libeigen3-\/dev\ libgtest-\/dev\ libnanoflann-\/dev\ openjdk-\/17-\/jre}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md19}{}\doxysubsection{\texorpdfstring{Build Instructions}{Build Instructions}}\label{index_autotoc_md19}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ -\/p\ build}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{cmake\ ..\ -\/DCMAKE\_BUILD\_TYPE=RELEASE}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md20}{}\doxysubsection{\texorpdfstring{Generating Documentation}{Generating Documentation}}\label{index_autotoc_md20}
+
+\begin{DoxyEnumerate}
+\item Make sure you have {\bfseries{Doxygen}} and {\bfseries{Graphviz}} installed\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt\ install\ doxygen\ graphviz}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item From the root of the project, run CMake and build the {\ttfamily doc} target\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/build\ .\ -\/-\/target\ doc}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item After building, open the generated HTML documentation {\ttfamily doc/html/index.\+html} in your browser
+\end{DoxyEnumerate}
+
+\begin{quote}
+The main page will include the README and automatically list the header files and classes. \end{quote}
+\hypertarget{index_autotoc_md21}{}\doxysubsection{\texorpdfstring{Running Unit Tests}{Running Unit Tests}}\label{index_autotoc_md21}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ctest\ -\/-\/test-\/dir\ test/\ -\/-\/output-\/on-\/failure}
+
+\end{DoxyCode}
+
+
+or
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./test/test\_pointcloud\_grid}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md22}{}\doxysubsection{\texorpdfstring{Visual Ground Segmentation Tool}{Visual Ground Segmentation Tool}}\label{index_autotoc_md22}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./test/test\_visual\_segmentation\ <cloud.pcd|cloud.ply>\ [cell\_size]\ [slope\_deg]\ [dist\_to\_ground]}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md23}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{index_autotoc_md23}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{wget\ https://zenodo.org/records/13771864/files/utah.ply}
+\DoxyCodeLine{./test/test\_visual\_segmentation\ utah.ply\ 1.0\ 15\ -\/0.5}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md24}{}\doxysubsubsection{\texorpdfstring{Colour Coding}{Colour Coding}}\label{index_autotoc_md24}
+
+\begin{DoxyItemize}
+\item Green → Ground points ~\newline
+
+\item Red → Obstacles / non-\/ground points ~\newline
+
+\end{DoxyItemize}
+
+Close the viewer window to exit.\hypertarget{index_autotoc_md25}{}\doxysubsection{\texorpdfstring{Core Class}{Core Class}}\label{index_autotoc_md25}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\textcolor{keyword}{class\ }PointCloudGrid;}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md26}{}\doxysubsection{\texorpdfstring{Main API}{Main API}}\label{index_autotoc_md26}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PointCloudGrid(\textcolor{keyword}{const}\ GridConfig\&\ config);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{void}\ setInputCloud(}
+\DoxyCodeLine{\ \ \ \ pcl::PointCloud<PointT>::Ptr\ input,}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{const}\ Eigen::Quaterniond\&\ R\_body2World}
+\DoxyCodeLine{);}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::pair<}
+\DoxyCodeLine{\ \ \ \ pcl::PointCloud<PointT>::Ptr,}
+\DoxyCodeLine{\ \ \ \ pcl::PointCloud<PointT>::Ptr}
+\DoxyCodeLine{>\ segmentPoints();}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md27}{}\doxysection{\texorpdfstring{Typical Configuration (from Paper)}{Typical Configuration (from Paper)}}\label{index_autotoc_md27}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cellSizeX:\ 1.5}
+\DoxyCodeLine{cellSizeY:\ 1.0}
+\DoxyCodeLine{cellSizeZ:\ 1.5\ \ \ \#\ Phase\ I}
+\DoxyCodeLine{slopeThresholdDegrees:\ 30.0}
+\DoxyCodeLine{groundInlierThreshold:\ 0.125}
+\DoxyCodeLine{centroidSearchRadius:\ 5.0}
+\DoxyCodeLine{distToGround:\ -\/1.723\ \#\ (e.g.\ Based\ on\ pointcloud\ data\ from\ SemanticKITTI)}
+\DoxyCodeLine{robotRadius:\ 2.7}
+
+\end{DoxyCode}
+\hypertarget{index_autotoc_md28}{}\doxysection{\texorpdfstring{Performance Summary (\+Semantic\+KITTI)}{Performance Summary (SemanticKITTI)}}\label{index_autotoc_md28}
+
+\begin{DoxyItemize}
+\item {\bfseries{Precision\+:}} \texorpdfstring{$\sim$}{\string~}96–99\% (low variance)
+\item {\bfseries{Recall\+:}} \texorpdfstring{$\sim$}{\string~}85–91\%
+\item {\bfseries{F1-\/score\+:}} \texorpdfstring{$\sim$}{\string~}92–94\%
+\item {\bfseries{Runtime\+:}} \texorpdfstring{$\sim$}{\string~}48 ms (CPU, single scan average)
+\end{DoxyItemize}
+
+GSeg3D consistently demonstrates {\bfseries{stable, high-\/precision performance}} across\+:
+\begin{DoxyItemize}
+\item Urban environments
+\item Highways
+\item Unstructured terrain
+\end{DoxyItemize}\hypertarget{index_autotoc_md29}{}\doxysection{\texorpdfstring{Intended Use}{Intended Use}}\label{index_autotoc_md29}
+
+\begin{DoxyItemize}
+\item Safety-\/critical autonomous driving
+\item Outdoor mobile robotics
+\item Traversability analysis
+\item Mapping and perception pipelines
+\end{DoxyItemize}\hypertarget{index_autotoc_md30}{}\doxysection{\texorpdfstring{Notes \& Future Work}{Notes \& Future Work}}\label{index_autotoc_md30}
+
+\begin{DoxyItemize}
+\item Recall degradation in dense vegetation remains challenging
+\item Planned extensions\+:
+\begin{DoxyItemize}
+\item Semantic-\/aware refinement
+\item Temporal fusion
+\item GPU acceleration
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md31}{}\doxysection{\texorpdfstring{Tests \& Visualisation}{Tests \& Visualisation}}\label{index_autotoc_md31}
+This directory contains {\bfseries{unit tests}} and a {\bfseries{visual debugging tool}} for the {\ttfamily Point\+Cloud\+Grid} ground segmentation implementation.
+
+The code uses {\bfseries{PCL}}, {\bfseries{Eigen}}, and {\bfseries{Google\+Test}} and is intended for quick validation of grid indexing, ground classification logic, and phase-\/based segmentation behaviour.\hypertarget{index_autotoc_md32}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{index_autotoc_md32}
+
+\begin{DoxyItemize}
+\item {\ttfamily test\+\_\+pointcloud\+\_\+grid.\+cpp} ~\newline
+ Google\+Test-\/based {\bfseries{unit tests}} covering\+:
+\begin{DoxyItemize}
+\item Grid indexing and hashing
+\item Flat ground detection
+\item Vertical structures as obstacles
+\item Phase 1 vs Phase 2 behaviour
+\item Orientation / gravity influence
+\item Robustness against empty inputs
+\end{DoxyItemize}
+\item {\ttfamily test\+\_\+visual\+\_\+segmentation.\+cpp} ~\newline
+ A {\bfseries{visual inspection tool}} that\+:
+\begin{DoxyItemize}
+\item Loads a {\ttfamily .pcd} or {\ttfamily .ply} point cloud
+\item Runs {\bfseries{phase 1 + phase 2}} ground segmentation
+\item Displays ground (green) and obstacles (red) using PCLVisualizer
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md33}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{index_autotoc_md33}
+
+\begin{DoxyItemize}
+\item Phase 1 allows vertical and slanted propagation from the robot seed cell.
+\item Phase 2 refines ground classification using only previously detected ground.
+\item Orientation ({\ttfamily Eigen\+::\+Quaterniond}) is interpreted as sensor → world rotation.
+\end{DoxyItemize}\hypertarget{index_autotoc_md34}{}\doxysection{\texorpdfstring{License}{License}}\label{index_autotoc_md34}
+BSD-\/3 Clause License.\hypertarget{index_autotoc_md35}{}\doxysection{\texorpdfstring{Citation}{Citation}}\label{index_autotoc_md35}
+If you use this work, please cite\+:
+
+Muhammad Haider Khan Lodhi and Christoph Hertzberg, "{}\+GSeg3\+D\+: A High-\/\+Precision Grid-\/\+Based Algorithm for Safety-\/\+Critical Ground Segmentation in Li\+DAR Point Clouds"{} in {\itshape 2025 7th International Conference on Robotics and Computer Vision (ICRCV)}, pp. 119-\/126, 2025. doi\+: \href{https://doi.org/10.1109/ICRCV67407.2025.11349133}{\texttt{ 10.\+1109/\+ICRCV67407.2025.\+11349133}}
+
+© DFKI Robotics Innovation Center 

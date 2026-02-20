@@ -1,0 +1,127 @@
+\doxysection{pointcloud\+\_\+processor.\+hpp}
+\hypertarget{pointcloud__processor_8hpp_source}{}\label{pointcloud__processor_8hpp_source}\index{/home/runner/work/ground\_segmentation/ground\_segmentation/include/pointcloud\_processor.hpp@{/home/runner/work/ground\_segmentation/ground\_segmentation/include/pointcloud\_processor.hpp}}
+\mbox{\hyperlink{pointcloud__processor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00012}00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <pcl/io/pcd\_io.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <pcl/common/common.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <pcl/filters/extract\_indices.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <pcl/filters/voxel\_grid.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <pcl/filters/crop\_box.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <pcl/kdtree/kdtree.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <pcl/segmentation/sac\_segmentation.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00021}00021\ \textcolor{preprocessor}{\#include\ <pcl/segmentation/extract\_clusters.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00022}00022\ \textcolor{preprocessor}{\#include\ <pcl/features/moment\_of\_inertia\_estimation.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00023}00023\ \textcolor{preprocessor}{\#include\ <pcl/common/transforms.h>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00024}00024\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00025}00025\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00026}00026\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00027}00027\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00028}00028\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00029}00029\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00031}00031\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceground__segmentation}{ground\_segmentation}}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00032}00032\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00034}00034\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00035}\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{00035}}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ProcessCloudProcessor}}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00038}00038\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00039}00039\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3}{filterCloud}}(}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00040}00040\ \ \ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,\ \textcolor{keywordtype}{bool}\ downSampleInputCloud,\ \textcolor{keywordtype}{float}\ filterRes,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00041}00041\ \ \ \ \ Eigen::Vector4f\ minPoint,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00042}00042\ \ \ \ \ Eigen::Vector4f\ maxPoint,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00043}00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ invertCropBox);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00045}00045\ \ \ std::vector<typename\ pcl::PointCloud<PointT>::Ptr>\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}{euclideanClustering}}(}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00047}00047\ \ \ \ \ \textcolor{keywordtype}{float}\ clusterTolerance,\ \textcolor{keywordtype}{int}\ minSize,\ \textcolor{keywordtype}{int}\ maxSize);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00049}00049\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586}{savePcd}}(\textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,\ std::string\ file);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00050}00050\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032}{loadPcd}}(std::string\ file);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00051}00051\ \};}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00053}00053\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00054}\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3}{00054}}\ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3}{ProcessCloudProcessor<PointT>::filterCloud}}(}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00055}00055\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00056}00056\ \ \ \textcolor{keywordtype}{bool}\ downSampleInputCloud,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00057}00057\ \ \ \textcolor{keywordtype}{float}\ filterRes,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00058}00058\ \ \ Eigen::Vector4f\ minPoint,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00059}00059\ \ \ Eigen::Vector4f\ maxPoint,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00060}00060\ \ \ \textcolor{keywordtype}{bool}\ invertCropBox}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00061}00061\ )}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00062}00062\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00063}00063\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud\_filtered(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>());}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00064}00064\ \ \ pcl::CropBox<PointT>\ roi;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00065}00065\ \ \ roi.setMin(minPoint);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00066}00066\ \ \ roi.setMax(maxPoint);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00067}00067\ \ \ roi.setNegative(invertCropBox);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00069}00069\ \ \ \textcolor{keywordflow}{if}\ (downSampleInputCloud)\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00070}00070\ \ \ \ \ pcl::VoxelGrid<PointT>\ sor;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00071}00071\ \ \ \ \ sor.setInputCloud(cloud);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00072}00072\ \ \ \ \ sor.setLeafSize(filterRes,\ filterRes,\ filterRes);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00073}00073\ \ \ \ \ sor.filter(*cloud\_filtered);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00074}00074\ \ \ \ \ roi.setInputCloud(cloud\_filtered);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00075}00075\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00076}00076\ \ \ \ \ roi.setInputCloud(cloud);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00077}00077\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00078}00078\ \ \ roi.filter(*cloud\_filtered);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00079}00079\ \ \ \textcolor{keywordflow}{return}\ cloud\_filtered;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00080}00080\ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00082}00082\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00083}\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}{00083}}\ std::vector<typename\ pcl::PointCloud<PointT>::Ptr>\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}{ProcessCloudProcessor<PointT>::}}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00084}00084\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}{euclideanClustering}}(}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00085}00085\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00086}00086\ \ \ \textcolor{keywordtype}{float}\ clusterTolerance,\ \textcolor{keywordtype}{int}\ minSize,\ \textcolor{keywordtype}{int}\ maxSize)}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00088}00088\ \ \ std::vector<typename\ pcl::PointCloud<PointT>::Ptr>\ clusters;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00089}00089\ \ \ \textcolor{keyword}{typename}\ pcl::search::KdTree<PointT>::Ptr\ tree(\textcolor{keyword}{new}\ pcl::search::KdTree<PointT>);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00090}00090\ \ \ tree-\/>setInputCloud(cloud);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00092}00092\ \ \ std::vector<pcl::PointIndices>\ cluster\_indices;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00093}00093\ \ \ pcl::EuclideanClusterExtraction<PointT>\ ec;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00094}00094\ \ \ ec.setClusterTolerance(clusterTolerance);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00095}00095\ \ \ ec.setMinClusterSize(minSize);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00096}00096\ \ \ ec.setMaxClusterSize(maxSize);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00097}00097\ \ \ ec.setSearchMethod(tree);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00098}00098\ \ \ ec.setInputCloud(cloud);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00099}00099\ \ \ ec.extract(cluster\_indices);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00101}00101\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cluster\ :\ cluster\_indices)\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00102}00102\ \ \ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud\_cluster(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ idx\ :\ cluster.indices)\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00104}00104\ \ \ \ \ \ \ cloud\_cluster-\/>push\_back((*cloud)[idx]);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00105}00105\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00106}00106\ \ \ \ \ cloud\_cluster-\/>width\ =\ cloud\_cluster-\/>size();}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00107}00107\ \ \ \ \ cloud\_cluster-\/>height\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00108}00108\ \ \ \ \ cloud\_cluster-\/>is\_dense\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00109}00109\ \ \ \ \ clusters.push\_back(cloud\_cluster);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00110}00110\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00111}00111\ \ \ \textcolor{keywordflow}{return}\ clusters;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00112}00112\ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00114}00114\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00115}\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586}{00115}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586}{ProcessCloudProcessor<PointT>::savePcd}}(}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00116}00116\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud,}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00117}00117\ \ \ std::string\ file)}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00118}00118\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00119}00119\ \ \ pcl::io::savePCDFileASCII(file,\ *cloud);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00120}00120\ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00122}00122\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00123}\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032}{00123}}\ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032}{ProcessCloudProcessor<PointT>::loadPcd}}(std::string\ file)}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00124}00124\ \{}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00125}00125\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>);}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00126}00126\ \ \ \textcolor{keywordflow}{if}\ (pcl::io::loadPCDFile<PointT>(file,\ *cloud)\ ==\ -\/1)\ \{\ \ \ \ \textcolor{comment}{//*\ load\ the\ file}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00127}00127\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ read\ PCD\ file:\ "{}}\ <<\ file\ <<\ std::endl;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00128}00128\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00129}00129\ \ \ \textcolor{keywordflow}{return}\ cloud;}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00130}00130\ \}}
+\DoxyCodeLine{\Hypertarget{pointcloud__processor_8hpp_source_l00131}00131\ \}\ \textcolor{comment}{//namespace\ ground\_segmentation}}
+
+\end{DoxyCode}

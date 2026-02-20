@@ -1,0 +1,341 @@
+\doxysection{ground\+\_\+segmentation\+::Grid\+Cell\texorpdfstring{$<$}{<} PointT \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structground__segmentation_1_1GridCell}{}\label{structground__segmentation_1_1GridCell}\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+
+
+Represents one discretized 3D voxel in the spatial grid.  
+
+
+
+
+{\ttfamily \#include $<$ground\+\_\+detection\+\_\+types.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1GridCell_a962050414f0432be13556e6f44294c79}{Grid\+Cell}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell_aeff0781f8920b2f5c554e2a8f98a0c55}{x}}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell_a7c3b4582a8b0660b77a9bbcc44dadc74}{y}}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell_a0a29ccbcf082e7a161a176c8feae4706}{z}}
+\item 
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}
+\item 
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\+\_\+queue}}
+\item 
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell_af159fd9c0f717c356c951b6a585970c1}{explored}}
+\item 
+\mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810}{Terrain\+Type}} \mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\+\_\+type}}
+\item 
+\mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf}{Primitive\+Type}} \mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\+\_\+type}}
+\item 
+Eigen\+::\+Vector4d \mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}
+\item 
+pcl\+::\+Point\+Indices\+::\+Ptr \mbox{\hyperlink{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e}{inliers}}
+\item 
+Eigen\+::\+Matrix3d \mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}
+\item 
+Eigen\+::\+Vector3d \mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}
+\item 
+pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr \mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridCell_ad8560a8ce3e0a2ecfc43da40aff5069d}{slope}}
+\item 
+Eigen\+::\+Vector3d \mbox{\hyperlink{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}{normal}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename PointT$>$\newline
+struct ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$}
+Represents one discretized 3D voxel in the spatial grid. 
+
+Each cell stores\+:
+\begin{DoxyItemize}
+\item Raw points assigned to the voxel
+\item PCA eigenvalues/eigenvectors
+\item Estimated surface normal
+\item Plane fitting inliers
+\item Terrain classification
+\end{DoxyItemize}
+
+Cells are classified using geometric consistency, slope, and region growing.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em PointT} & PCL point type \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00095}{95}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structground__segmentation_1_1GridCell_a962050414f0432be13556e6f44294c79}\label{structground__segmentation_1_1GridCell_a962050414f0432be13556e6f44294c79} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!GridCell@{GridCell}}
+\index{GridCell@{GridCell}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{GridCell()}{GridCell()}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+\mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::\+Grid\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{118}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00119\ \ \ :\ \mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>),}
+\DoxyCodeLine{00120\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e}{inliers}}(\textcolor{keyword}{new}\ pcl::PointIndices)}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_aeff0781f8920b2f5c554e2a8f98a0c55}{x}}\ =\ 0;}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_a7c3b4582a8b0660b77a9bbcc44dadc74}{y}}\ =\ 0;}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_a0a29ccbcf082e7a161a176c8feae4706}{z}}\ =\ 0;}
+\DoxyCodeLine{00125\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00126\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00127\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell_af159fd9c0f717c356c951b6a585970c1}{explored}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00128\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00100}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::expanded}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00102}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::explored}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00101}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::in\+\_\+queue}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00097}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::x}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00098}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::y}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00099}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::z}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}\label{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!centroid@{centroid}}
+\index{centroid@{centroid}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{centroid}{centroid}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+Eigen\+::\+Vector4d \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::centroid}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00105}{105}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00324}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::classify\+Sparsity\+Normal\+Dist()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00570}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::expand\+Grid()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}\label{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!eigenvalues@{eigenvalues}}
+\index{eigenvalues@{eigenvalues}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{eigenvalues}{eigenvalues}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+Eigen\+::\+Vector3d \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::eigenvalues}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00108}{108}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}\label{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!eigenvectors@{eigenvectors}}
+\index{eigenvectors@{eigenvectors}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{eigenvectors}{eigenvectors}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+Eigen\+::\+Matrix3d \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::eigenvectors}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00107}{107}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}\label{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!expanded@{expanded}}
+\index{expanded@{expanded}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{expanded}{expanded}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::expanded}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00100}{100}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00570}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::expand\+Grid()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_af159fd9c0f717c356c951b6a585970c1}\label{structground__segmentation_1_1GridCell_af159fd9c0f717c356c951b6a585970c1} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!explored@{explored}}
+\index{explored@{explored}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{explored}{explored}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::explored}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00102}{102}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}\label{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!in\_queue@{in\_queue}}
+\index{in\_queue@{in\_queue}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{in\_queue}{in\_queue}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+bool \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::in\+\_\+queue}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00101}{101}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00570}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::expand\+Grid()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e}\label{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!inliers@{inliers}}
+\index{inliers@{inliers}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{inliers}{inliers}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+pcl\+::\+Point\+Indices\+::\+Ptr \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::inliers}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00106}{106}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00378}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::fit\+Ground\+Plane()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00680}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::segment\+Points()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}\label{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!normal@{normal}}
+\index{normal@{normal}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{normal}{normal}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+Eigen\+::\+Vector3d \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::normal}
+
+Normal of the plane 
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00116}{116}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00324}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::classify\+Sparsity\+Normal\+Dist()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}\label{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!points@{points}}
+\index{points@{points}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{points}{points}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+pcl\+::\+Point\+Cloud$<$PointT$>$\+::\+Ptr \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::points}
+
+The points in the Grid Cell 
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00110}{110}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00258}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::add\+Point()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00297}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::classify\+Sparsity\+Bounding\+Box()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00324}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::classify\+Sparsity\+Normal\+Dist()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00570}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::expand\+Grid()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00378}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::fit\+Ground\+Plane()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00680}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::segment\+Points()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}\label{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!primitive\_type@{primitive\_type}}
+\index{primitive\_type@{primitive\_type}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{primitive\_type}{primitive\_type}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+\mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf}{Primitive\+Type}} \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::primitive\+\_\+type}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00104}{104}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00680}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::segment\+Points()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_ad8560a8ce3e0a2ecfc43da40aff5069d}\label{structground__segmentation_1_1GridCell_ad8560a8ce3e0a2ecfc43da40aff5069d} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!slope@{slope}}
+\index{slope@{slope}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{slope}{slope}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+double \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::slope}
+
+slope of the plane 
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00113}{113}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00378}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::fit\+Ground\+Plane()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}\label{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!terrain\_type@{terrain\_type}}
+\index{terrain\_type@{terrain\_type}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{terrain\_type}{terrain\_type}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+\mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810}{Terrain\+Type}} \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::terrain\+\_\+type}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00103}{103}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00570}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::expand\+Grid()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00405}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Ground\+Cells()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00680}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::segment\+Points()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_aeff0781f8920b2f5c554e2a8f98a0c55}\label{structground__segmentation_1_1GridCell_aeff0781f8920b2f5c554e2a8f98a0c55} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!x@{x}}
+\index{x@{x}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::x}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00097}{97}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00258}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::add\+Point()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a7c3b4582a8b0660b77a9bbcc44dadc74}\label{structground__segmentation_1_1GridCell_a7c3b4582a8b0660b77a9bbcc44dadc74} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!y@{y}}
+\index{y@{y}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::y}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00098}{98}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00258}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::add\+Point()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+\Hypertarget{structground__segmentation_1_1GridCell_a0a29ccbcf082e7a161a176c8feae4706}\label{structground__segmentation_1_1GridCell_a0a29ccbcf082e7a161a176c8feae4706} 
+\index{ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}!z@{z}}
+\index{z@{z}!ground\_segmentation::GridCell$<$ PointT $>$@{ground\_segmentation::GridCell$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+int \mbox{\hyperlink{structground__segmentation_1_1GridCell}{ground\+\_\+segmentation\+::\+Grid\+Cell}}$<$ PointT $>$\+::z}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00099}{99}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00258}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::add\+Point()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00118}{ground\+\_\+segmentation\+::\+Grid\+Cell$<$ Point\+T $>$\+::\+Grid\+Cell()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/ground\+\_\+segmentation/ground\+\_\+segmentation/include/\mbox{\hyperlink{ground__detection__types_8hpp}{ground\+\_\+detection\+\_\+types.\+hpp}}\end{DoxyCompactItemize}

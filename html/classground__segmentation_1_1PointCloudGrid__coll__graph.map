@@ -1,0 +1,17 @@
+<map id="ground_segmentation::PointCloudGrid&lt; PointT &gt;" name="ground_segmentation::PointCloudGrid&lt; PointT &gt;">
+<area shape="rect" id="Node000001" title="Core grid&#45;based ground segmentation algorithm." alt="" coords="771,147,969,187"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="331,99,527,139"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,128,771,153,770,159,540,133"/>
+<area shape="rect" id="Node000003" href="$structground__segmentation_1_1Index3D.html" title="Integer 3D grid index used as key in hash map." alt="" coords="5,91,169,131"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,110,330,114,330,119,183,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="333,163,524,218"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="184,130,333,166,332,171,182,136"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="283,5,575,75"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="182,88,282,68,283,73,183,94"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="538,186,747,177,770,175,770,181,747,183,538,192"/>
+<area shape="rect" id="Node000005" href="$structground__segmentation_1_1GridCell.html" title="Represents one discretized 3D voxel in the spatial grid." alt="" coords="5,181,169,221"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="183,199,259,197,333,194,333,199,259,203,183,204"/>
+<area shape="rect" id="Node000006" href="$structground__segmentation_1_1GridConfig.html" title="Configuration parameters controlling segmentation behavior." alt="" coords="347,243,511,283"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="523,247,631,229,746,204,813,184,814,189,747,209,632,234,524,252"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="589,37,669,48,748,71,778,86,807,106,851,145,848,149,804,110,776,91,746,76,668,53,588,42"/>
+</map>

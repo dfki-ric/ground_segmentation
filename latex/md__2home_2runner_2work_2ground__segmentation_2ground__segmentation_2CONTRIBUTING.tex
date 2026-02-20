@@ -1,0 +1,33 @@
+\chapter{Contributing to ground\+\_\+segmentation}
+\hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING}{}\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING}\index{Contributing to ground\_segmentation@{Contributing to ground\_segmentation}}
+\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md0}%
+\Hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md0}%
+ Please inform the maintainer as early as possible about your planned feature developments, extensions, or bugfixes that you are working on. An easy way is to open an issue or a pull request in which you explain what you are trying to do.\hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md1}{}\doxysection{\texorpdfstring{Pull Requests}{Pull Requests}}\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md1}
+The preferred way to contribute to \doxylink{namespaceground__segmentation}{ground\+\_\+segmentation} is to fork the \href{https://github.com/dfki-ric/ground_segmentation.git}{\texttt{ master repository}} on Git\+Hub, then submit a "{}pull request"{} (PR)\+:
+
+
+\begin{DoxyEnumerate}
+\item \href{https://github.com/signup/free}{\texttt{ Create an account}} on Git\+Hub if you do not already have one.
+\item Fork the \href{https://github.com/dfki-ric/ground_segmentation.git}{\texttt{ project repository}}\+: click on the \textquotesingle{}Fork\textquotesingle{} button near the top of the page. This creates a copy of the code under your account on the Git\+Hub server.
+\item Clone this copy to your local disk\+: \begin{DoxyVerb} $ git clone git@github.com:YourLogin/ground_segmentation.git
+\end{DoxyVerb}
+
+\item Create a branch to hold your changes\+: \begin{DoxyVerb} $ git checkout -b my-feature
+\end{DoxyVerb}
+ and start making changes. Never work in the {\ttfamily master} branch!
+\item Work on this copy, on your computer, using Git to do the version control. When you\textquotesingle{}re done editing, do\+:\+: \begin{DoxyVerb} $ git add modified_files
+ $ git commit
+\end{DoxyVerb}
+ to record your changes in Git, then push them to Git\+Hub with\+:\+:
+
+\$ git push -\/u origin my-\/feature
+\end{DoxyEnumerate}
+
+Finally, go to the web page of the your fork of the \doxylink{namespaceground__segmentation}{ground\+\_\+segmentation} repo, and click \textquotesingle{}Pull request\textquotesingle{} to send your changes to the maintainers for review. request.\hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md2}{}\doxysection{\texorpdfstring{Merge Policy}{Merge Policy}}\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md2}
+Usually it is not possible to push directly to the master branch of Software Name for anyone. Only tiny changes, urgent bugfixes, and maintenance commits can be pushed directly to the master branch by the maintainer without a review. "{}\+Tiny"{} means backwards compatibility is mandatory and all tests must succeed. No new feature must be added.
+
+Developers have to submit pull requests. Those will be reviewed by at least one other developer and merged by the maintainer. New features must be documented and tested. Breaking changes must be discussed and announced in advance with deprecation warnings.\hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md3}{}\doxysection{\texorpdfstring{Project Roadmap}{Project Roadmap}}\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md3}
+Please see the issues for planned future changes.\hypertarget{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md4}{}\doxysection{\texorpdfstring{Funding}{Funding}}\label{md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING_autotoc_md4}
+The \doxylink{namespaceground__segmentation}{ground\+\_\+segmentation} library was initiated and is currently developed at the Robotics Innovation Center of the German Research Center for Artificial Intelligence (DFKI) in Bremen. The development was started in the scope of the Robdekon2 (50RA1406), which has been funded from the German Federal Ministry for Research, Technology, and Space.
+
+ 

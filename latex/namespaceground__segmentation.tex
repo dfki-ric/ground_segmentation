@@ -1,0 +1,115 @@
+\doxysection{ground\+\_\+segmentation Namespace Reference}
+\hypertarget{namespaceground__segmentation}{}\label{namespaceground__segmentation}\index{ground\_segmentation@{ground\_segmentation}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1GridCell}{Grid\+Cell}}
+\begin{DoxyCompactList}\small\item\em Represents one discretized 3D voxel in the spatial grid. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1GridConfig}{Grid\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration parameters controlling segmentation behavior. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}
+\begin{DoxyCompactList}\small\item\em Integer 3D grid index used as key in hash map. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}
+\begin{DoxyCompactList}\small\item\em nanoflann adaptor for PCL point clouds. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1Point}{Point}}
+\begin{DoxyCompactList}\small\item\em Simple 3D point representation (double precision). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid}{Point\+Cloud\+Grid}}
+\begin{DoxyCompactList}\small\item\em Core grid-\/based ground segmentation algorithm. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{Process\+Cloud\+Processor}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810}{Terrain\+Type}} \{ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a8526520e52bcdad74ea679ae7dc28226}{UNDEFINED}}
+, \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a7d86951bf069ce6220631cc1df1bdd7f}{UNKNOWN}}
+, \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{GROUND}}
+, \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{OBSTACLE}}
+ \}
+\begin{DoxyCompactList}\small\item\em Semantic classification label assigned to a grid cell. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf}{Primitive\+Type}} \{ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{LINE}}
+, \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PLANE}}
+, \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{NOISE}}
+ \}
+\begin{DoxyCompactList}\small\item\em Geometric primitive classification based on local PCA. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf}\label{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf} 
+\index{ground\_segmentation@{ground\_segmentation}!PrimitiveType@{PrimitiveType}}
+\index{PrimitiveType@{PrimitiveType}!ground\_segmentation@{ground\_segmentation}}
+\doxysubsubsection{\texorpdfstring{PrimitiveType}{PrimitiveType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bf}{ground\+\_\+segmentation\+::\+Primitive\+Type}}}
+
+
+
+Geometric primitive classification based on local PCA. 
+
+LINE -\/ Strong linear structure (e.\+g., edge, curb) PLANE -\/ Planar surface (candidate ground) NOISE -\/ Irregular or scattered structure \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LINE@{LINE}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!LINE@{LINE}}}\Hypertarget{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}\label{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f} 
+LINE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PLANE@{PLANE}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!PLANE@{PLANE}}}\Hypertarget{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}\label{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe} 
+PLANE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NOISE@{NOISE}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!NOISE@{NOISE}}}\Hypertarget{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}\label{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1} 
+NOISE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00070}{70}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \ \ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{LINE}},}
+\DoxyCodeLine{00073\ \ \ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PLANE}},}
+\DoxyCodeLine{00074\ \ \ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{NOISE}}}
+\DoxyCodeLine{00075\ \};}
+
+\end{DoxyCode}
+\Hypertarget{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810}\label{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810} 
+\index{ground\_segmentation@{ground\_segmentation}!TerrainType@{TerrainType}}
+\index{TerrainType@{TerrainType}!ground\_segmentation@{ground\_segmentation}}
+\doxysubsubsection{\texorpdfstring{TerrainType}{TerrainType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810}{ground\+\_\+segmentation\+::\+Terrain\+Type}}}
+
+
+
+Semantic classification label assigned to a grid cell. 
+
+UNDEFINED -\/ Not processed yet UNKNOWN -\/ Insufficient evidence GROUND -\/ Traversable ground surface OBSTACLE -\/ Non-\/traversable object or structure \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNDEFINED@{UNDEFINED}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!UNDEFINED@{UNDEFINED}}}\Hypertarget{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a8526520e52bcdad74ea679ae7dc28226}\label{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a8526520e52bcdad74ea679ae7dc28226} 
+UNDEFINED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNKNOWN@{UNKNOWN}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!UNKNOWN@{UNKNOWN}}}\Hypertarget{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a7d86951bf069ce6220631cc1df1bdd7f}\label{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a7d86951bf069ce6220631cc1df1bdd7f} 
+UNKNOWN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GROUND@{GROUND}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!GROUND@{GROUND}}}\Hypertarget{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}\label{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f} 
+GROUND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OBSTACLE@{OBSTACLE}!ground\_segmentation@{ground\_segmentation}}\index{ground\_segmentation@{ground\_segmentation}!OBSTACLE@{OBSTACLE}}}\Hypertarget{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}\label{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052} 
+OBSTACLE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00053}{53}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a8526520e52bcdad74ea679ae7dc28226}{UNDEFINED}},}
+\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810a7d86951bf069ce6220631cc1df1bdd7f}{UNKNOWN}},}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{GROUND}},}
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{OBSTACLE}}}
+\DoxyCodeLine{00059\ \};}
+
+\end{DoxyCode}

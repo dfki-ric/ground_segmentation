@@ -1,0 +1,214 @@
+\doxysection{ground\+\_\+segmentation\+::Grid\+Config Struct Reference}
+\hypertarget{structground__segmentation_1_1GridConfig}{}\label{structground__segmentation_1_1GridConfig}\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+
+
+Configuration parameters controlling segmentation behavior.  
+
+
+
+
+{\ttfamily \#include $<$ground\+\_\+detection\+\_\+types.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a96bd39a38c55723f964ee9dce9ef933d}{Grid\+Config}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400}{cell\+SizeX}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}{cell\+SizeY}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cell\+SizeZ}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slope\+Threshold\+Degrees}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{ground\+Inlier\+Threshold}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}{max\+Centroid\+Height\+Diff}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroid\+Search\+Radius}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{dist\+To\+Ground}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\+\_\+phase}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration parameters controlling segmentation behavior. 
+
+Contains grid resolution, geometric thresholds, slope limits, and processing phase control.
+
+Important relationships\+: ground\+Inlier\+Threshold \texorpdfstring{$<$}{<} cell\+SizeZ slope\+Threshold\+Degrees determines traversability angle limit 
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00190}{190}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structground__segmentation_1_1GridConfig_a96bd39a38c55723f964ee9dce9ef933d}\label{structground__segmentation_1_1GridConfig_a96bd39a38c55723f964ee9dce9ef933d} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!GridConfig@{GridConfig}}
+\index{GridConfig@{GridConfig}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{GridConfig()}{GridConfig()}}
+{\footnotesize\ttfamily ground\+\_\+segmentation\+::\+Grid\+Config\+::\+Grid\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{204}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00205\ \ \ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400}{cellSizeX}}\ =\ 2;}
+\DoxyCodeLine{00207\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}{cellSizeY}}\ =\ 2;}
+\DoxyCodeLine{00208\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cellSizeZ}}\ =\ 10;}
+\DoxyCodeLine{00209\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ =\ 30;\ \ \ \ \ \textcolor{comment}{//degrees}}
+\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{groundInlierThreshold}}\ =\ 0.1;\ \ \ \ \ \textcolor{comment}{//\ meters}}
+\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}{maxCentroidHeightDiff}}\ =\ 0.5;}
+\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ =\ 5.0;}
+\DoxyCodeLine{00213\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}}\ =\ 0.0;}
+\DoxyCodeLine{00214\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ =\ 1;}
+\DoxyCodeLine{00215\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00192}{cell\+SizeX}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{cell\+SizeY}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{cell\+SizeZ}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{centroid\+Search\+Radius}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00200}{dist\+To\+Ground}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00197}{ground\+Inlier\+Threshold}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00198}{max\+Centroid\+Height\+Diff}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00202}{processing\+\_\+phase}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{slope\+Threshold\+Degrees}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400}\label{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!cellSizeX@{cellSizeX}}
+\index{cellSizeX@{cellSizeX}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{cellSizeX}{cellSizeX}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::cell\+SizeX}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00192}{192}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}\label{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!cellSizeY@{cellSizeY}}
+\index{cellSizeY@{cellSizeY}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{cellSizeY}{cellSizeY}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::cell\+SizeY}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{193}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}\label{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!cellSizeZ@{cellSizeZ}}
+\index{cellSizeZ@{cellSizeZ}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{cellSizeZ}{cellSizeZ}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::cell\+SizeZ}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{194}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}\label{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!centroidSearchRadius@{centroidSearchRadius}}
+\index{centroidSearchRadius@{centroidSearchRadius}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{centroidSearchRadius}{centroidSearchRadius}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::centroid\+Search\+Radius}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{199}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}\label{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!distToGround@{distToGround}}
+\index{distToGround@{distToGround}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{distToGround}{distToGround}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::dist\+To\+Ground}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00200}{200}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00117}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::set\+Dist\+To\+Ground()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}\label{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!groundInlierThreshold@{groundInlierThreshold}}
+\index{groundInlierThreshold@{groundInlierThreshold}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{groundInlierThreshold}{groundInlierThreshold}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::ground\+Inlier\+Threshold}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00197}{197}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}\label{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!maxCentroidHeightDiff@{maxCentroidHeightDiff}}
+\index{maxCentroidHeightDiff@{maxCentroidHeightDiff}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{maxCentroidHeightDiff}{maxCentroidHeightDiff}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::max\+Centroid\+Height\+Diff}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00198}{198}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}\label{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!processing\_phase@{processing\_phase}}
+\index{processing\_phase@{processing\_phase}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{processing\_phase}{processing\_phase}}
+{\footnotesize\ttfamily uint16\+\_\+t ground\+\_\+segmentation\+::\+Grid\+Config\+::processing\+\_\+phase}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00202}{202}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}\label{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!slopeThresholdDegrees@{slopeThresholdDegrees}}
+\index{slopeThresholdDegrees@{slopeThresholdDegrees}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{slopeThresholdDegrees}{slopeThresholdDegrees}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::slope\+Threshold\+Degrees}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{196}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/ground\+\_\+segmentation/ground\+\_\+segmentation/include/\mbox{\hyperlink{ground__detection__types_8hpp}{ground\+\_\+detection\+\_\+types.\+hpp}}\end{DoxyCompactItemize}

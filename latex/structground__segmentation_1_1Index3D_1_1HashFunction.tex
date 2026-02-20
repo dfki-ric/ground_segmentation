@@ -1,0 +1,49 @@
+\doxysection{ground\+\_\+segmentation\+::Index3D\+::Hash\+Function Struct Reference}
+\hypertarget{structground__segmentation_1_1Index3D_1_1HashFunction}{}\label{structground__segmentation_1_1Index3D_1_1HashFunction}\index{ground\_segmentation::Index3D::HashFunction@{ground\_segmentation::Index3D::HashFunction}}
+
+
+{\ttfamily \#include $<$ground\+\_\+detection\+\_\+types.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{structground__segmentation_1_1Index3D_1_1HashFunction_a9f38c8f8e9026f8a4294f8c512c82bca}{operator()}} (\mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} const \&ind) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00154}{154}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structground__segmentation_1_1Index3D_1_1HashFunction_a9f38c8f8e9026f8a4294f8c512c82bca}\label{structground__segmentation_1_1Index3D_1_1HashFunction_a9f38c8f8e9026f8a4294f8c512c82bca} 
+\index{ground\_segmentation::Index3D::HashFunction@{ground\_segmentation::Index3D::HashFunction}!operator()@{operator()}}
+\index{operator()@{operator()}!ground\_segmentation::Index3D::HashFunction@{ground\_segmentation::Index3D::HashFunction}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily size\+\_\+t ground\+\_\+segmentation\+::\+Index3\+D\+::\+Hash\+Function\+::operator() (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} const \&}]{ind }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00156}{156}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00157\ \ \ \ \ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ xx\ =\ ind.x,\ yy\ =\ ind.y,\ zz\ =\ ind.z;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \textcolor{comment}{//\ distribute\ bits\ equally\ over\ 64bits}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (xx)\ \string^\ (yy\ <<\ 21)\ \string^\ ((zz\ <<\ 42)\ |\ (zz\ >>\ 22));}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{ground\+\_\+segmentation\+::\+Index3\+D\+::x}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{ground\+\_\+segmentation\+::\+Index3\+D\+::y}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{ground\+\_\+segmentation\+::\+Index3\+D\+::z}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/ground\+\_\+segmentation/ground\+\_\+segmentation/include/\mbox{\hyperlink{ground__detection__types_8hpp}{ground\+\_\+detection\+\_\+types.\+hpp}}\end{DoxyCompactItemize}

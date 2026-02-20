@@ -1,0 +1,170 @@
+\doxysection{ground\+\_\+segmentation\+::PCLPoint\+Cloud\+Adaptor\texorpdfstring{$<$}{<} PointT \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor}{}\label{structground__segmentation_1_1PCLPointCloudAdaptor}\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+
+
+nanoflann adaptor for PCL point clouds.  
+
+
+
+
+{\ttfamily \#include $<$ground\+\_\+detection.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef pcl\+::\+Point\+Cloud$<$ PointT $>$ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}{Point\+Cloud\+Type}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_ade67db736013ecb2ba2047b88a33e506}{PCLPoint\+Cloud\+Adaptor}} (\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}{Point\+Cloud\+Type}} \&\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}})
+\item 
+size\+\_\+t \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a6891ba0f60d1bea12ff41f180293ce59}{kdtree\+\_\+get\+\_\+point\+\_\+count}} () const
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_af1672c97669118bea8da76cc455b1df2}{kdtree\+\_\+get\+\_\+pt}} (const size\+\_\+t idx, const size\+\_\+t dim) const
+\item 
+{\footnotesize template$<$class BBOX $>$ }\\bool \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a7137e89ca111c99cedbe371f4f54bbe4}{kdtree\+\_\+get\+\_\+bbox}} (BBOX \&) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}{Point\+Cloud\+Type}} \& \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename PointT$>$\newline
+struct ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor$<$ Point\+T $>$}
+nanoflann adaptor for PCL point clouds. 
+
+Allows fast KD-\/tree construction without copying data.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em PointT} & PCL point type \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00034}{34}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}\label{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!PointCloudType@{PointCloudType}}
+\index{PointCloudType@{PointCloudType}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{PointCloudType}{PointCloudType}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+typedef pcl\+::\+Point\+Cloud$<$PointT$>$ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::\+Point\+Cloud\+Type}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00036}{36}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_ade67db736013ecb2ba2047b88a33e506}\label{structground__segmentation_1_1PCLPointCloudAdaptor_ade67db736013ecb2ba2047b88a33e506} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!PCLPointCloudAdaptor@{PCLPointCloudAdaptor}}
+\index{PCLPointCloudAdaptor@{PCLPointCloudAdaptor}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{PCLPointCloudAdaptor()}{PCLPointCloudAdaptor()}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::\+PCLPoint\+Cloud\+Adaptor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}{Point\+Cloud\+Type}} \&}]{cloud }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00040}{40}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00041\ \ \ :\ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}(\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}})\ \{\}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_a7137e89ca111c99cedbe371f4f54bbe4}\label{structground__segmentation_1_1PCLPointCloudAdaptor_a7137e89ca111c99cedbe371f4f54bbe4} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!kdtree\_get\_bbox@{kdtree\_get\_bbox}}
+\index{kdtree\_get\_bbox@{kdtree\_get\_bbox}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{kdtree\_get\_bbox()}{kdtree\_get\_bbox()}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+template$<$class BBOX $>$ \\
+bool \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::kdtree\+\_\+get\+\_\+bbox (\begin{DoxyParamCaption}\item[{BBOX \&}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00056}{56}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00056\ \{\textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\}}
+
+\end{DoxyCode}
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_a6891ba0f60d1bea12ff41f180293ce59}\label{structground__segmentation_1_1PCLPointCloudAdaptor_a6891ba0f60d1bea12ff41f180293ce59} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!kdtree\_get\_point\_count@{kdtree\_get\_point\_count}}
+\index{kdtree\_get\_point\_count@{kdtree\_get\_point\_count}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{kdtree\_get\_point\_count()}{kdtree\_get\_point\_count()}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+size\+\_\+t \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::kdtree\+\_\+get\+\_\+point\+\_\+count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00044}{44}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00044\ \{\textcolor{keywordflow}{return}\ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}.points.size();\}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection_8hpp_source_l00038}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor$<$ Point\+T $>$\+::cloud}}.
+
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_af1672c97669118bea8da76cc455b1df2}\label{structground__segmentation_1_1PCLPointCloudAdaptor_af1672c97669118bea8da76cc455b1df2} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!kdtree\_get\_pt@{kdtree\_get\_pt}}
+\index{kdtree\_get\_pt@{kdtree\_get\_pt}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{kdtree\_get\_pt()}{kdtree\_get\_pt()}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+double \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::kdtree\+\_\+get\+\_\+pt (\begin{DoxyParamCaption}\item[{const size\+\_\+t}]{idx,  }\item[{const size\+\_\+t}]{dim }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00047}{47}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00048\ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{if}\ (dim\ ==\ 0)\ \{\textcolor{keywordflow}{return}\ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}.points[idx].x;\}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (dim\ ==\ 1)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}.points[idx].y;}
+\DoxyCodeLine{00051\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\textcolor{keywordflow}{return}\ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}{cloud}}.points[idx].z;\}}
+\DoxyCodeLine{00052\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection_8hpp_source_l00038}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor$<$ Point\+T $>$\+::cloud}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc}\label{structground__segmentation_1_1PCLPointCloudAdaptor_a228def57df6d01bd9f9eef5dc0a8f2bc} 
+\index{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}!cloud@{cloud}}
+\index{cloud@{cloud}!ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$@{ground\_segmentation::PCLPointCloudAdaptor$<$ PointT $>$}}
+\doxysubsubsection{\texorpdfstring{cloud}{cloud}}
+{\footnotesize\ttfamily template$<$typename PointT $>$ \\
+\mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor_a9277a1aa76ad98831111837caef56e2a}{Point\+Cloud\+Type}}\& \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$\+::cloud}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00038}{38}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00044}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor$<$ Point\+T $>$\+::kdtree\+\_\+get\+\_\+point\+\_\+count()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00047}{ground\+\_\+segmentation\+::\+PCLPoint\+Cloud\+Adaptor$<$ Point\+T $>$\+::kdtree\+\_\+get\+\_\+pt()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/ground\+\_\+segmentation/ground\+\_\+segmentation/include/\mbox{\hyperlink{ground__detection_8hpp}{ground\+\_\+detection.\+hpp}}\end{DoxyCompactItemize}

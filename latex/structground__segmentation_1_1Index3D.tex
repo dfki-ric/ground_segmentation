@@ -1,0 +1,192 @@
+\doxysection{ground\+\_\+segmentation\+::Index3D Struct Reference}
+\hypertarget{structground__segmentation_1_1Index3D}{}\label{structground__segmentation_1_1Index3D}\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+
+
+Integer 3D grid index used as key in hash map.  
+
+
+
+
+{\ttfamily \#include $<$ground\+\_\+detection\+\_\+types.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structground__segmentation_1_1Index3D_1_1HashFunction}{Hash\+Function}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1Index3D_a8a8da0022786b281b513b0edae92c090}{Index3D}} (int \mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}, int \mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}, int \mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}})
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1Index3D_a2d84cc6ed1d9c019bd1fbd9a9fdbbe80}{Index3D}} ()
+\item 
+bool \mbox{\hyperlink{structground__segmentation_1_1Index3D_a5527da68f493a12d18d10685bc0459a5}{operator==}} (const \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} \&oth) const
+\item 
+\mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} \mbox{\hyperlink{structground__segmentation_1_1Index3D_a54cdc3e7ff9c2b7010f4f332d22a6afb}{operator+}} (\mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} const \&obj)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}
+\item 
+int \mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Integer 3D grid index used as key in hash map. 
+
+Provides\+:
+\begin{DoxyItemize}
+\item Hash function for unordered\+\_\+map
+\item Equality operator
+\item Offset addition operator
+\end{DoxyItemize}
+
+Designed for efficient sparse 3D grid storage. 
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00143}{143}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structground__segmentation_1_1Index3D_a8a8da0022786b281b513b0edae92c090}\label{structground__segmentation_1_1Index3D_a8a8da0022786b281b513b0edae92c090} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!Index3D@{Index3D}}
+\index{Index3D@{Index3D}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{Index3D()}{Index3D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily ground\+\_\+segmentation\+::\+Index3\+D\+::\+Index3D (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y,  }\item[{int}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00145}{145}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00146\ \ \ :\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}(\mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}),\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}(\mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}),\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}}(\mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}})\ \{\}}
+
+\end{DoxyCode}
+\Hypertarget{structground__segmentation_1_1Index3D_a2d84cc6ed1d9c019bd1fbd9a9fdbbe80}\label{structground__segmentation_1_1Index3D_a2d84cc6ed1d9c019bd1fbd9a9fdbbe80} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!Index3D@{Index3D}}
+\index{Index3D@{Index3D}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{Index3D()}{Index3D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily ground\+\_\+segmentation\+::\+Index3\+D\+::\+Index3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00147}{147}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00148\ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}\ =\ std::numeric\_limits<int>::min();}
+\DoxyCodeLine{00150\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}\ =\ std::numeric\_limits<int>::min();}
+\DoxyCodeLine{00151\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}}\ =\ std::numeric\_limits<int>::min();}
+\DoxyCodeLine{00152\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{x}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{y}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{z}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structground__segmentation_1_1Index3D_a54cdc3e7ff9c2b7010f4f332d22a6afb}\label{structground__segmentation_1_1Index3D_a54cdc3e7ff9c2b7010f4f332d22a6afb} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!operator+@{operator+}}
+\index{operator+@{operator+}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} ground\+\_\+segmentation\+::\+Index3\+D\+::operator+ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} const \&}]{obj }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00168}{168}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00169\ \ \ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a2d84cc6ed1d9c019bd1fbd9a9fdbbe80}{Index3D}}\ res;}
+\DoxyCodeLine{00171\ \ \ \ \ res.x\ =\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}\ +\ obj.x;}
+\DoxyCodeLine{00172\ \ \ \ \ res.y\ =\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}\ +\ obj.y;}
+\DoxyCodeLine{00173\ \ \ \ \ res.z\ =\ \mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}}\ +\ obj.z;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00175\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{x}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{y}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{z}}.
+
+\Hypertarget{structground__segmentation_1_1Index3D_a5527da68f493a12d18d10685bc0459a5}\label{structground__segmentation_1_1Index3D_a5527da68f493a12d18d10685bc0459a5} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!operator==@{operator==}}
+\index{operator==@{operator==}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool ground\+\_\+segmentation\+::\+Index3\+D\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}} \&}]{oth }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00163}{163}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00164\ \ \ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}{x}}\ ==\ oth.x)\ \&\ (\mbox{\hyperlink{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}{y}}\ ==\ oth.y)\ \&\ (\mbox{\hyperlink{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}{z}}\ ==\ oth.z);\ \textcolor{comment}{//\ use\ non-\/lazy\ \`{}\&`\ to\ avoid\ branching}}
+\DoxyCodeLine{00166\ \ \ \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{x}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{y}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{z}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae}\label{structground__segmentation_1_1Index3D_a9ef887a3508dd0d4c62f716f6d9881ae} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!x@{x}}
+\index{x@{x}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily int ground\+\_\+segmentation\+::\+Index3\+D\+::x}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{153}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00220}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::generate\+Indices()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00147}{Index3\+D()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00156}{ground\+\_\+segmentation\+::\+Index3\+D\+::\+Hash\+Function\+::operator()()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00168}{operator+()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00163}{operator==()}}.
+
+\Hypertarget{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3}\label{structground__segmentation_1_1Index3D_a0d59fd01baff550677da4d8d13f01ea3} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!y@{y}}
+\index{y@{y}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily int ground\+\_\+segmentation\+::\+Index3\+D\+::y}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{153}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00220}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::generate\+Indices()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00147}{Index3\+D()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00156}{ground\+\_\+segmentation\+::\+Index3\+D\+::\+Hash\+Function\+::operator()()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00168}{operator+()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00163}{operator==()}}.
+
+\Hypertarget{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834}\label{structground__segmentation_1_1Index3D_aae035f943ea18cc92cabafe380510834} 
+\index{ground\_segmentation::Index3D@{ground\_segmentation::Index3D}!z@{z}}
+\index{z@{z}!ground\_segmentation::Index3D@{ground\_segmentation::Index3D}}
+\doxysubsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily int ground\+\_\+segmentation\+::\+Index3\+D\+::z}
+
+
+
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00153}{153}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection_8hpp_source_l00220}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::generate\+Indices()}}, \mbox{\hyperlink{ground__detection_8hpp_source_l00344}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::get\+Neighbors()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00147}{Index3\+D()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00156}{ground\+\_\+segmentation\+::\+Index3\+D\+::\+Hash\+Function\+::operator()()}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00168}{operator+()}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00163}{operator==()}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/ground\+\_\+segmentation/ground\+\_\+segmentation/include/\mbox{\hyperlink{ground__detection__types_8hpp}{ground\+\_\+detection\+\_\+types.\+hpp}}\end{DoxyCompactItemize}
