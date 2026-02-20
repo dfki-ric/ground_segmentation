@@ -4,10 +4,21 @@
 This module implements the core algorithmic components of **GSeg3D**, a high-precision, grid-based ground segmentation method for LiDAR point clouds designed for **safety-critical autonomous driving and robotics applications**.  
 It follows the methodology described in the paper:
 
-> *GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds*  
-> Lodhi, M. H. K., Hertzberg, C., DFKI Robotics Innovation Center
+> **GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds**  
+> Muhammad Haider Khan Lodhi and Christoph Hertzberg  
+> *Proceedings of the 7th International Conference on Robotics and Computer Vision (ICRCV)*,  
+> Hong Kong, China, October 24–26, 2025.  
+> IEEE, 2025.  
+> DOI: https://doi.org/10.1109/ICRCV67407.2025.11349133
 
+This demo video uses the [SemanticKITTI](https://www.semantic-kitti.org/index.html) dataset for evaluation and visualization.
 ![GSeg3D](images/gseg3d.gif)
+
+## ROS2
+
+The official ROS 2 wrapper for **GSeg3D** is available here:
+
+[ROS 2 Node Implementation](https://github.com/dfki-ric/ground_segmentation_ros2)
 
 ## Motivation
 
