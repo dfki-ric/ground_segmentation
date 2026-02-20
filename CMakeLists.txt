@@ -7,18 +7,24 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE "RELEASE")
 
-add_subdirectory(src)
-add_subdirectory(test)
+option(BUILD_DOCS_ONLY "Build documentation only" OFF)
 
-find_package(Doxygen REQUIRED)
+if(NOT BUILD_DOCS_ONLY)
+    add_subdirectory(src)
+    add_subdirectory(test)
+endif()
 
-set(DOXYFILE_IN  ${CMAKE_SOURCE_DIR}/Doxyfile.in)
-set(DOXYFILE_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+find_package(Doxygen)
 
-configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+if(DOXYGEN_FOUND)
+    set(DOXYFILE_IN  ${CMAKE_SOURCE_DIR}/Doxyfile.in)
+    set(DOXYFILE_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
 
-add_custom_target(doc
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-)
+    configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+
+    add_custom_target(doc
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+    )
+endif()
