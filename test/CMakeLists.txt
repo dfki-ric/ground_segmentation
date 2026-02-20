@@ -15,6 +15,7 @@ target_include_directories(test_pointcloud_grid PRIVATE
 )
 
 target_link_libraries(test_pointcloud_grid
+  Eigen3::Eigen
   GTest::gtest
   GTest::gtest_main
   ${PCL_LIBRARIES}
@@ -34,5 +35,6 @@ target_include_directories(test_visual_segmentation PRIVATE
 )
 
 target_link_libraries(test_visual_segmentation
+  Eigen3::Eigen
   ${PCL_LIBRARIES}
 )

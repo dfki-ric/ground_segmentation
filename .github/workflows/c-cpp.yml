@@ -19,3 +19,4 @@ jobs:
         mkdir build && cd build
         cmake .. -DCMAKE_BUILD_TYPE=RELEASE
         make
+        ctest --output-on-failure
