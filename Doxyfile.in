@@ -46,6 +46,6 @@ AUTOLINK_SUPPORT        = YES
 
 # HTML
 GENERATE_HTML           = YES
-HTML_OUTPUT             = html
+HTML_OUTPUT             = .
 HTML_FILE_EXTENSION     = .html
 GENERATE_TREEVIEW       = YES
