@@ -14,6 +14,9 @@ It follows the methodology described in the paper:
 This demo video uses the [SemanticKITTI](https://www.semantic-kitti.org/index.html) dataset for evaluation and visualization.
 ![GSeg3D](images/gseg3d.gif)
 
+Please find below a summary comparison of the average results on the SemanticKITTI sequences 00–10:
+![Comparision](images/comparison.png)
+
 ## ROS2
 
 The official ROS 2 wrapper for **GSeg3D** is available here:
