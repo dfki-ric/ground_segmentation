@@ -194,10 +194,10 @@ struct GridConfig
   double cellSizeZ;   // meters
 
   double slopeThresholdDegrees;   //degrees
-  double groundInlierThreshold;
-  double maxCentroidHeightDiff;
-  double centroidSearchRadius;
-  double distToGround;
+  double groundInlierThreshold;    // meters
+  double centroidSearchRadius; // meters
+  double distToGround; // meters
+  double maxStepHeight; // meters
 
   uint16_t processing_phase;
 
@@ -206,10 +206,10 @@ struct GridConfig
     cellSizeX = 2;
     cellSizeY = 2;
     cellSizeZ = 10;
-    slopeThresholdDegrees = 30;     //degrees
-    groundInlierThreshold = 0.1;     // meters
-    maxCentroidHeightDiff = 0.5;
+    slopeThresholdDegrees = 30;
+    groundInlierThreshold = 0.1;
     centroidSearchRadius = 5.0;
+    maxStepHeight = 0.3;
     distToGround = 0.0;
     processing_phase = 1;
   }

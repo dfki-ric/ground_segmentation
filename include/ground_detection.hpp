@@ -749,7 +749,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,
 
       double local_ref = *std::min_element(neighbor_zs.begin(), neighbor_zs.end());
 
-      if (cell_z - local_ref > 0.3) {
+      if (std::abs(cell_z - local_ref) > grid_config.maxStepHeight) {
         *non_ground_points += *cell.points;
         continue;
       }
