@@ -112,7 +112,7 @@ public:
   typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double,
       PCLPointCloudAdaptor<PointT>>,
       PCLPointCloudAdaptor<PointT>, 3> KDTree;
-  bool checkIndex3DInGrid(const Index3D & index);
+  bool checkIndex3DInGrid(const Index3D & index) const;
 
   void setDistToGround(double z)
   {
@@ -188,6 +188,15 @@ private:
     const GridCell<PointT> & cell,
     typename pcl::PointCloud<PointT>::Ptr cloud);
   bool classifySparsityNormalDist(const GridCell<PointT> & cell);
+
+  bool findNearestGroundNeighbor(
+    const Index3D & cid,
+    Index3D & out_gid) const;
+
+  bool pointIsGroundWrtCell(
+    const PointT & p,
+    const GridCell<PointT> & gcell) const;
+
   std::vector<Index3D> neighbor_offsets;
 
   GridCellsType gridCells;
@@ -236,6 +245,77 @@ std::vector<Index3D> PointCloudGrid<PointT>::generateIndices(const uint16_t & z_
     }
   }
   return idxs;
+}
+
+template<typename PointT>
+bool PointCloudGrid<PointT>::findNearestGroundNeighbor(
+  const Index3D & cid,
+  Index3D & out_gid) const
+{
+  bool found = false;
+  double best_d2 = std::numeric_limits<double>::infinity();
+
+  for (const auto & off : neighbor_offsets) {
+
+    Index3D nid = cid + off;
+
+    if (!checkIndex3DInGrid(nid)) {
+      continue;
+    }
+
+    const auto & ncell = gridCells.at(nid);
+
+    if (ncell.terrain_type != TerrainType::GROUND ||
+        ncell.points->empty() ||
+        !ncell.expanded)
+    {
+      continue;
+    }
+
+    double dx = double(nid.x - cid.x);
+    double dy = double(nid.y - cid.y);
+    double dz = double(nid.z - cid.z);
+
+    double d2 = dx*dx + dy*dy + 0.25*dz*dz;
+
+    if (d2 < best_d2) {
+      best_d2 = d2;
+      out_gid = nid;
+      found = true;
+    }
+  }
+
+  return found;
+}
+
+template<typename PointT>
+bool PointCloudGrid<PointT>::pointIsGroundWrtCell(
+  const PointT & p,
+  const GridCell<PointT> & gcell) const
+{
+  Eigen::Vector3d n = gcell.normal;
+
+  if (!std::isfinite(n.x()) || !std::isfinite(n.y()) ||
+      !std::isfinite(n.z()) || n.norm() < 1e-6)
+  {
+    return false;
+  }
+
+  n.normalize();
+
+  Eigen::Vector3d c(
+      double(gcell.centroid[0]),
+      double(gcell.centroid[1]),
+      double(gcell.centroid[2]));
+
+  Eigen::Vector3d x(double(p.x), double(p.y), double(p.z));
+
+  // Distance to plane
+  double plane_dist = std::abs(n.dot(x - c));
+  if (plane_dist > grid_config.groundInlierThreshold)
+      return false;
+      
+  return true;
 }
 
 template<typename PointT>
@@ -587,6 +667,8 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
 
   const float radius = grid_config.centroidSearchRadius * grid_config.centroidSearchRadius;   // nanoflann uses squared radius
 
+  const double slope_tolerance =
+      15.0 * (M_PI / 180.0);  // 15 degrees tolerance
   while (!q.empty()) {
     Index3D idx = q.front();
     q.pop();
@@ -634,10 +716,13 @@ using Neighbor = std::pair<unsigned int, double>;
 
       if (grid_config.processing_phase == 2) {
         // Reject neighbor if centroid height difference is too large
-        double dz = std::abs(curr_centroid.z - neighbor.centroid[2]);
-        if (dz > grid_config.groundInlierThreshold) {
+        // Height continuity constraint
+        double dz =
+            std::abs(curr_centroid.z - neighbor.centroid[2]);
+
+        if (dz > grid_config.maxGroundHeightDeviation)
           continue;
-        }
+
         neighbor.terrain_type = TerrainType::GROUND;
       }
 
@@ -666,7 +751,7 @@ void PointCloudGrid<PointT>::setInputCloud(
 }
 
 template<typename PointT>
-bool PointCloudGrid<PointT>::checkIndex3DInGrid(const Index3D & index)
+bool PointCloudGrid<PointT>::checkIndex3DInGrid(const Index3D & index) const
 {
   if (auto search = gridCells.find(index); search != gridCells.end()) {
     return true;
@@ -749,7 +834,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,
 
       double local_ref = *std::min_element(neighbor_zs.begin(), neighbor_zs.end());
 
-      if (std::abs(cell_z - local_ref) > grid_config.maxStepHeight) {
+      if (std::abs(cell_z - local_ref) > grid_config.maxGroundHeightDeviation) {
         *non_ground_points += *cell.points;
         continue;
       }
@@ -778,9 +863,35 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,
     *non_ground_points += *non_ground_inliers;
   }
 
-  for (const auto & cell_id : non_ground_cells) {
-    const GridCell<PointT> & cell = gridCells[cell_id];
-    *non_ground_points += *cell.points;
+  if (grid_config.processing_phase == 1)
+  {
+    for (const auto & cell_id : non_ground_cells)
+    {
+      const GridCell<PointT> & cell = gridCells[cell_id];
+
+      Index3D nearest_ground_id;
+
+      if (!findNearestGroundNeighbor(cell_id, nearest_ground_id)) {
+          *non_ground_points += *cell.points;
+        continue;
+      }
+
+      const auto & gcell = gridCells[nearest_ground_id];
+
+      for (const auto & pt : cell.points->points)
+      {
+          if (pointIsGroundWrtCell(pt, gcell))
+              ground_points->push_back(pt);
+          else
+              non_ground_points->push_back(pt);
+      }
+    }
+  }
+  else
+  {
+    for (const auto & cell_id : non_ground_cells) {
+        *non_ground_points += *gridCells[cell_id].points;
+    }
   }
   return std::make_pair(ground_points, non_ground_points);
 }
