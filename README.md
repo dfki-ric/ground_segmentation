@@ -11,7 +11,6 @@ It follows the methodology described in the paper:
 > IEEE, 2025.  
 > DOI: https://doi.org/10.1109/ICRCV67407.2025.11349133
 
-This demo video uses the [SemanticKITTI](https://www.semantic-kitti.org/index.html) dataset for evaluation and visualization.
 ![GSeg3D](images/gseg3d.gif)
 
 Please find below a summary comparison of the average results on the SemanticKITTI sequences 00–10:
