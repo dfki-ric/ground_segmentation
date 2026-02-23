@@ -209,17 +209,25 @@ std::pair<
 > segmentPoints();
 ```
 
-## Typical Configuration (from Paper)
+## Typical Configuration 
+Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.g., LiDAR-based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.
 
+Phase-I
 ```yaml
-cellSizeX: 1.5
+cellSizeX: 1.0
 cellSizeY: 1.0
-cellSizeZ: 1.5   # Phase I
-slopeThresholdDegrees: 30.0
+cellSizeZ: 10.0   # Phase I
+slopeThresholdDegrees: 20.0
 groundInlierThreshold: 0.125
 centroidSearchRadius: 5.0
-distToGround: -1.723 # (e.g. Based on pointcloud data from SemanticKITTI)
-robotRadius: 2.7
+distToGround: -1.723 # (e.g. SemanticKITTI)
+maxGroundHeightDeviation: 0.1
+```
+Phase-II
+
+After coarse ground detection of Phase-I, Phase II increases vertical resolution to refine classification. All parameters are kept same as Phase-I expect for the `cellSizeZ`
+```
+cellSizeZ: 1.0
 ```
 
 ## Performance Summary (SemanticKITTI)

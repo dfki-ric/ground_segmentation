@@ -125,6 +125,7 @@ struct GridCell
     in_queue = false;
     expanded = false;
     explored = false;
+    slope = std::numeric_limits<double>::quiet_NaN();
   }
 };
 
@@ -165,13 +166,9 @@ struct Index3D
     return (x == oth.x) & (y == oth.y) & (z == oth.z); // use non-lazy `&` to avoid branching
   }
 
-  Index3D operator+(Index3D const & obj)
+  Index3D operator+(Index3D const & obj) const
   {
-    Index3D res;
-    res.x = x + obj.x;
-    res.y = y + obj.y;
-    res.z = z + obj.z;
-    return res;
+    return Index3D(x + obj.x, y + obj.y, z + obj.z);
   }
 };
 
@@ -194,10 +191,10 @@ struct GridConfig
   double cellSizeZ;   // meters
 
   double slopeThresholdDegrees;   //degrees
-  double groundInlierThreshold;
-  double maxCentroidHeightDiff;
-  double centroidSearchRadius;
-  double distToGround;
+  double groundInlierThreshold;    // meters
+  double centroidSearchRadius; // meters
+  double distToGround; // meters
+  double maxGroundHeightDeviation; // meters
 
   uint16_t processing_phase;
 
@@ -206,10 +203,10 @@ struct GridConfig
     cellSizeX = 2;
     cellSizeY = 2;
     cellSizeZ = 10;
-    slopeThresholdDegrees = 30;     //degrees
-    groundInlierThreshold = 0.1;     // meters
-    maxCentroidHeightDiff = 0.5;
+    slopeThresholdDegrees = 30;
+    groundInlierThreshold = 0.1;
     centroidSearchRadius = 5.0;
+    maxGroundHeightDeviation = 0.3;
     distToGround = 0.0;
     processing_phase = 1;
   }
