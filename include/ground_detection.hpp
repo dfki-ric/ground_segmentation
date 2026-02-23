@@ -667,8 +667,6 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
 
   const float radius = grid_config.centroidSearchRadius * grid_config.centroidSearchRadius;   // nanoflann uses squared radius
 
-  const double slope_tolerance =
-      15.0 * (M_PI / 180.0);  // 15 degrees tolerance
   while (!q.empty()) {
     Index3D idx = q.front();
     q.pop();
@@ -708,11 +706,10 @@ using Neighbor = std::pair<unsigned int, double>;
       Index3D neighbor_id = centroid_indices[ni];
       if (neighbor_id == idx) {
         continue;                             // redundant but safe
-
       }
-      GridCell<PointT> & neighbor = gridCells[neighbor_id];
 
-      if (neighbor.points->empty() || neighbor.expanded || neighbor.in_queue) {continue;}
+      GridCell<PointT> & neighbor = gridCells[neighbor_id];
+      if (neighbor.points->empty() || neighbor.expanded || neighbor.in_queue || neighbor.terrain_type != TerrainType::GROUND) {continue;}
 
       if (grid_config.processing_phase == 2) {
         // Reject neighbor if centroid height difference is too large
@@ -722,8 +719,6 @@ using Neighbor = std::pair<unsigned int, double>;
 
         if (dz > grid_config.maxGroundHeightDeviation)
           continue;
-
-        neighbor.terrain_type = TerrainType::GROUND;
       }
 
       if (neighbor.terrain_type == TerrainType::GROUND) {
