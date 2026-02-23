@@ -30,14 +30,14 @@ Reliable ground segmentation is a fundamental prerequisite for\+:
 
 False positives (classifying ground as obstacles) can directly compromise safety and downstream decision-\/making. ~\newline
  GSeg3D is explicitly designed to {\bfseries{maximize precision while maintaining robust recall}}, even in cluttered and unstructured environments.\hypertarget{index_autotoc_md8}{}\doxysection{\texorpdfstring{Algorithm Overview}{Algorithm Overview}}\label{index_autotoc_md8}
-GSeg3D performs {\bfseries{two-\/phase grid-\/based ground segmentation}}\+:\hypertarget{index_autotoc_md9}{}\doxysubsection{\texorpdfstring{Phase I – Coarse Segmentation}{Phase I – Coarse Segmentation}}\label{index_autotoc_md9}
+GSeg3D paper performs {\bfseries{two-\/phase grid-\/based ground segmentation}}. For a reference implementation of the two-\/phase approach, see the ROS 2 node available \href{https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp\#L241}{\texttt{ here}}.\hypertarget{index_autotoc_md9}{}\doxysubsection{\texorpdfstring{$<$a href="{}https\+://github.\+com/dfki-\/ric/ground\+\_\+segmentation\+\_\+ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground\+\_\+segmentation\+\_\+ros2\+\_\+node.\+cpp\#\+L84\+C8-\/\+L84\+C29"{} $>$\+Phase I – Coarse Segmentation$<$/a$>$}{<a href="https://github.com/dfki-ric/ground\_segmentation\_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground\_segmentation\_ros2\_node.cpp\#L84C8-L84C29" >Phase I – Coarse Segmentation</a>}}\label{index_autotoc_md9}
 
 \begin{DoxyItemize}
 \item Uses {\bfseries{larger vertical grid cells}}
 \item Aggressively captures elevated structures as non-\/ground
 \item Ensures high initial precision
 \item May temporarily over-\/segment ground in cluttered areas
-\end{DoxyItemize}\hypertarget{index_autotoc_md10}{}\doxysubsection{\texorpdfstring{Phase II – Refinement}{Phase II – Refinement}}\label{index_autotoc_md10}
+\end{DoxyItemize}\hypertarget{index_autotoc_md10}{}\doxysubsection{\texorpdfstring{$<$a href="{}https\+://github.\+com/dfki-\/ric/ground\+\_\+segmentation\+\_\+ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground\+\_\+segmentation\+\_\+ros2\+\_\+node.\+cpp\#\+L91\+C8-\/\+L91\+C30"{} $>$\+Phase II – Refinement$<$/a$>$}{<a href="https://github.com/dfki-ric/ground\_segmentation\_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground\_segmentation\_ros2\_node.cpp\#L91C8-L91C30" >Phase II – Refinement</a>}}\label{index_autotoc_md10}
 
 \begin{DoxyItemize}
 \item Uses {\bfseries{smaller vertical grid cells}}
@@ -46,7 +46,7 @@ GSeg3D performs {\bfseries{two-\/phase grid-\/based ground segmentation}}\+:\hyp
 \item Enforces vertical consistency constraints
 \end{DoxyItemize}
 
-This dual-\/phase strategy achieves a strong balance between {\bfseries{precision and recall}}, which is critical for safety-\/critical systems.\hypertarget{index_autotoc_md11}{}\doxysection{\texorpdfstring{Processing Pipeline}{Processing Pipeline}}\label{index_autotoc_md11}
+This dual-\/phase strategy strikes a strong balance between precision and recall, a trade-\/off that is especially important in safety-\/critical systems.\hypertarget{index_autotoc_md11}{}\doxysection{\texorpdfstring{Processing Pipeline}{Processing Pipeline}}\label{index_autotoc_md11}
 Each phase follows the same four core steps\+:
 
 

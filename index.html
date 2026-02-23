@@ -122,9 +122,9 @@ Motivation</h1>
  GSeg3D is explicitly designed to <b>maximize precision while maintaining robust recall</b>, even in cluttered and unstructured environments.</p>
 <h1><a class="anchor" id="autotoc_md8"></a>
 Algorithm Overview</h1>
-<p>GSeg3D performs <b>two-phase grid-based ground segmentation</b>:</p>
+<p>GSeg3D paper performs <b>two-phase grid-based ground segmentation</b>. For a reference implementation of the two-phase approach, see the ROS 2 node available <a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L241">here</a>.</p>
 <h2><a class="anchor" id="autotoc_md9"></a>
-Phase I – Coarse Segmentation</h2>
+&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29" &gt;Phase I – Coarse Segmentation&lt;/a&gt;</h2>
 <ul>
 <li>Uses <b>larger vertical grid cells</b></li>
 <li>Aggressively captures elevated structures as non-ground</li>
@@ -132,14 +132,14 @@ Phase I – Coarse Segmentation</h2>
 <li>May temporarily over-segment ground in cluttered areas</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md10"></a>
-Phase II – Refinement</h2>
+&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30" &gt;Phase II – Refinement&lt;/a&gt;</h2>
 <ul>
 <li>Uses <b>smaller vertical grid cells</b></li>
 <li>Re-evaluates ground points from Phase I</li>
 <li>Corrects false positives and false negatives from Phase I</li>
 <li>Enforces vertical consistency constraints</li>
 </ul>
-<p>This dual-phase strategy achieves a strong balance between <b>precision and recall</b>, which is critical for safety-critical systems.</p>
+<p>This dual-phase strategy strikes a strong balance between precision and recall, a trade-off that is especially important in safety-critical systems.</p>
 <h1><a class="anchor" id="autotoc_md11"></a>
 Processing Pipeline</h1>
 <p>Each phase follows the same four core steps:</p>

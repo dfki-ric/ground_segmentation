@@ -3,8 +3,8 @@ var index =
     [ "ROS2", "index.html#autotoc_md6", null ],
     [ "Motivation", "index.html#autotoc_md7", null ],
     [ "Algorithm Overview", "index.html#autotoc_md8", [
-      [ "Phase I – Coarse Segmentation", "index.html#autotoc_md9", null ],
-      [ "Phase II – Refinement", "index.html#autotoc_md10", null ]
+      [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29\" >Phase I – Coarse Segmentation</a>", "index.html#autotoc_md9", null ],
+      [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30\" >Phase II – Refinement</a>", "index.html#autotoc_md10", null ]
     ] ],
     [ "Processing Pipeline", "index.html#autotoc_md11", null ],
     [ "Key Design Contributions", "index.html#autotoc_md12", [
