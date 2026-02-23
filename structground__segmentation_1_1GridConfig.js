@@ -7,7 +7,7 @@ var structground__segmentation_1_1GridConfig =
     [ "centroidSearchRadius", "structground__segmentation_1_1GridConfig.html#ab60b8eee50415325b899105e659c6625", null ],
     [ "distToGround", "structground__segmentation_1_1GridConfig.html#a2208c857dbaa2879dda721cf93f4aa2b", null ],
     [ "groundInlierThreshold", "structground__segmentation_1_1GridConfig.html#a9736550fb5094bb17933f639de74fb8e", null ],
-    [ "maxCentroidHeightDiff", "structground__segmentation_1_1GridConfig.html#a522dd23a941facd3b45ef876fed11347", null ],
+    [ "maxGroundHeightDeviation", "structground__segmentation_1_1GridConfig.html#a88b311a8ee2a151101eecfe2be5a3469", null ],
     [ "processing_phase", "structground__segmentation_1_1GridConfig.html#a2373c722c930fffca8dd2b1f20e34ce1", null ],
     [ "slopeThresholdDegrees", "structground__segmentation_1_1GridConfig.html#a5483cbdd7461934ce0b6ba7efa78cae4", null ]
 ];

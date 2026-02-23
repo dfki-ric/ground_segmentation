@@ -25,7 +25,7 @@ var index =
       [ "Core Class", "index.html#autotoc_md25", null ],
       [ "Main API", "index.html#autotoc_md26", null ]
     ] ],
-    [ "Typical Configuration (from Paper)", "index.html#autotoc_md27", null ],
+    [ "Typical Configuration", "index.html#autotoc_md27", null ],
     [ "Performance Summary (SemanticKITTI)", "index.html#autotoc_md28", null ],
     [ "Intended Use", "index.html#autotoc_md29", null ],
     [ "Notes & Future Work", "index.html#autotoc_md30", null ],

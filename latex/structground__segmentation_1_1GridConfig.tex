@@ -27,11 +27,11 @@ double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd746193
 \item 
 double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{ground\+Inlier\+Threshold}}
 \item 
-double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}{max\+Centroid\+Height\+Diff}}
-\item 
 double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroid\+Search\+Radius}}
 \item 
 double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{dist\+To\+Ground}}
+\item 
+double \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{max\+Ground\+Height\+Deviation}}
 \item 
 uint16\+\_\+t \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\+\_\+phase}}
 \end{DoxyCompactItemize}
@@ -44,7 +44,7 @@ Contains grid resolution, geometric thresholds, slope limits, and processing pha
 
 Important relationships\+: ground\+Inlier\+Threshold \texorpdfstring{$<$}{<} cell\+SizeZ slope\+Threshold\+Degrees determines traversability angle limit 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00190}{190}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00187}{187}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
@@ -57,26 +57,26 @@ Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00190}
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{204}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{201}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00205\ \ \ \{}
-\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400}{cellSizeX}}\ =\ 2;}
-\DoxyCodeLine{00207\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}{cellSizeY}}\ =\ 2;}
-\DoxyCodeLine{00208\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cellSizeZ}}\ =\ 10;}
-\DoxyCodeLine{00209\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ =\ 30;\ \ \ \ \ \textcolor{comment}{//degrees}}
-\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{groundInlierThreshold}}\ =\ 0.1;\ \ \ \ \ \textcolor{comment}{//\ meters}}
-\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}{maxCentroidHeightDiff}}\ =\ 0.5;}
-\DoxyCodeLine{00212\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ =\ 5.0;}
-\DoxyCodeLine{00213\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}}\ =\ 0.0;}
-\DoxyCodeLine{00214\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ =\ 1;}
-\DoxyCodeLine{00215\ \ \ \}}
+\DoxyCodeLine{00202\ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ac5090a5e98a4ff3f5dbba05854091400}{cellSizeX}}\ =\ 2;}
+\DoxyCodeLine{00204\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}{cellSizeY}}\ =\ 2;}
+\DoxyCodeLine{00205\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cellSizeZ}}\ =\ 10;}
+\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ =\ 30;}
+\DoxyCodeLine{00207\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{groundInlierThreshold}}\ =\ 0.1;}
+\DoxyCodeLine{00208\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ =\ 5.0;}
+\DoxyCodeLine{00209\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{maxGroundHeightDeviation}}\ =\ 0.3;}
+\DoxyCodeLine{00210\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}}\ =\ 0.0;}
+\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ =\ 1;}
+\DoxyCodeLine{00212\ \ \ \}}
 
 \end{DoxyCode}
 
 
-References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00192}{cell\+SizeX}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{cell\+SizeY}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{cell\+SizeZ}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{centroid\+Search\+Radius}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00200}{dist\+To\+Ground}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00197}{ground\+Inlier\+Threshold}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00198}{max\+Centroid\+Height\+Diff}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00202}{processing\+\_\+phase}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{slope\+Threshold\+Degrees}}.
+References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00189}{cell\+SizeX}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00190}{cell\+SizeY}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00191}{cell\+SizeZ}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00195}{centroid\+Search\+Radius}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{dist\+To\+Ground}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{ground\+Inlier\+Threshold}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00197}{max\+Ground\+Height\+Deviation}}, \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{processing\+\_\+phase}}, and \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{slope\+Threshold\+Degrees}}.
 
 
 
@@ -89,11 +89,11 @@ References \mbox{\hyperlink{ground__detection__types_8hpp_source_l00192}{cell\+S
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00192}{192}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00189}{189}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12}\label{structground__segmentation_1_1GridConfig_a8a72084d233fd227e478e8ad94fd0b12} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!cellSizeY@{cellSizeY}}
@@ -103,11 +103,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{193}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00190}{190}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}\label{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!cellSizeZ@{cellSizeZ}}
@@ -117,11 +117,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{194}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00191}{191}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}\label{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!centroidSearchRadius@{centroidSearchRadius}}
@@ -131,11 +131,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{199}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00195}{195}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}\label{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!distToGround@{distToGround}}
@@ -145,11 +145,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00200}{200}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{196}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00117}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::set\+Dist\+To\+Ground()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}, and \mbox{\hyperlink{ground__detection_8hpp_source_l00117}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid$<$ Point\+T $>$\+::set\+Dist\+To\+Ground()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}\label{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!groundInlierThreshold@{groundInlierThreshold}}
@@ -159,25 +159,25 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00194}{194}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+
+
+
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
+
+\Hypertarget{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}\label{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469} 
+\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!maxGroundHeightDeviation@{maxGroundHeightDeviation}}
+\index{maxGroundHeightDeviation@{maxGroundHeightDeviation}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
+\doxysubsubsection{\texorpdfstring{maxGroundHeightDeviation}{maxGroundHeightDeviation}}
+{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::max\+Ground\+Height\+Deviation}
+
+
+
 Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00197}{197}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
-
-\Hypertarget{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347}\label{structground__segmentation_1_1GridConfig_a522dd23a941facd3b45ef876fed11347} 
-\index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!maxCentroidHeightDiff@{maxCentroidHeightDiff}}
-\index{maxCentroidHeightDiff@{maxCentroidHeightDiff}!ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}}
-\doxysubsubsection{\texorpdfstring{maxCentroidHeightDiff}{maxCentroidHeightDiff}}
-{\footnotesize\ttfamily double ground\+\_\+segmentation\+::\+Grid\+Config\+::max\+Centroid\+Height\+Diff}
-
-
-
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00198}{198}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
-
-
-
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}\label{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!processing\_phase@{processing\_phase}}
@@ -187,11 +187,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00202}{202}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00199}{199}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 \Hypertarget{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}\label{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4} 
 \index{ground\_segmentation::GridConfig@{ground\_segmentation::GridConfig}!slopeThresholdDegrees@{slopeThresholdDegrees}}
@@ -201,11 +201,11 @@ Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00196}{196}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection__types_8hpp_source_l00193}{193}} of file \mbox{\hyperlink{ground__detection__types_8hpp_source}{ground\+\_\+detection\+\_\+types.\+hpp}}.
 
 
 
-Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00204}{Grid\+Config()}}.
+Referenced by \mbox{\hyperlink{ground__detection__types_8hpp_source_l00201}{Grid\+Config()}}.
 
 
 

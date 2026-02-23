@@ -283,15 +283,18 @@ Main API</h2>
 <div class="line">    pcl::PointCloud&lt;PointT&gt;::Ptr</div>
 <div class="line">&gt; segmentPoints();</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md27"></a>
-Typical Configuration (from Paper)</h1>
-<div class="fragment"><div class="line">cellSizeX: 1.5</div>
+Typical Configuration</h1>
+<p>Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.g., LiDAR-based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.</p>
+<p>Phase-I </p><div class="fragment"><div class="line">cellSizeX: 1.0</div>
 <div class="line">cellSizeY: 1.0</div>
-<div class="line">cellSizeZ: 1.5   # Phase I</div>
-<div class="line">slopeThresholdDegrees: 30.0</div>
+<div class="line">cellSizeZ: 10.0   # Phase I</div>
+<div class="line">slopeThresholdDegrees: 20.0</div>
 <div class="line">groundInlierThreshold: 0.125</div>
 <div class="line">centroidSearchRadius: 5.0</div>
-<div class="line">distToGround: -1.723 # (e.g. Based on pointcloud data from SemanticKITTI)</div>
-<div class="line">robotRadius: 2.7</div>
+<div class="line">distToGround: -1.723 # (e.g. SemanticKITTI)</div>
+<div class="line">maxGroundHeightDeviation: 0.1</div>
+</div><!-- fragment --><p> Phase-II</p>
+<p>After coarse ground detection of Phase-I, Phase II increases vertical resolution to refine classification. All parameters are kept same as Phase-I expect for the <code>cellSizeZ</code> </p><div class="fragment"><div class="line">cellSizeZ: 1.0</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md28"></a>
 Performance Summary (SemanticKITTI)</h1>
 <ul>

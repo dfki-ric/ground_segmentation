@@ -228,17 +228,26 @@ Close the viewer window to exit.\hypertarget{index_autotoc_md25}{}\doxysubsectio
 \DoxyCodeLine{>\ segmentPoints();}
 
 \end{DoxyCode}
-\hypertarget{index_autotoc_md27}{}\doxysection{\texorpdfstring{Typical Configuration (from Paper)}{Typical Configuration (from Paper)}}\label{index_autotoc_md27}
+\hypertarget{index_autotoc_md27}{}\doxysection{\texorpdfstring{Typical Configuration}{Typical Configuration}}\label{index_autotoc_md27}
+Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.\+g., Li\+DAR-\/based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.
 
+Phase-\/I 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{cellSizeX:\ 1.5}
+\DoxyCodeLine{cellSizeX:\ 1.0}
 \DoxyCodeLine{cellSizeY:\ 1.0}
-\DoxyCodeLine{cellSizeZ:\ 1.5\ \ \ \#\ Phase\ I}
-\DoxyCodeLine{slopeThresholdDegrees:\ 30.0}
+\DoxyCodeLine{cellSizeZ:\ 10.0\ \ \ \#\ Phase\ I}
+\DoxyCodeLine{slopeThresholdDegrees:\ 20.0}
 \DoxyCodeLine{groundInlierThreshold:\ 0.125}
 \DoxyCodeLine{centroidSearchRadius:\ 5.0}
-\DoxyCodeLine{distToGround:\ -\/1.723\ \#\ (e.g.\ Based\ on\ pointcloud\ data\ from\ SemanticKITTI)}
-\DoxyCodeLine{robotRadius:\ 2.7}
+\DoxyCodeLine{distToGround:\ -\/1.723\ \#\ (e.g.\ SemanticKITTI)}
+\DoxyCodeLine{maxGroundHeightDeviation:\ 0.1}
+
+\end{DoxyCode}
+ Phase-\/\+II
+
+After coarse ground detection of Phase-\/I, Phase II increases vertical resolution to refine classification. All parameters are kept same as Phase-\/I expect for the {\ttfamily cell\+SizeZ} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cellSizeZ:\ 1.0}
 
 \end{DoxyCode}
 \hypertarget{index_autotoc_md28}{}\doxysection{\texorpdfstring{Performance Summary (\+Semantic\+KITTI)}{Performance Summary (SemanticKITTI)}}\label{index_autotoc_md28}

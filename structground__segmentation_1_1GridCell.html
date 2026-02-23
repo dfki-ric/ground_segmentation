@@ -196,17 +196,19 @@ template&lt;typename PointT &gt; </div>
 <div class="line"><span class="lineno">  125</span>    <a class="code hl_variable" href="structground__segmentation_1_1GridCell.html#affb9335a0f505384021b7fc7a1b61636">in_queue</a> = <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">  126</span>    <a class="code hl_variable" href="structground__segmentation_1_1GridCell.html#a580024e759ba76fa5504de41ac1ea38d">expanded</a> = <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">  127</span>    <a class="code hl_variable" href="structground__segmentation_1_1GridCell.html#af159fd9c0f717c356c951b6a585970c1">explored</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  128</span>  }</div>
+<div class="line"><span class="lineno">  128</span>    <a class="code hl_variable" href="structground__segmentation_1_1GridCell.html#ad8560a8ce3e0a2ecfc43da40aff5069d">slope</a> = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
+<div class="line"><span class="lineno">  129</span>  }</div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_a0a29ccbcf082e7a161a176c8feae4706"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#a0a29ccbcf082e7a161a176c8feae4706">ground_segmentation::GridCell::z</a></div><div class="ttdeci">int z</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00099">ground_detection_types.hpp:99</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_a1f0092e9c182a35031621ded836a666e"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#a1f0092e9c182a35031621ded836a666e">ground_segmentation::GridCell::inliers</a></div><div class="ttdeci">pcl::PointIndices::Ptr inliers</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00106">ground_detection_types.hpp:106</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_a28c210ea86309368a9f9b8a392d1ed70"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#a28c210ea86309368a9f9b8a392d1ed70">ground_segmentation::GridCell::points</a></div><div class="ttdeci">pcl::PointCloud&lt; PointT &gt;::Ptr points</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00110">ground_detection_types.hpp:110</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_a580024e759ba76fa5504de41ac1ea38d"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#a580024e759ba76fa5504de41ac1ea38d">ground_segmentation::GridCell::expanded</a></div><div class="ttdeci">bool expanded</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00100">ground_detection_types.hpp:100</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_a7c3b4582a8b0660b77a9bbcc44dadc74"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#a7c3b4582a8b0660b77a9bbcc44dadc74">ground_segmentation::GridCell::y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00098">ground_detection_types.hpp:98</a></div></div>
+<div class="ttc" id="astructground__segmentation_1_1GridCell_html_ad8560a8ce3e0a2ecfc43da40aff5069d"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#ad8560a8ce3e0a2ecfc43da40aff5069d">ground_segmentation::GridCell::slope</a></div><div class="ttdeci">double slope</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00113">ground_detection_types.hpp:113</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_aeff0781f8920b2f5c554e2a8f98a0c55"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#aeff0781f8920b2f5c554e2a8f98a0c55">ground_segmentation::GridCell::x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00097">ground_detection_types.hpp:97</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_af159fd9c0f717c356c951b6a585970c1"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#af159fd9c0f717c356c951b6a585970c1">ground_segmentation::GridCell::explored</a></div><div class="ttdeci">bool explored</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00102">ground_detection_types.hpp:102</a></div></div>
 <div class="ttc" id="astructground__segmentation_1_1GridCell_html_affb9335a0f505384021b7fc7a1b61636"><div class="ttname"><a href="structground__segmentation_1_1GridCell.html#affb9335a0f505384021b7fc7a1b61636">ground_segmentation::GridCell::in_queue</a></div><div class="ttdeci">bool in_queue</div><div class="ttdef"><b>Definition</b> <a href="ground__detection__types_8hpp_source.html#l00101">ground_detection_types.hpp:101</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="ground__detection__types_8hpp_source.html#l00100">ground_segmentation::GridCell&lt; PointT &gt;::expanded</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00102">ground_segmentation::GridCell&lt; PointT &gt;::explored</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00101">ground_segmentation::GridCell&lt; PointT &gt;::in_queue</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00097">ground_segmentation::GridCell&lt; PointT &gt;::x</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00098">ground_segmentation::GridCell&lt; PointT &gt;::y</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00099">ground_segmentation::GridCell&lt; PointT &gt;::z</a>.</p>
+<p class="reference">References <a class="el" href="ground__detection__types_8hpp_source.html#l00100">ground_segmentation::GridCell&lt; PointT &gt;::expanded</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00102">ground_segmentation::GridCell&lt; PointT &gt;::explored</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00101">ground_segmentation::GridCell&lt; PointT &gt;::in_queue</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00113">ground_segmentation::GridCell&lt; PointT &gt;::slope</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00097">ground_segmentation::GridCell&lt; PointT &gt;::x</a>, <a class="el" href="ground__detection__types_8hpp_source.html#l00098">ground_segmentation::GridCell&lt; PointT &gt;::y</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00099">ground_segmentation::GridCell&lt; PointT &gt;::z</a>.</p>
 
 </div>
 </div>
@@ -227,7 +229,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00105">105</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00324">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00570">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00404">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00650">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00292">ground_segmentation::PointCloudGrid&lt; PointT &gt;::pointIsGroundWrtCell()</a>.</p>
 
 </div>
 </div>
@@ -247,7 +249,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00108">108</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
 
 </div>
 </div>
@@ -267,7 +269,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00107">107</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
 
 </div>
 </div>
@@ -287,7 +289,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00100">100</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00570">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00650">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>
@@ -327,7 +329,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00101">101</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00570">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00650">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>
@@ -347,7 +349,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00106">106</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00378">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00680">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00458">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00760">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
 
 </div>
 </div>
@@ -368,7 +370,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00116">116</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00324">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00404">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00292">ground_segmentation::PointCloudGrid&lt; PointT &gt;::pointIsGroundWrtCell()</a>.</p>
 
 </div>
 </div>
@@ -389,7 +391,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00110">110</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00258">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00297">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityBoundingBox()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00324">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00570">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00378">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00344">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00680">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00338">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00377">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityBoundingBox()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00404">ground_segmentation::PointCloudGrid&lt; PointT &gt;::classifySparsityNormalDist()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00650">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00458">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00424">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00760">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
 
 </div>
 </div>
@@ -409,7 +411,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00104">104</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00680">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00760">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
 
 </div>
 </div>
@@ -430,7 +432,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00113">113</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00378">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00458">ground_segmentation::PointCloudGrid&lt; PointT &gt;::fitGroundPlane()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>
@@ -450,7 +452,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00103">103</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00570">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00405">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00344">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00680">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00650">ground_segmentation::PointCloudGrid&lt; PointT &gt;::expandGrid()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00485">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getGroundCells()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00424">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection_8hpp_source.html#l00760">ground_segmentation::PointCloudGrid&lt; PointT &gt;::segmentPoints()</a>.</p>
 
 </div>
 </div>
@@ -470,7 +472,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00097">97</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00258">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00344">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00338">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00424">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>
@@ -490,7 +492,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00098">98</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00258">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00344">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00338">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00424">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>
@@ -510,7 +512,7 @@ template&lt;typename PointT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ground__detection__types_8hpp_source.html#l00099">99</a> of file <a class="el" href="ground__detection__types_8hpp_source.html">ground_detection_types.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00258">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00344">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ground__detection_8hpp_source.html#l00338">ground_segmentation::PointCloudGrid&lt; PointT &gt;::addPoint()</a>, <a class="el" href="ground__detection_8hpp_source.html#l00424">ground_segmentation::PointCloudGrid&lt; PointT &gt;::getNeighbors()</a>, and <a class="el" href="ground__detection__types_8hpp_source.html#l00118">ground_segmentation::GridCell&lt; PointT &gt;::GridCell()</a>.</p>
 
 </div>
 </div>

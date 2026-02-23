@@ -7,5 +7,5 @@ var searchData=
   ['to_20ground_5fsegmentation_4',['Contributing to ground_segmentation',['../md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html',1,'']]],
   ['tool_5',['Visual Ground Segmentation Tool',['../index.html#autotoc_md22',1,'']]],
   ['tree–based_20ground_20expansion_6',['KD-Tree–Based Ground Expansion',['../index.html#autotoc_md13',1,'']]],
-  ['typical_20configuration_20from_20paper_7',['Typical Configuration (from Paper)',['../index.html#autotoc_md27',1,'']]]
+  ['typical_20configuration_7',['Typical Configuration',['../index.html#autotoc_md27',1,'']]]
 ];
