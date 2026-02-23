@@ -36,22 +36,21 @@ GSeg3D is explicitly designed to **maximize precision while maintaining robust r
 
 ## Algorithm Overview
 
-GSeg3D performs **two-phase grid-based ground segmentation**:
+GSeg3D paper performs **two-phase grid-based ground segmentation**. For a reference implementation of the two-phase approach, see the ROS 2 node available [here](https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L241).
 
-### Phase I – Coarse Segmentation
+### [Phase I – Coarse Segmentation](https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29)
 - Uses **larger vertical grid cells**
 - Aggressively captures elevated structures as non-ground
 - Ensures high initial precision
 - May temporarily over-segment ground in cluttered areas
 
-### Phase II – Refinement
+### [Phase II – Refinement](https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30)
 - Uses **smaller vertical grid cells**
 - Re-evaluates ground points from Phase I
 - Corrects false positives and false negatives from Phase I
 - Enforces vertical consistency constraints
 
-This dual-phase strategy achieves a strong balance between **precision and recall**, which is critical for safety-critical systems.
-
+This dual-phase strategy strikes a strong balance between precision and recall, a trade-off that is especially important in safety-critical systems.
 
 ## Processing Pipeline
 
