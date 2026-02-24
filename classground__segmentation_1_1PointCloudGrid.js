@@ -28,8 +28,13 @@ var classground__segmentation_1_1PointCloudGrid =
     [ "grid_config", "classground__segmentation_1_1PointCloudGrid.html#afce03e28a6df9289742dadc909913488", null ],
     [ "gridCells", "classground__segmentation_1_1PointCloudGrid.html#a8666cb88a6baa0c76f783034b5315065", null ],
     [ "ground_cells", "classground__segmentation_1_1PointCloudGrid.html#ac5a3bb7b7e69fd4cfd1be4fc762cfca4", null ],
+    [ "ground_inliers", "classground__segmentation_1_1PointCloudGrid.html#a932324c749c873b5ab2bd7fb13cd36e7", null ],
+    [ "ground_points", "classground__segmentation_1_1PointCloudGrid.html#a7c2c77cbbf664be01391048e9b3465b6", null ],
     [ "index_to_centroid_idx", "classground__segmentation_1_1PointCloudGrid.html#aec65e97e550ac61412cb79730b00116b", null ],
     [ "neighbor_offsets", "classground__segmentation_1_1PointCloudGrid.html#a6b6b5a10467209f9850edfc62190deb2", null ],
     [ "non_ground_cells", "classground__segmentation_1_1PointCloudGrid.html#a1e6bb0ca4dddfdb8209f9e2504eec644", null ],
-    [ "orientation", "classground__segmentation_1_1PointCloudGrid.html#ae715bfd68d27f8c08820e3d89db82e31", null ]
+    [ "non_ground_inliers", "classground__segmentation_1_1PointCloudGrid.html#a6af33057a380e576267831f6039c5e32", null ],
+    [ "non_ground_points", "classground__segmentation_1_1PointCloudGrid.html#a9e90543cd5157c77fca93b80a1fa75aa", null ],
+    [ "orientation", "classground__segmentation_1_1PointCloudGrid.html#ae715bfd68d27f8c08820e3d89db82e31", null ],
+    [ "seg", "classground__segmentation_1_1PointCloudGrid.html#a3b47bedc4ac4caef47a8c0676d54e702", null ]
 ];
