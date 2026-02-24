@@ -210,6 +210,12 @@ private:
   std::vector<Index3D> centroid_indices;                // Corresponding Index3D for each centroid
   std::unordered_map<Index3D, size_t, Index3D::HashFunction> index_to_centroid_idx;
 
+  typename pcl::PointCloud<PointT>::Ptr ground_points;
+  typename pcl::PointCloud<PointT>::Ptr non_ground_points;
+  typename pcl::PointCloud<PointT>::Ptr ground_inliers;
+  typename pcl::PointCloud<PointT>::Ptr non_ground_inliers;
+
+  pcl::SACSegmentation<PointT> seg;
 };
 template<typename PointT>
 PointCloudGrid<PointT>::PointCloudGrid(const GridConfig & config)
@@ -223,6 +229,16 @@ PointCloudGrid<PointT>::PointCloudGrid(const GridConfig & config)
   } else {
     neighbor_offsets = generateIndices(0);
   }
+
+  ground_points.reset(new pcl::PointCloud<PointT>());
+  non_ground_points.reset(new pcl::PointCloud<PointT>());
+  ground_inliers.reset(new pcl::PointCloud<PointT>());
+  non_ground_inliers.reset(new pcl::PointCloud<PointT>());
+
+  seg.setOptimizeCoefficients(true);
+  seg.setModelType(pcl::SACMODEL_PLANE);
+  seg.setMethodType(pcl::SAC_PROSAC);
+  seg.setMaxIterations(1000);
 }
 
 template<typename PointT>
@@ -460,11 +476,6 @@ bool PointCloudGrid<PointT>::fitGroundPlane(GridCell<PointT> & cell, const doubl
 
   pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
   pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-  pcl::SACSegmentation<PointT> seg;
-  seg.setOptimizeCoefficients(true);
-  seg.setModelType(pcl::SACMODEL_PLANE);
-  seg.setMethodType(pcl::SAC_PROSAC);
-  seg.setMaxIterations(1000);
   seg.setInputCloud(cell.points);
   seg.setDistanceThreshold(threshold);   // Adjust this threshold based on your needs
   seg.segment(*inliers, *coefficients);
@@ -490,6 +501,11 @@ void PointCloudGrid<PointT>::getGroundCells()
   }
 
   this->cleanUp();
+
+  centroid_cloud->points.reserve(gridCells.size());
+  centroid_indices.reserve(gridCells.size());
+  ground_cells.reserve(gridCells.size());
+  non_ground_cells.reserve(gridCells.size());
 
   for (auto & cellPair : gridCells) {
     GridCell<PointT> & cell = cellPair.second;
@@ -738,10 +754,8 @@ void PointCloudGrid<PointT>::setInputCloud(
 
   this->clear();
   orientation = R_body2World;
-  unsigned int index = 0;
   for (typename pcl::PointCloud<PointT>::iterator it = input->begin(); it != input->end(); ++it) {
     this->addPoint(*it);
-    index++;
   }
 }
 
@@ -759,11 +773,10 @@ template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr,
   typename pcl::PointCloud<PointT>::Ptr> PointCloudGrid<PointT>::segmentPoints()
 {
-
-  typename pcl::PointCloud<PointT>::Ptr ground_points(new pcl::PointCloud<PointT>());
-  typename pcl::PointCloud<PointT>::Ptr ground_inliers(new pcl::PointCloud<PointT>());
-  typename pcl::PointCloud<PointT>::Ptr non_ground_points(new pcl::PointCloud<PointT>());
-  typename pcl::PointCloud<PointT>::Ptr non_ground_inliers(new pcl::PointCloud<PointT>());
+  ground_points->clear();
+  non_ground_points->clear();
+  ground_inliers->clear();
+  non_ground_inliers->clear();
 
   pcl::ExtractIndices<PointT> extract_ground;
 
@@ -806,18 +819,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr,
         Index3D nidx = cell_id + offset;
         if (!checkIndex3DInGrid(nidx)) {continue;}
         const auto & ncell = gridCells[nidx];
-
         if (ncell.terrain_type == TerrainType::GROUND) {
-          typename pcl::PointCloud<PointT>::Ptr ninliers(new pcl::PointCloud<PointT>());
-          Eigen::Vector4d ncentroid;
-
-          extract_ground.setInputCloud(ncell.points);
-          extract_ground.setIndices(ncell.inliers);
-
-          extract_ground.setNegative(false);
-          extract_ground.filter(*ninliers);
-
-          pcl::compute3DCentroid(*(ninliers), ncentroid);
           neighbor_zs.push_back(ncell.centroid[2]);
         }
       }
