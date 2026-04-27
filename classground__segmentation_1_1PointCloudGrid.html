@@ -739,9 +739,9 @@ template&lt;typename PointT &gt; </div>
 <div class="line"><span class="lineno">  699</span> </div>
 <div class="line"><span class="lineno">  700</span>    <span class="comment">// Prepare radius search</span></div>
 <div class="line"><span class="lineno">  701</span><span class="preprocessor">#if NANOFLANN_VERSION &gt;= 0x150</span></div>
-<div class="line"><span class="lineno">  702</span><span class="keyword">using </span>Neighbor = nanoflann::ResultItem&lt;size_t, double&gt;;</div>
+<div class="line"><span class="lineno">  702</span><span class="keyword">using </span>Neighbor = nanoflann::ResultItem&lt;unsigned int, double&gt;;</div>
 <div class="line"><span class="lineno">  703</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">  704</span><span class="keyword">using </span>Neighbor = std::pair&lt;size_t, double&gt;;</div>
+<div class="line"><span class="lineno">  704</span><span class="keyword">using </span>Neighbor = std::pair&lt;unsigned int, double&gt;;</div>
 <div class="line"><span class="lineno">  705</span><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="lineno">  706</span> </div>
 <div class="line"><span class="lineno">  707</span>    std::vector&lt;Neighbor&gt; neighbors;</div>

@@ -600,9 +600,9 @@
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00699}00699\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00700}00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00701}00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<unsigned\ int,\ double>;}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00703}00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<unsigned\ int,\ double>;}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00705}00705\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00706}00706\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00707}00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}

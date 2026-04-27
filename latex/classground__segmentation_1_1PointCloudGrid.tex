@@ -492,9 +492,9 @@ Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00666}{666}} 
 \DoxyCodeLine{00699\ }
 \DoxyCodeLine{00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
 \DoxyCodeLine{00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
+\DoxyCodeLine{00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<unsigned\ int,\ double>;}
 \DoxyCodeLine{00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
+\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<unsigned\ int,\ double>;}
 \DoxyCodeLine{00705\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{00706\ }
 \DoxyCodeLine{00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
