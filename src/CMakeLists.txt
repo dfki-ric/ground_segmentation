@@ -7,10 +7,8 @@ find_package(PCL REQUIRED COMPONENTS
   filters
   kdtree
   segmentation
-  visualization
 )
 
-find_package(VTK REQUIRED)
 find_package(nanoflann REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
@@ -30,7 +28,6 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE
 
 target_link_libraries(${PROJECT_NAME} INTERFACE
   ${PCL_LIBRARIES}
-  ${VTK_LIBRARIES}
   nanoflann::nanoflann
 )
 
@@ -76,7 +73,6 @@ set(PKG_CONFIG_DEPS
     pcl_filters-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
     pcl_kdtree-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
     pcl_segmentation-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
-    pcl_visualization-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}
 )
 
 list(JOIN PKG_CONFIG_DEPS " " PKGCONFIG_REQUIRES)
