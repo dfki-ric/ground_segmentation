@@ -61,7 +61,7 @@
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00111}00111\ \ \ \textcolor{comment}{//\ Build\ KD-\/Tree}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00112}00112\ \ \ \textcolor{keyword}{typedef}\ nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2\_Simple\_Adaptor<double,}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00113}00113\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPointCloudAdaptor<PointT>}}>,}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00114}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}{00114}}\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPointCloudAdaptor<PointT>}},\ 3>\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}{KDTree}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00114}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{00114}}\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPointCloudAdaptor<PointT>}},\ 3,\ \textcolor{keywordtype}{size\_t}>\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}};}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00115}00115\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{checkIndex3DInGrid}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ \&\ index)\ \textcolor{keyword}{const};}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00116}00116\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00117}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1fa0dc1bb0857824dcf67d571f88e914}{00117}}\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1fa0dc1bb0857824dcf67d571f88e914}{setDistToGround}}(\textcolor{keywordtype}{double}\ z)}
@@ -579,10 +579,10 @@
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00678}00678\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00679}00679\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00680}00680\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00681}00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00681}00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00682}00682\ \ \ tree.buildIndex();}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00683}00683\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00684}00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ radius\ =\ grid\_config.centroidSearchRadius\ *\ grid\_config.centroidSearchRadius;\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00684}00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ grid\_config.centroidSearchRadius\ *\ grid\_config.centroidSearchRadius;\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00685}00685\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00686}00686\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00687}00687\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ idx\ =\ q.front();}
@@ -600,9 +600,9 @@
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00699}00699\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00700}00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00701}00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<unsigned\ int,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00703}00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<unsigned\ int,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00705}00705\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00706}00706\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00707}00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}

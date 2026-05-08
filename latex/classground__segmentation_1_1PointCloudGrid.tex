@@ -26,7 +26,7 @@ typedef \mbox{\hyperlink{structground__segmentation_1_1GridCell}{Grid\+Cell}}$<$
 \item 
 typedef std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}, \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ad7076155bb78fbf473a4ae2625517eb1}{Cell\+Type}}, \mbox{\hyperlink{structground__segmentation_1_1Index3D_1_1HashFunction}{Index3\+D\+::\+Hash\+Function}} $>$ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7b13cca7273b69da94790582eab60224}{Grid\+Cells\+Type}}
 \item 
-typedef nanoflann\+::\+KDTree\+Single\+Index\+Adaptor$<$ nanoflann\+::\+L2\+\_\+\+Simple\+\_\+\+Adaptor$<$ double, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$ $>$, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$, 3 $>$ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}{KDTree}}
+typedef nanoflann\+::\+KDTree\+Single\+Index\+Adaptor$<$ nanoflann\+::\+L2\+\_\+\+Simple\+\_\+\+Adaptor$<$ double, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$ $>$, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$ PointT $>$, 3, size\+\_\+t $>$ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -150,12 +150,12 @@ typedef std\+::unordered\+\_\+map$<$\mbox{\hyperlink{structground__segmentation_
 
 Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00085}{85}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
 
-\Hypertarget{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}\label{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167} 
+\Hypertarget{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}\label{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5} 
 \index{ground\_segmentation::PointCloudGrid$<$ PointT $>$@{ground\_segmentation::PointCloudGrid$<$ PointT $>$}!KDTree@{KDTree}}
 \index{KDTree@{KDTree}!ground\_segmentation::PointCloudGrid$<$ PointT $>$@{ground\_segmentation::PointCloudGrid$<$ PointT $>$}}
 \doxysubsubsection{\texorpdfstring{KDTree}{KDTree}}
 {\footnotesize\ttfamily template$<$typename PointT $>$ \\
-typedef nanoflann\+::\+KDTree\+Single\+Index\+Adaptor$<$nanoflann\+::\+L2\+\_\+\+Simple\+\_\+\+Adaptor$<$double, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$PointT$>$ $>$, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$PointT$>$, 3$>$ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid}}$<$ PointT $>$\+::\+KDTree}
+typedef nanoflann\+::\+KDTree\+Single\+Index\+Adaptor$<$nanoflann\+::\+L2\+\_\+\+Simple\+\_\+\+Adaptor$<$double, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$PointT$>$ $>$, \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPoint\+Cloud\+Adaptor}}$<$PointT$>$, 3, size\+\_\+t$>$ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid}{ground\+\_\+segmentation\+::\+Point\+Cloud\+Grid}}$<$ PointT $>$\+::\+KDTree}
 
 
 
@@ -471,10 +471,10 @@ Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00666}{666}} 
 \DoxyCodeLine{00678\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
 \DoxyCodeLine{00679\ }
 \DoxyCodeLine{00680\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
-\DoxyCodeLine{00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac39af590cbf509a89804501389180167}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
+\DoxyCodeLine{00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
 \DoxyCodeLine{00682\ \ \ tree.buildIndex();}
 \DoxyCodeLine{00683\ }
-\DoxyCodeLine{00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ radius\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ *\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}};\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ *\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}};\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
 \DoxyCodeLine{00685\ }
 \DoxyCodeLine{00686\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
 \DoxyCodeLine{00687\ \ \ \ \ Index3D\ idx\ =\ q.front();}
@@ -492,9 +492,9 @@ Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00666}{666}} 
 \DoxyCodeLine{00699\ }
 \DoxyCodeLine{00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
 \DoxyCodeLine{00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<unsigned\ int,\ double>;}
+\DoxyCodeLine{00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
 \DoxyCodeLine{00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<unsigned\ int,\ double>;}
+\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
 \DoxyCodeLine{00705\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{00706\ }
 \DoxyCodeLine{00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
