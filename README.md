@@ -116,13 +116,12 @@ OS: Ubuntu 22.04, Ubuntu 24.04
 - Eigen3  
 - GoogleTest  
 - NanoFlann
-- JDK 17
 
 Example (Ubuntu):
 
 ```bash
 sudo apt update
-sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev openjdk-17-jre
+sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev
 ```
 
 ### Build Instructions
