@@ -1,10 +1,10 @@
 var searchData=
 [
   ['pclpointcloudadaptor_0',['pclpointcloudadaptor',['../structground__segmentation_1_1PCLPointCloudAdaptor.html',1,'ground_segmentation::PCLPointCloudAdaptor&lt; PointT &gt;'],['../structground__segmentation_1_1PCLPointCloudAdaptor.html#ade67db736013ecb2ba2047b88a33e506',1,'ground_segmentation::PCLPointCloudAdaptor::PCLPointCloudAdaptor()']]],
-  ['performance_20summary_20semantickitti_1',['Performance Summary (SemanticKITTI)',['../index.html#autotoc_md25',1,'']]],
-  ['phase_20i_20–_20coarse_20segmentation_20a_2',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29&quot; &gt;Phase I – Coarse Segmentation&lt;/a&gt;',['../index.html#autotoc_md9',1,'']]],
-  ['phase_20ii_20–_20refinement_20a_3',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30&quot; &gt;Phase II – Refinement&lt;/a&gt;',['../index.html#autotoc_md10',1,'']]],
-  ['pipeline_4',['Processing Pipeline',['../index.html#autotoc_md11',1,'']]],
+  ['performance_20summary_20semantickitti_1',['Performance Summary (SemanticKITTI)',['../index.html#autotoc_md24',1,'']]],
+  ['phase_20i_20–_20coarse_20segmentation_20a_2',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29&quot; &gt;Phase I – Coarse Segmentation&lt;/a&gt;',['../index.html#autotoc_md8',1,'']]],
+  ['phase_20ii_20–_20refinement_20a_3',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30&quot; &gt;Phase II – Refinement&lt;/a&gt;',['../index.html#autotoc_md9',1,'']]],
+  ['pipeline_4',['Processing Pipeline',['../index.html#autotoc_md10',1,'']]],
   ['plane_5',['PLANE',['../namespaceground__segmentation.html#acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe',1,'ground_segmentation']]],
   ['point_6',['Point',['../structground__segmentation_1_1Point.html',1,'ground_segmentation']]],
   ['pointcloud_5fprocessor_2ehpp_7',['pointcloud_processor.hpp',['../pointcloud__processor_8hpp.html',1,'']]],
@@ -16,7 +16,7 @@ var searchData=
   ['primitive_5ftype_13',['primitive_type',['../structground__segmentation_1_1GridCell.html#a95aee9c061ebecbfdaf5d51bbc2d8fb2',1,'ground_segmentation::GridCell']]],
   ['primitivetype_14',['PrimitiveType',['../namespaceground__segmentation.html#acf181d525e8a5b29e9c35841066d38bf',1,'ground_segmentation']]],
   ['processcloudprocessor_15',['ProcessCloudProcessor',['../classground__segmentation_1_1ProcessCloudProcessor.html',1,'ground_segmentation']]],
-  ['processing_20pipeline_16',['Processing Pipeline',['../index.html#autotoc_md11',1,'']]],
+  ['processing_20pipeline_16',['Processing Pipeline',['../index.html#autotoc_md10',1,'']]],
   ['processing_5fphase_17',['processing_phase',['../structground__segmentation_1_1GridConfig.html#a2373c722c930fffca8dd2b1f20e34ce1',1,'ground_segmentation::GridConfig']]],
   ['project_20roadmap_18',['Project Roadmap',['../md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html#autotoc_md3',1,'']]],
   ['pull_20requests_19',['Pull Requests',['../md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html#autotoc_md1',1,'']]]

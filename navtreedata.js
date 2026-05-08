@@ -25,8 +25,36 @@
 var NAVTREE =
 [
   [ "ground_segmentation", "index.html", [
-    [ "GSeg3D", "index.html", "index" ],
     [ "Contributing to ground_segmentation", "md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html", [
+      [ "Motivation", "index.html#autotoc_md6", null ],
+      [ "Algorithm Overview", "index.html#autotoc_md7", [
+        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29\" >Phase I – Coarse Segmentation</a>", "index.html#autotoc_md8", null ],
+        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30\" >Phase II – Refinement</a>", "index.html#autotoc_md9", null ]
+      ] ],
+      [ "Processing Pipeline", "index.html#autotoc_md10", null ],
+      [ "Key Design Contributions", "index.html#autotoc_md11", [
+        [ "KD-Tree–Based Ground Expansion", "index.html#autotoc_md12", null ],
+        [ "Robust Seed Initialization", "index.html#autotoc_md13", null ],
+        [ "Multi-Step Ground Verification", "index.html#autotoc_md14", null ]
+      ] ],
+      [ "Implementation Details", "index.html#autotoc_md15", [
+        [ "System Requirements", "index.html#autotoc_md16", null ],
+        [ "Dependencies", "index.html#autotoc_md17", null ],
+        [ "Build Instructions", "index.html#autotoc_md18", null ],
+        [ "Generating Documentation", "index.html#autotoc_md19", null ],
+        [ "Running Unit Tests", "index.html#autotoc_md20", null ],
+        [ "Core Class", "index.html#autotoc_md21", null ],
+        [ "Main API", "index.html#autotoc_md22", null ]
+      ] ],
+      [ "Typical Configuration", "index.html#autotoc_md23", null ],
+      [ "Performance Summary (SemanticKITTI)", "index.html#autotoc_md24", null ],
+      [ "Intended Use", "index.html#autotoc_md25", null ],
+      [ "Notes & Future Work", "index.html#autotoc_md26", null ],
+      [ "Tests & Visualisation", "index.html#autotoc_md27", [
+        [ "Contents", "index.html#autotoc_md28", null ],
+        [ "Notes", "index.html#autotoc_md29", null ]
+      ] ],
+      [ "License", "index.html#autotoc_md30", null ],
       [ "Pull Requests", "md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html#autotoc_md1", null ],
       [ "Merge Policy", "md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html#autotoc_md2", null ],
       [ "Project Roadmap", "md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html#autotoc_md3", null ],
@@ -59,7 +87,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"structground__segmentation_1_1Point.html#a7058c1950568212980f036df234bfcbb"
+"structground__segmentation_1_1Point.html#aa9ec4718e16b0e0f86eefbe8f4f5ea33"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

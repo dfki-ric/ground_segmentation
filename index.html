@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ground_segmentation: GSeg3D</title>
+<title>ground_segmentation: ground_segmentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,28 +90,28 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">GSeg3D </div></div>
+  <div class="headertitle"><div class="title"><a class="el" href="namespaceground__segmentation.html">ground_segmentation</a> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2README"></a><b>High-Precision Grid-Based Ground Segmentation for Safety-Critical Autonomous Driving and Robotics Applications</b></p>
+<div class="textblock"><p><a class="anchor" id="md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2README"></a> </p><div align="center"> <h1>GSeg3D</h1>
+</div><div align="center"> <a href="https://github.com/dfki-ric/ground_segmentation_ros2">ROS 2</a> <span>&#160;&#160;•&#160;&#160;</span> <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">Paper</a> </div><hr  />
+<p><b>High-Precision Grid-Based Ground Segmentation for Safety-Critical Autonomous Driving and Robotics Applications</b></p>
 <p>This module implements the core algorithmic components of <b>GSeg3D</b>, a high-precision, grid-based ground segmentation method for LiDAR point clouds designed for <b>safety-critical autonomous driving and robotics applications</b>. <br  />
- It follows the methodology described in the paper:</p>
-<blockquote class="doxtable">
-<p>&zwj;<b>GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds</b> <br  />
- Muhammad Haider Khan Lodhi and Christoph Hertzberg <br  />
- <em>Proceedings of the 7th International Conference on Robotics and Computer Vision (ICRCV)</em>, <br  />
- Hong Kong, China, October 24–26, 2025. <br  />
- IEEE, 2025. <br  />
- DOI: <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">https://doi.org/10.1109/ICRCV67407.2025.11349133</a> </p>
-</blockquote>
+</p>
 <p><img src="images/gseg3d.gif" alt="GSeg3D" class="inline"/></p>
-<p>Please find below a summary comparison of the average results on the SemanticKITTI sequences 00–10: <img src="images/comparison.png" alt="Comparision" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md6"></a>
-ROS2</h1>
-<p>The official ROS 2 wrapper for <b>GSeg3D</b> is available here:</p>
-<p><a href="https://github.com/dfki-ric/ground_segmentation_ros2">ROS 2 Node Implementation</a></p>
-<h1><a class="anchor" id="autotoc_md7"></a>
-Motivation</h1>
+<p>If you use this work, please cite:</p>
+<div class="fragment"><div class="line">@inproceedings{lodhi2025gseg3d,</div>
+<div class="line">  author    = {Muhammad Haider Khan Lodhi and Christoph Hertzberg},</div>
+<div class="line">  title     = {GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds},</div>
+<div class="line">  booktitle = {2025 7th International Conference on Robotics and Computer Vision (ICRCV)},</div>
+<div class="line">  pages     = {119-126},</div>
+<div class="line">  year      = {2025},</div>
+<div class="line">  doi       = {10.1109/ICRCV67407.2025.11349133}</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Please find below a summary comparison of the average results on the SemanticKITTI sequences 00–10:</p>
+<p><img src="images/comparison.png" alt="Comparision" class="inline"/></p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Motivation</h2>
 <p>Reliable ground segmentation is a fundamental prerequisite for:</p><ul>
 <li>Obstacle detection</li>
 <li>Traversability estimation</li>
@@ -120,19 +120,19 @@ Motivation</h1>
 </ul>
 <p>False positives (classifying ground as obstacles) can directly compromise safety and downstream decision-making. <br  />
  GSeg3D is explicitly designed to <b>maximize precision while maintaining robust recall</b>, even in cluttered and unstructured environments.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
-Algorithm Overview</h1>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Algorithm Overview</h2>
 <p>GSeg3D paper performs <b>two-phase grid-based ground segmentation</b>. For a reference implementation of the two-phase approach, see the ROS 2 node available <a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L241">here</a>.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
-&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29" &gt;Phase I – Coarse Segmentation&lt;/a&gt;</h2>
+<h3><a class="anchor" id="autotoc_md8"></a>
+&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29" &gt;Phase I – Coarse Segmentation&lt;/a&gt;</h3>
 <ul>
 <li>Uses <b>larger vertical grid cells</b></li>
 <li>Aggressively captures elevated structures as non-ground</li>
 <li>Ensures high initial precision</li>
 <li>May temporarily over-segment ground in cluttered areas</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
-&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30" &gt;Phase II – Refinement&lt;/a&gt;</h2>
+<h3><a class="anchor" id="autotoc_md9"></a>
+&lt;a href="https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30" &gt;Phase II – Refinement&lt;/a&gt;</h3>
 <ul>
 <li>Uses <b>smaller vertical grid cells</b></li>
 <li>Re-evaluates ground points from Phase I</li>
@@ -140,8 +140,8 @@ Algorithm Overview</h1>
 <li>Enforces vertical consistency constraints</li>
 </ul>
 <p>This dual-phase strategy strikes a strong balance between precision and recall, a trade-off that is especially important in safety-critical systems.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
-Processing Pipeline</h1>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Processing Pipeline</h2>
 <p>Each phase follows the same four core steps:</p>
 <ol type="1">
 <li><b>Grid Representation</b><ul>
@@ -173,25 +173,25 @@ Processing Pipeline</h1>
 </ul>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md12"></a>
-Key Design Contributions</h1>
-<h2><a class="anchor" id="autotoc_md13"></a>
-KD-Tree–Based Ground Expansion</h2>
+<h2><a class="anchor" id="autotoc_md11"></a>
+Key Design Contributions</h2>
+<h3><a class="anchor" id="autotoc_md12"></a>
+KD-Tree–Based Ground Expansion</h3>
 <p>Traditional grid-neighbor expansion fails at high grid resolutions due to scan-line gaps. <br  />
  GSeg3D overcomes this by:</p><ul>
 <li>Indexing ground centroids in a KD-tree</li>
 <li>Performing radius-based spatial expansion</li>
 <li>Enabling fine grid resolutions without loss of connectivity or recall</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md14"></a>
-Robust Seed Initialization</h2>
+<h3><a class="anchor" id="autotoc_md13"></a>
+Robust Seed Initialization</h3>
 <ul>
 <li>Synthetic seed points are injected directly beneath the robot</li>
 <li>Ensures reliable ground initialization even with occlusions or sparse data</li>
 <li>Synthetic points are removed before final output and evaluation</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
-Multi-Step Ground Verification</h2>
+<h3><a class="anchor" id="autotoc_md14"></a>
+Multi-Step Ground Verification</h3>
 <p>Each candidate cell undergoes:</p><ul>
 <li>Plane inlier / outlier separation</li>
 <li>Bounding-box sparsity analysis</li>
@@ -199,14 +199,14 @@ Multi-Step Ground Verification</h2>
 <li>Floating-cell rejection (non-ground below)</li>
 </ul>
 <p>Only physically plausible and spatially coherent cells are labeled as ground.</p>
-<h1><a class="anchor" id="autotoc_md16"></a>
-Implementation Details</h1>
+<h2><a class="anchor" id="autotoc_md15"></a>
+Implementation Details</h2>
 <p>To generate the HTML documentation for this library:</p>
-<h2><a class="anchor" id="autotoc_md17"></a>
-System Requirements</h2>
+<h3><a class="anchor" id="autotoc_md16"></a>
+System Requirements</h3>
 <p>OS: Ubuntu 22.04, Ubuntu 24.04</p>
-<h2><a class="anchor" id="autotoc_md18"></a>
-Dependencies</h2>
+<h3><a class="anchor" id="autotoc_md17"></a>
+Dependencies</h3>
 <ul>
 <li>CMake</li>
 <li>PCL <br  />
@@ -220,15 +220,15 @@ Dependencies</h2>
 <p>Example (Ubuntu):</p>
 <div class="fragment"><div class="line">sudo apt update</div>
 <div class="line">sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md19"></a>
-Build Instructions</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md18"></a>
+Build Instructions</h3>
 <div class="fragment"><div class="line">git clone git@github.com:dfki-ric/ground_segmentation.git</div>
 <div class="line">cd ground_segmentation &amp;&amp; mkdir -p build</div>
 <div class="line">cd build</div>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=RELEASE</div>
 <div class="line">make</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md20"></a>
-Generating Documentation</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md19"></a>
+Generating Documentation</h3>
 <ol type="1">
 <li>Make sure you have <b>Doxygen</b> and <b>Graphviz</b> installed:</li>
 </ol>
@@ -243,17 +243,17 @@ Generating Documentation</h2>
 <blockquote class="doxtable">
 <p>&zwj;The main page will include the README and automatically list the header files and classes. </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md21"></a>
-Running Unit Tests</h2>
+<h3><a class="anchor" id="autotoc_md20"></a>
+Running Unit Tests</h3>
 <div class="fragment"><div class="line">ctest --test-dir test/ --output-on-failure</div>
 </div><!-- fragment --><p>or</p>
 <div class="fragment"><div class="line">./test/test_pointcloud_grid</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md22"></a>
-Core Class</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md21"></a>
+Core Class</h3>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Po<span class="keywordtype">int</span>T&gt;</div>
 <div class="line"><span class="keyword">class </span>PointCloudGrid;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
-Main API</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md22"></a>
+Main API</h3>
 <div class="fragment"><div class="line">PointCloudGrid(<span class="keyword">const</span> GridConfig&amp; config);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> setInputCloud(</div>
@@ -265,8 +265,8 @@ Main API</h2>
 <div class="line">    pcl::PointCloud&lt;PointT&gt;::Ptr,</div>
 <div class="line">    pcl::PointCloud&lt;PointT&gt;::Ptr</div>
 <div class="line">&gt; segmentPoints();</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md24"></a>
-Typical Configuration</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
+Typical Configuration</h2>
 <p>Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.g., LiDAR-based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.</p>
 <p>Phase-I </p><div class="fragment"><div class="line">cellSizeX: 1.0</div>
 <div class="line">cellSizeY: 1.0</div>
@@ -278,8 +278,8 @@ Typical Configuration</h1>
 <div class="line">maxGroundHeightDeviation: 0.1</div>
 </div><!-- fragment --><p> Phase-II</p>
 <p>After coarse ground detection of Phase-I, Phase II increases vertical resolution to refine classification. All parameters are kept same as Phase-I expect for the <code>cellSizeZ</code> </p><div class="fragment"><div class="line">cellSizeZ: 1.0</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md25"></a>
-Performance Summary (SemanticKITTI)</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md24"></a>
+Performance Summary (SemanticKITTI)</h2>
 <ul>
 <li><b>Precision:</b> ~96–99% (low variance)</li>
 <li><b>Recall:</b> ~85–91%</li>
@@ -291,16 +291,16 @@ Performance Summary (SemanticKITTI)</h1>
 <li>Highways</li>
 <li>Unstructured terrain</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md26"></a>
-Intended Use</h1>
+<h2><a class="anchor" id="autotoc_md25"></a>
+Intended Use</h2>
 <ul>
 <li>Safety-critical autonomous driving</li>
 <li>Outdoor mobile robotics</li>
 <li>Traversability analysis</li>
 <li>Mapping and perception pipelines</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md27"></a>
-Notes &amp; Future Work</h1>
+<h2><a class="anchor" id="autotoc_md26"></a>
+Notes &amp; Future Work</h2>
 <ul>
 <li>Recall degradation in dense vegetation remains challenging</li>
 <li>Planned extensions:<ul>
@@ -310,12 +310,12 @@ Notes &amp; Future Work</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md28"></a>
-Tests &amp; Visualisation</h1>
+<h2><a class="anchor" id="autotoc_md27"></a>
+Tests &amp; Visualisation</h2>
 <p>This directory contains <b>unit tests</b> and a <b>visual debugging tool</b> for the <code>PointCloudGrid</code> ground segmentation implementation.</p>
 <p>The code uses <b>PCL</b>, <b>Eigen</b>, and <b>GoogleTest</b> and is intended for quick validation of grid indexing, ground classification logic, and phase-based segmentation behaviour.</p>
-<h2><a class="anchor" id="autotoc_md29"></a>
-Contents</h2>
+<h3><a class="anchor" id="autotoc_md28"></a>
+Contents</h3>
 <ul>
 <li><code>test_pointcloud_grid.cpp</code> <br  />
  GoogleTest-based <b>unit tests</b> covering:<ul>
@@ -335,20 +335,16 @@ Contents</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md30"></a>
-Notes</h2>
+<h3><a class="anchor" id="autotoc_md29"></a>
+Notes</h3>
 <ul>
 <li>Phase 1 allows vertical and slanted propagation from the robot seed cell.</li>
 <li>Phase 2 refines ground classification using only previously detected ground.</li>
 <li>Orientation (<code>Eigen::Quaterniond</code>) is interpreted as sensor → world rotation.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md31"></a>
-License</h1>
+<h2><a class="anchor" id="autotoc_md30"></a>
+License</h2>
 <p>BSD-3 Clause License.</p>
-<h1><a class="anchor" id="autotoc_md32"></a>
-Citation</h1>
-<p>If you use this work, please cite:</p>
-<p>Muhammad Haider Khan Lodhi and Christoph Hertzberg, "GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds" in <em>2025 7th International Conference on Robotics and Computer Vision (ICRCV)</em>, pp. 119-126, 2025. doi: <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">10.1109/ICRCV67407.2025.11349133</a></p>
 <p>© DFKI Robotics Innovation Center </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
