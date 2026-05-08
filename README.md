@@ -164,26 +164,6 @@ or
 ./test/test_pointcloud_grid
 ```
 
-### Visual Ground Segmentation Tool
-
-```bash
-./test/test_visual_segmentation <cloud.pcd|cloud.ply> [cell_size] [slope_deg] [dist_to_ground]
-```
-
-#### Example
-
-```bash
-wget https://zenodo.org/records/13771864/files/utah.ply
-./test/test_visual_segmentation utah.ply 1.0 30 -0.5
-```
-
-#### Colour Coding
-
-- Green → Ground points  
-- Red → Obstacles / non-ground points  
-
-Close the viewer window to exit.
-
 ### Core Class
 
 ```cpp
