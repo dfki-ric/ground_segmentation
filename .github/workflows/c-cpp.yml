@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
-      run: sudo apt update && sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev openjdk-17-jre
+      run: sudo apt update && sudo apt install cmake libpcl-dev libeigen3-dev libgtest-dev libnanoflann-dev
       shell: bash
     - name: build_ground_segmentation
       run: |
