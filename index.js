@@ -18,21 +18,17 @@ var index =
       [ "Build Instructions", "index.html#autotoc_md19", null ],
       [ "Generating Documentation", "index.html#autotoc_md20", null ],
       [ "Running Unit Tests", "index.html#autotoc_md21", null ],
-      [ "Visual Ground Segmentation Tool", "index.html#autotoc_md22", [
-        [ "Example", "index.html#autotoc_md23", null ],
-        [ "Colour Coding", "index.html#autotoc_md24", null ]
-      ] ],
-      [ "Core Class", "index.html#autotoc_md25", null ],
-      [ "Main API", "index.html#autotoc_md26", null ]
+      [ "Core Class", "index.html#autotoc_md22", null ],
+      [ "Main API", "index.html#autotoc_md23", null ]
     ] ],
-    [ "Typical Configuration", "index.html#autotoc_md27", null ],
-    [ "Performance Summary (SemanticKITTI)", "index.html#autotoc_md28", null ],
-    [ "Intended Use", "index.html#autotoc_md29", null ],
-    [ "Notes & Future Work", "index.html#autotoc_md30", null ],
-    [ "Tests & Visualisation", "index.html#autotoc_md31", [
-      [ "Contents", "index.html#autotoc_md32", null ],
-      [ "Notes", "index.html#autotoc_md33", null ]
+    [ "Typical Configuration", "index.html#autotoc_md24", null ],
+    [ "Performance Summary (SemanticKITTI)", "index.html#autotoc_md25", null ],
+    [ "Intended Use", "index.html#autotoc_md26", null ],
+    [ "Notes & Future Work", "index.html#autotoc_md27", null ],
+    [ "Tests & Visualisation", "index.html#autotoc_md28", [
+      [ "Contents", "index.html#autotoc_md29", null ],
+      [ "Notes", "index.html#autotoc_md30", null ]
     ] ],
-    [ "License", "index.html#autotoc_md34", null ],
-    [ "Citation", "index.html#autotoc_md35", null ]
+    [ "License", "index.html#autotoc_md31", null ],
+    [ "Citation", "index.html#autotoc_md32", null ]
 ];

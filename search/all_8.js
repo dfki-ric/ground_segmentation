@@ -9,5 +9,5 @@ var searchData=
   ['initialization_6',['Robust Seed Initialization',['../index.html#autotoc_md14',1,'']]],
   ['inliers_7',['inliers',['../structground__segmentation_1_1GridCell.html#a1f0092e9c182a35031621ded836a666e',1,'ground_segmentation::GridCell']]],
   ['instructions_8',['Build Instructions',['../index.html#autotoc_md19',1,'']]],
-  ['intended_20use_9',['Intended Use',['../index.html#autotoc_md29',1,'']]]
+  ['intended_20use_9',['Intended Use',['../index.html#autotoc_md26',1,'']]]
 ];

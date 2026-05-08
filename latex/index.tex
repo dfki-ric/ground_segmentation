@@ -182,36 +182,14 @@ or
 \DoxyCodeLine{./test/test\_pointcloud\_grid}
 
 \end{DoxyCode}
-\hypertarget{index_autotoc_md22}{}\doxysubsection{\texorpdfstring{Visual Ground Segmentation Tool}{Visual Ground Segmentation Tool}}\label{index_autotoc_md22}
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{./test/test\_visual\_segmentation\ <cloud.pcd|cloud.ply>\ [cell\_size]\ [slope\_deg]\ [dist\_to\_ground]}
-
-\end{DoxyCode}
-\hypertarget{index_autotoc_md23}{}\doxysubsubsection{\texorpdfstring{Example}{Example}}\label{index_autotoc_md23}
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{wget\ https://zenodo.org/records/13771864/files/utah.ply}
-\DoxyCodeLine{./test/test\_visual\_segmentation\ utah.ply\ 1.0\ 30\ -\/0.5}
-
-\end{DoxyCode}
-\hypertarget{index_autotoc_md24}{}\doxysubsubsection{\texorpdfstring{Colour Coding}{Colour Coding}}\label{index_autotoc_md24}
-
-\begin{DoxyItemize}
-\item Green → Ground points ~\newline
-
-\item Red → Obstacles / non-\/ground points ~\newline
-
-\end{DoxyItemize}
-
-Close the viewer window to exit.\hypertarget{index_autotoc_md25}{}\doxysubsection{\texorpdfstring{Core Class}{Core Class}}\label{index_autotoc_md25}
+\hypertarget{index_autotoc_md22}{}\doxysubsection{\texorpdfstring{Core Class}{Core Class}}\label{index_autotoc_md22}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
 \DoxyCodeLine{\textcolor{keyword}{class\ }PointCloudGrid;}
 
 \end{DoxyCode}
-\hypertarget{index_autotoc_md26}{}\doxysubsection{\texorpdfstring{Main API}{Main API}}\label{index_autotoc_md26}
+\hypertarget{index_autotoc_md23}{}\doxysubsection{\texorpdfstring{Main API}{Main API}}\label{index_autotoc_md23}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{PointCloudGrid(\textcolor{keyword}{const}\ GridConfig\&\ config);}
@@ -227,7 +205,7 @@ Close the viewer window to exit.\hypertarget{index_autotoc_md25}{}\doxysubsectio
 \DoxyCodeLine{>\ segmentPoints();}
 
 \end{DoxyCode}
-\hypertarget{index_autotoc_md27}{}\doxysection{\texorpdfstring{Typical Configuration}{Typical Configuration}}\label{index_autotoc_md27}
+\hypertarget{index_autotoc_md24}{}\doxysection{\texorpdfstring{Typical Configuration}{Typical Configuration}}\label{index_autotoc_md24}
 Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.\+g., Li\+DAR-\/based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.
 
 Phase-\/I 
@@ -249,7 +227,7 @@ After coarse ground detection of Phase-\/I, Phase II increases vertical resoluti
 \DoxyCodeLine{cellSizeZ:\ 1.0}
 
 \end{DoxyCode}
-\hypertarget{index_autotoc_md28}{}\doxysection{\texorpdfstring{Performance Summary (\+Semantic\+KITTI)}{Performance Summary (SemanticKITTI)}}\label{index_autotoc_md28}
+\hypertarget{index_autotoc_md25}{}\doxysection{\texorpdfstring{Performance Summary (\+Semantic\+KITTI)}{Performance Summary (SemanticKITTI)}}\label{index_autotoc_md25}
 
 \begin{DoxyItemize}
 \item {\bfseries{Precision\+:}} \texorpdfstring{$\sim$}{\string~}96–99\% (low variance)
@@ -263,14 +241,14 @@ GSeg3D consistently demonstrates {\bfseries{stable, high-\/precision performance
 \item Urban environments
 \item Highways
 \item Unstructured terrain
-\end{DoxyItemize}\hypertarget{index_autotoc_md29}{}\doxysection{\texorpdfstring{Intended Use}{Intended Use}}\label{index_autotoc_md29}
+\end{DoxyItemize}\hypertarget{index_autotoc_md26}{}\doxysection{\texorpdfstring{Intended Use}{Intended Use}}\label{index_autotoc_md26}
 
 \begin{DoxyItemize}
 \item Safety-\/critical autonomous driving
 \item Outdoor mobile robotics
 \item Traversability analysis
 \item Mapping and perception pipelines
-\end{DoxyItemize}\hypertarget{index_autotoc_md30}{}\doxysection{\texorpdfstring{Notes \& Future Work}{Notes \& Future Work}}\label{index_autotoc_md30}
+\end{DoxyItemize}\hypertarget{index_autotoc_md27}{}\doxysection{\texorpdfstring{Notes \& Future Work}{Notes \& Future Work}}\label{index_autotoc_md27}
 
 \begin{DoxyItemize}
 \item Recall degradation in dense vegetation remains challenging
@@ -280,10 +258,10 @@ GSeg3D consistently demonstrates {\bfseries{stable, high-\/precision performance
 \item Temporal fusion
 \item GPU acceleration
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{index_autotoc_md31}{}\doxysection{\texorpdfstring{Tests \& Visualisation}{Tests \& Visualisation}}\label{index_autotoc_md31}
+\end{DoxyItemize}\hypertarget{index_autotoc_md28}{}\doxysection{\texorpdfstring{Tests \& Visualisation}{Tests \& Visualisation}}\label{index_autotoc_md28}
 This directory contains {\bfseries{unit tests}} and a {\bfseries{visual debugging tool}} for the {\ttfamily Point\+Cloud\+Grid} ground segmentation implementation.
 
-The code uses {\bfseries{PCL}}, {\bfseries{Eigen}}, and {\bfseries{Google\+Test}} and is intended for quick validation of grid indexing, ground classification logic, and phase-\/based segmentation behaviour.\hypertarget{index_autotoc_md32}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{index_autotoc_md32}
+The code uses {\bfseries{PCL}}, {\bfseries{Eigen}}, and {\bfseries{Google\+Test}} and is intended for quick validation of grid indexing, ground classification logic, and phase-\/based segmentation behaviour.\hypertarget{index_autotoc_md29}{}\doxysubsection{\texorpdfstring{Contents}{Contents}}\label{index_autotoc_md29}
 
 \begin{DoxyItemize}
 \item {\ttfamily test\+\_\+pointcloud\+\_\+grid.\+cpp} ~\newline
@@ -303,14 +281,14 @@ The code uses {\bfseries{PCL}}, {\bfseries{Eigen}}, and {\bfseries{Google\+Test}
 \item Runs {\bfseries{phase 1 + phase 2}} ground segmentation
 \item Displays ground (green) and obstacles (red) using PCLVisualizer
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{index_autotoc_md33}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{index_autotoc_md33}
+\end{DoxyItemize}\hypertarget{index_autotoc_md30}{}\doxysubsection{\texorpdfstring{Notes}{Notes}}\label{index_autotoc_md30}
 
 \begin{DoxyItemize}
 \item Phase 1 allows vertical and slanted propagation from the robot seed cell.
 \item Phase 2 refines ground classification using only previously detected ground.
 \item Orientation ({\ttfamily Eigen\+::\+Quaterniond}) is interpreted as sensor → world rotation.
-\end{DoxyItemize}\hypertarget{index_autotoc_md34}{}\doxysection{\texorpdfstring{License}{License}}\label{index_autotoc_md34}
-BSD-\/3 Clause License.\hypertarget{index_autotoc_md35}{}\doxysection{\texorpdfstring{Citation}{Citation}}\label{index_autotoc_md35}
+\end{DoxyItemize}\hypertarget{index_autotoc_md31}{}\doxysection{\texorpdfstring{License}{License}}\label{index_autotoc_md31}
+BSD-\/3 Clause License.\hypertarget{index_autotoc_md32}{}\doxysection{\texorpdfstring{Citation}{Citation}}\label{index_autotoc_md32}
 If you use this work, please cite\+:
 
 Muhammad Haider Khan Lodhi and Christoph Hertzberg, "{}\+GSeg3\+D\+: A High-\/\+Precision Grid-\/\+Based Algorithm for Safety-\/\+Critical Ground Segmentation in Li\+DAR Point Clouds"{} in {\itshape 2025 7th International Conference on Robotics and Computer Vision (ICRCV)}, pp. 119-\/126, 2025. doi\+: \href{https://doi.org/10.1109/ICRCV67407.2025.11349133}{\texttt{ 10.\+1109/\+ICRCV67407.2025.\+11349133}}

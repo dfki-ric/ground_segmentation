@@ -1,7 +1,7 @@
 var searchData=
 [
   ['pclpointcloudadaptor_0',['pclpointcloudadaptor',['../structground__segmentation_1_1PCLPointCloudAdaptor.html',1,'ground_segmentation::PCLPointCloudAdaptor&lt; PointT &gt;'],['../structground__segmentation_1_1PCLPointCloudAdaptor.html#ade67db736013ecb2ba2047b88a33e506',1,'ground_segmentation::PCLPointCloudAdaptor::PCLPointCloudAdaptor()']]],
-  ['performance_20summary_20semantickitti_1',['Performance Summary (SemanticKITTI)',['../index.html#autotoc_md28',1,'']]],
+  ['performance_20summary_20semantickitti_1',['Performance Summary (SemanticKITTI)',['../index.html#autotoc_md25',1,'']]],
   ['phase_20i_20–_20coarse_20segmentation_20a_2',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29&quot; &gt;Phase I – Coarse Segmentation&lt;/a&gt;',['../index.html#autotoc_md9',1,'']]],
   ['phase_20ii_20–_20refinement_20a_3',['&lt;a href=&quot;https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30&quot; &gt;Phase II – Refinement&lt;/a&gt;',['../index.html#autotoc_md10',1,'']]],
   ['pipeline_4',['Processing Pipeline',['../index.html#autotoc_md11',1,'']]],

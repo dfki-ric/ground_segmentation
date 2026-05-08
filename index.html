@@ -249,26 +249,10 @@ Running Unit Tests</h2>
 </div><!-- fragment --><p>or</p>
 <div class="fragment"><div class="line">./test/test_pointcloud_grid</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md22"></a>
-Visual Ground Segmentation Tool</h2>
-<div class="fragment"><div class="line">./test/test_visual_segmentation &lt;cloud.pcd|cloud.ply&gt; [cell_size] [slope_deg] [dist_to_ground]</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md23"></a>
-Example</h3>
-<div class="fragment"><div class="line">wget https://zenodo.org/records/13771864/files/utah.ply</div>
-<div class="line">./test/test_visual_segmentation utah.ply 1.0 30 -0.5</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md24"></a>
-Colour Coding</h3>
-<ul>
-<li>Green → Ground points <br  />
-</li>
-<li>Red → Obstacles / non-ground points <br  />
-</li>
-</ul>
-<p>Close the viewer window to exit.</p>
-<h2><a class="anchor" id="autotoc_md25"></a>
 Core Class</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Po<span class="keywordtype">int</span>T&gt;</div>
 <div class="line"><span class="keyword">class </span>PointCloudGrid;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md26"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
 Main API</h2>
 <div class="fragment"><div class="line">PointCloudGrid(<span class="keyword">const</span> GridConfig&amp; config);</div>
 <div class="line"> </div>
@@ -281,7 +265,7 @@ Main API</h2>
 <div class="line">    pcl::PointCloud&lt;PointT&gt;::Ptr,</div>
 <div class="line">    pcl::PointCloud&lt;PointT&gt;::Ptr</div>
 <div class="line">&gt; segmentPoints();</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md27"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md24"></a>
 Typical Configuration</h1>
 <p>Below is a recommended baseline setup for most outdoor mobile robotics use cases (e.g., LiDAR-based UGVs). Adjust values based on sensor height, terrain roughness, and map resolution.</p>
 <p>Phase-I </p><div class="fragment"><div class="line">cellSizeX: 1.0</div>
@@ -294,7 +278,7 @@ Typical Configuration</h1>
 <div class="line">maxGroundHeightDeviation: 0.1</div>
 </div><!-- fragment --><p> Phase-II</p>
 <p>After coarse ground detection of Phase-I, Phase II increases vertical resolution to refine classification. All parameters are kept same as Phase-I expect for the <code>cellSizeZ</code> </p><div class="fragment"><div class="line">cellSizeZ: 1.0</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md25"></a>
 Performance Summary (SemanticKITTI)</h1>
 <ul>
 <li><b>Precision:</b> ~96–99% (low variance)</li>
@@ -307,7 +291,7 @@ Performance Summary (SemanticKITTI)</h1>
 <li>Highways</li>
 <li>Unstructured terrain</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md29"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 Intended Use</h1>
 <ul>
 <li>Safety-critical autonomous driving</li>
@@ -315,7 +299,7 @@ Intended Use</h1>
 <li>Traversability analysis</li>
 <li>Mapping and perception pipelines</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Notes &amp; Future Work</h1>
 <ul>
 <li>Recall degradation in dense vegetation remains challenging</li>
@@ -326,11 +310,11 @@ Notes &amp; Future Work</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md31"></a>
+<h1><a class="anchor" id="autotoc_md28"></a>
 Tests &amp; Visualisation</h1>
 <p>This directory contains <b>unit tests</b> and a <b>visual debugging tool</b> for the <code>PointCloudGrid</code> ground segmentation implementation.</p>
 <p>The code uses <b>PCL</b>, <b>Eigen</b>, and <b>GoogleTest</b> and is intended for quick validation of grid indexing, ground classification logic, and phase-based segmentation behaviour.</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md29"></a>
 Contents</h2>
 <ul>
 <li><code>test_pointcloud_grid.cpp</code> <br  />
@@ -351,17 +335,17 @@ Contents</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 Notes</h2>
 <ul>
 <li>Phase 1 allows vertical and slanted propagation from the robot seed cell.</li>
 <li>Phase 2 refines ground classification using only previously detected ground.</li>
 <li>Orientation (<code>Eigen::Quaterniond</code>) is interpreted as sensor → world rotation.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md34"></a>
+<h1><a class="anchor" id="autotoc_md31"></a>
 License</h1>
 <p>BSD-3 Clause License.</p>
-<h1><a class="anchor" id="autotoc_md35"></a>
+<h1><a class="anchor" id="autotoc_md32"></a>
 Citation</h1>
 <p>If you use this work, please cite:</p>
 <p>Muhammad Haider Khan Lodhi and Christoph Hertzberg, "GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds" in <em>2025 7th International Conference on Robotics and Computer Vision (ICRCV)</em>, pp. 119-126, 2025. doi: <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">10.1109/ICRCV67407.2025.11349133</a></p>
