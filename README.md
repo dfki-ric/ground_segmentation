@@ -1,26 +1,35 @@
-# GSeg3D  
+<div align="center">
+  <h1>GSeg3D</h1>
+  <a href="https://github.com/dfki-ric/ground_segmentation_ros2">ROS 2</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">Paper</a>
+</div>
+
+---
+
 **High-Precision Grid-Based Ground Segmentation for Safety-Critical Autonomous Driving and Robotics Applications**
 
 This module implements the core algorithmic components of **GSeg3D**, a high-precision, grid-based ground segmentation method for LiDAR point clouds designed for **safety-critical autonomous driving and robotics applications**.  
-It follows the methodology described in the paper:
-
-> **GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds**  
-> Muhammad Haider Khan Lodhi and Christoph Hertzberg  
-> *Proceedings of the 7th International Conference on Robotics and Computer Vision (ICRCV)*,  
-> Hong Kong, China, October 24–26, 2025.  
-> IEEE, 2025.  
-> DOI: https://doi.org/10.1109/ICRCV67407.2025.11349133
 
 ![GSeg3D](images/gseg3d.gif)
 
+
+If you use this work, please cite:
+
+```bibtex
+@inproceedings{lodhi2025gseg3d,
+  author    = {Muhammad Haider Khan Lodhi and Christoph Hertzberg},
+  title     = {GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds},
+  booktitle = {2025 7th International Conference on Robotics and Computer Vision (ICRCV)},
+  pages     = {119-126},
+  year      = {2025},
+  doi       = {10.1109/ICRCV67407.2025.11349133}
+}
+```
+
 Please find below a summary comparison of the average results on the SemanticKITTI sequences 00–10:
+
 ![Comparision](images/comparison.png)
-
-## ROS2
-
-The official ROS 2 wrapper for **GSeg3D** is available here:
-
-[ROS 2 Node Implementation](https://github.com/dfki-ric/ground_segmentation_ros2)
 
 ## Motivation
 
@@ -270,12 +279,5 @@ segmentation behaviour.
 ## License
 
 BSD-3 Clause License.
-
-## Citation
-
-If you use this work, please cite:
-
-Muhammad Haider Khan Lodhi and Christoph Hertzberg, "GSeg3D: A High-Precision Grid-Based Algorithm for Safety-Critical Ground Segmentation in LiDAR Point Clouds" in *2025 7th International Conference on Robotics and Computer Vision (ICRCV)*, pp. 119-126, 2025. doi: [10.1109/ICRCV67407.2025.11349133](https://doi.org/10.1109/ICRCV67407.2025.11349133)
-
 
 © DFKI Robotics Innovation Center
