@@ -111,7 +111,7 @@ public:
   // Build KD-Tree
   typedef nanoflann::KDTreeSingleIndexAdaptor<nanoflann::L2_Simple_Adaptor<double,
       PCLPointCloudAdaptor<PointT>>,
-      PCLPointCloudAdaptor<PointT>, 3> KDTree;
+      PCLPointCloudAdaptor<PointT>, 3, size_t> KDTree;
   bool checkIndex3DInGrid(const Index3D & index) const;
 
   void setDistToGround(double z)
@@ -681,7 +681,7 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
   KDTree tree(3, pclAdaptor, build_params);
   tree.buildIndex();
 
-  const float radius = grid_config.centroidSearchRadius * grid_config.centroidSearchRadius;   // nanoflann uses squared radius
+  const double radius = grid_config.centroidSearchRadius * grid_config.centroidSearchRadius;   // nanoflann uses squared radius
 
   while (!q.empty()) {
     Index3D idx = q.front();
@@ -699,9 +699,9 @@ void PointCloudGrid<PointT>::expandGrid(std::queue<Index3D> q)
 
     // Prepare radius search
 #if NANOFLANN_VERSION >= 0x150
-using Neighbor = nanoflann::ResultItem<unsigned int, double>;
+using Neighbor = nanoflann::ResultItem<size_t, double>;
 #else
-using Neighbor = std::pair<unsigned int, double>;
+using Neighbor = std::pair<size_t, double>;
 #endif
 
     std::vector<Neighbor> neighbors;
