@@ -3,6 +3,12 @@ project(ground_segmentation
         VERSION 1.0
         DESCRIPTION "Ground segmentation in pointcloud")
 
+# Silence PCL's nested find_package(FLANN) CMP0144 dev warning; set as
+# default since cmake_policy(SET) wouldn't propagate into that nested call.
+if(POLICY CMP0144)
+    set(CMAKE_POLICY_DEFAULT_CMP0144 NEW)
+endif()
+
 set(CMAKE_BUILD_TYPE "RELEASE")
 
 option(BUILD_DOCS_ONLY "Build documentation only" OFF)
