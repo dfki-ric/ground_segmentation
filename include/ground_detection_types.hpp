@@ -116,8 +116,8 @@ struct GridCell
   Eigen::Vector3d normal;
 
   GridCell()
-  : points(new pcl::PointCloud<PointT>),
-    inliers(new pcl::PointIndices)
+  : inliers(new pcl::PointIndices),
+    points(new pcl::PointCloud<PointT>)
   {
     x = 0;
     y = 0;

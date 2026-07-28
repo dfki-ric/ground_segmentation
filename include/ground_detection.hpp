@@ -547,7 +547,9 @@ void PointCloudGrid<PointT>::getGroundCells()
     }
 
     Eigen::Matrix3d covariance_matrix;
-    pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix);
+    if(0 == pcl::computeCovarianceMatrixNormalized(*cell.points, cell.centroid, covariance_matrix)){
+        continue;  // THIS SHOULD NEVER HAPPEN (only here to fix compiler warning)
+    }
 
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigen_solver(covariance_matrix,
       Eigen::ComputeEigenvectors);
