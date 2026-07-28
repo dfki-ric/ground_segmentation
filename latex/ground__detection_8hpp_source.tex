@@ -448,352 +448,354 @@
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00547}00547\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00548}00548\ }
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00549}00549\ \ \ \ \ Eigen::Matrix3d\ covariance\_matrix;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00550}00550\ \ \ \ \ pcl::computeCovarianceMatrixNormalized(*cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}},\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}},\ covariance\_matrix);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00551}00551\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00552}00552\ \ \ \ \ Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d>\ eigen\_solver(covariance\_matrix,}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00553}00553\ \ \ \ \ \ \ Eigen::ComputeEigenvectors);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00554}00554\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}\ =\ eigen\_solver.eigenvectors();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00555}00555\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}\ =\ eigen\_solver.eigenvalues();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00556}00556\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00557}00557\ \ \ \ \ Eigen::Vector3d\ normal\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}.col(0);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00550}00550\ \ \ \ \ \textcolor{keywordflow}{if}(0\ ==\ pcl::computeCovarianceMatrixNormalized(*cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}},\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}},\ covariance\_matrix))\{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \textcolor{comment}{//\ THIS\ SHOULD\ NEVER\ HAPPEN\ (only\ here\ to\ fix\ compiler\ warning)}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00552}00552\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00554}00554\ \ \ \ \ Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d>\ eigen\_solver(covariance\_matrix,}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00555}00555\ \ \ \ \ \ \ Eigen::ComputeEigenvectors);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00556}00556\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}\ =\ eigen\_solver.eigenvectors();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00557}00557\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}\ =\ eigen\_solver.eigenvalues();}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00558}00558\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00559}00559\ \ \ \ \ \textcolor{comment}{//\ Ensure\ all\ normals\ point\ upward}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00560}00560\ \ \ \ \ \textcolor{keywordflow}{if}\ (normal(2)\ <\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00561}00561\ \ \ \ \ \ \ normal\ *=\ -\/1;\ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00562}00562\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00563}00563\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00564}00564\ \ \ \ \ normal.normalize();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00565}00565\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}{normal}}\ =\ normal;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00566}00566\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00567}00567\ \ \ \ \ \textcolor{keywordtype}{double}\ ratio\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}[2]\ /\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}.sum();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00568}00568\ \ \ \ \ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.950)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00569}00569\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00570}00570\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00571}00571\ \ \ \ \ \ \ Eigen::Vector3d\ v\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}.col(2);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00572}00572\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v(2)\ <\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00573}00573\ \ \ \ \ \ \ \ \ v\ *=\ -\/1;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00574}00574\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00575}00575\ \ \ \ \ \ \ v\ =\ orientation\ *\ v;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00576}00576\ \ \ \ \ \ \ v.normalize();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00577}00577\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00578}00578\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ angle\_rad\ =\ acos(std::abs(v.dot(Eigen::Vector3d::UnitZ())));}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00559}00559\ \ \ \ \ Eigen::Vector3d\ normal\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}.col(0);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00561}00561\ \ \ \ \ \textcolor{comment}{//\ Ensure\ all\ normals\ point\ upward}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00562}00562\ \ \ \ \ \textcolor{keywordflow}{if}\ (normal(2)\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00563}00563\ \ \ \ \ \ \ normal\ *=\ -\/1;\ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00564}00564\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00565}00565\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00566}00566\ \ \ \ \ normal.normalize();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00567}00567\ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}{normal}}\ =\ normal;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00569}00569\ \ \ \ \ \textcolor{keywordtype}{double}\ ratio\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}[2]\ /\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a3dbf0058348df52c640d63095c08fe94}{eigenvalues}}.sum();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00570}00570\ \ \ \ \ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.950)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00571}00571\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00573}00573\ \ \ \ \ \ \ Eigen::Vector3d\ v\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad6a3077db4bd99d544f7b41bd80818dc}{eigenvectors}}.col(2);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00574}00574\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v(2)\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00575}00575\ \ \ \ \ \ \ \ \ v\ *=\ -\/1;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00576}00576\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00577}00577\ \ \ \ \ \ \ v\ =\ orientation\ *\ v;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00578}00578\ \ \ \ \ \ \ v.normalize();}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00579}00579\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00580}00580\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (angle\_rad\ >\ ((90\ -\/\ grid\_config.slopeThresholdDegrees)\ *\ (M\_PI\ /\ 180)))\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00581}00581\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00582}00582\ \ \ \ \ \ \ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00583}00583\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00584}00584\ \ \ \ \ \ \ \ \ centroid3d.x\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[0];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00585}00585\ \ \ \ \ \ \ \ \ centroid3d.y\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[1];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00586}00586\ \ \ \ \ \ \ \ \ centroid3d.z\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00587}00587\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00588}00588\ \ \ \ \ \ \ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00589}00589\ \ \ \ \ \ \ \ \ centroid\_indices.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00590}00590\ \ \ \ \ \ \ \ \ index\_to\_centroid\_idx[cell\_id]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00591}00591\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00592}00592\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00593}00593\ \ \ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00594}00594\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00595}00595\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00596}00596\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.4)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00597}00597\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PrimitiveType::PLANE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00598}00598\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(computeSlope(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}{normal}}))\ >\ (grid\_config.slopeThresholdDegrees\ *\ (M\_PI\ /\ 180.0)))\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00599}00599\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00600}00600\ \ \ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00602}00602\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00603}00603\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00604}00604\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00605}00605\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{PrimitiveType::NOISE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00606}00606\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00607}00607\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00608}00608\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00609}00609\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00610}00610\ \ \ \ \ \textcolor{keywordflow}{if}\ (!fitGroundPlane(cell,\ grid\_config.groundInlierThreshold))\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00611}00611\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00612}00612\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00613}00613\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00614}00614\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00615}00615\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00616}00616\ \ \ \ \ \textcolor{keywordflow}{if}\ (cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad8560a8ce3e0a2ecfc43da40aff5069d}{slope}}\ <\ (grid\_config.slopeThresholdDegrees\ *\ (M\_PI\ /\ 180))\ )\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00617}00617\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00618}00618\ \ \ \ \ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00619}00619\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00620}00620\ \ \ \ \ \ \ centroid3d.x\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[0];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00621}00621\ \ \ \ \ \ \ centroid3d.y\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[1];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00622}00622\ \ \ \ \ \ \ centroid3d.z\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00623}00623\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00624}00624\ \ \ \ \ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00625}00625\ \ \ \ \ \ \ centroid\_indices.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00626}00626\ \ \ \ \ \ \ index\_to\_centroid\_idx[cell\_id]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00627}00627\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00628}00628\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00629}00629\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00630}00630\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00631}00631\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00632}00632\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00633}00633\ \ \ std::queue<Index3D>\ q;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00580}00580\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ angle\_rad\ =\ acos(std::abs(v.dot(Eigen::Vector3d::UnitZ())));}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00582}00582\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (angle\_rad\ >\ ((90\ -\/\ grid\_config.slopeThresholdDegrees)\ *\ (M\_PI\ /\ 180)))\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00583}00583\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00584}00584\ \ \ \ \ \ \ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00585}00585\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00586}00586\ \ \ \ \ \ \ \ \ centroid3d.x\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[0];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00587}00587\ \ \ \ \ \ \ \ \ centroid3d.y\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[1];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00588}00588\ \ \ \ \ \ \ \ \ centroid3d.z\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00590}00590\ \ \ \ \ \ \ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00591}00591\ \ \ \ \ \ \ \ \ centroid\_indices.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00592}00592\ \ \ \ \ \ \ \ \ index\_to\_centroid\_idx[cell\_id]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00593}00593\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00594}00594\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00595}00595\ \ \ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00596}00596\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00597}00597\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00598}00598\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.4)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00599}00599\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PrimitiveType::PLANE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00600}00600\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(computeSlope(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa980c243de5392754ffdf4c0a18fbaf5}{normal}}))\ >\ (grid\_config.slopeThresholdDegrees\ *\ (M\_PI\ /\ 180.0)))\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00601}00601\ \ \ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00602}00602\ \ \ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00604}00604\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00605}00605\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00606}00606\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00607}00607\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{PrimitiveType::NOISE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00608}00608\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00609}00609\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00610}00610\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00612}00612\ \ \ \ \ \textcolor{keywordflow}{if}\ (!fitGroundPlane(cell,\ grid\_config.groundInlierThreshold))\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00613}00613\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00614}00614\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00615}00615\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00616}00616\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00617}00617\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{if}\ (cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_ad8560a8ce3e0a2ecfc43da40aff5069d}{slope}}\ <\ (grid\_config.slopeThresholdDegrees\ *\ (M\_PI\ /\ 180))\ )\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00619}00619\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00620}00620\ \ \ \ \ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00621}00621\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00622}00622\ \ \ \ \ \ \ centroid3d.x\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[0];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00623}00623\ \ \ \ \ \ \ centroid3d.y\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[1];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00624}00624\ \ \ \ \ \ \ centroid3d.z\ =\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00626}00626\ \ \ \ \ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00627}00627\ \ \ \ \ \ \ centroid\_indices.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00628}00628\ \ \ \ \ \ \ index\_to\_centroid\_idx[cell\_id]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00629}00629\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00630}00630\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00631}00631\ \ \ \ \ \ \ non\_ground\_cells.push\_back(cell\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00632}00632\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00633}00633\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00634}00634\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00635}00635\ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ best\_robot\_cell;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00635}00635\ \ \ std::queue<Index3D>\ q;}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00636}00636\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00637}00637\ \ \ \textcolor{comment}{//\ Compute\ z\ index\ directly\ from\ distToGround}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00638}00638\ \ \ \textcolor{keywordtype}{int}\ z\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(std::floor(grid\_config.distToGround\ /\ grid\_config.cellSizeZ));}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00639}00639\ \ \ best\_robot\_cell\ =\ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\{0,\ 0,\ z\};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00640}00640\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00641}00641\ \ \ \textcolor{comment}{//\ Ensure\ the\ cell\ exists\ (even\ if\ empty)}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00642}00642\ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ robot\_cell\ =\ gridCells[best\_robot\_cell];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00643}00643\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00644}00644\ \ \ \textcolor{comment}{//\ Mark\ semantics}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00645}00645\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00646}00646\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00647}00647\ \ \ \textcolor{comment}{//\ IMPORTANT:\ allow\ expansion\ even\ without\ points}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00648}00648\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00649}00649\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00650}00650\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00651}00651\ \ \ \textcolor{comment}{//\ Add\ centroid\ ONLY\ for\ KD-\/tree\ seeding}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00652}00652\ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00653}00653\ \ \ centroid3d.x\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00654}00654\ \ \ centroid3d.y\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00655}00655\ \ \ centroid3d.z\ =\ grid\_config.distToGround;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00656}00656\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00657}00657\ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00658}00658\ \ \ centroid\_indices.push\_back(best\_robot\_cell);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00659}00659\ \ \ index\_to\_centroid\_idx[best\_robot\_cell]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00660}00660\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00661}00661\ \ \ q.push(best\_robot\_cell);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00662}00662\ \ \ expandGrid(q);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00663}00663\ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00664}00664\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00665}00665\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00666}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{00666}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{PointCloudGrid<PointT>::expandGrid}}(std::queue<Index3D>\ q)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00667}00667\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00668}00668\ \ \ \textcolor{comment}{//\ Wrap\ the\ PCL\ point\ cloud\ with\ nanoflann\ adaptor}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00669}00669\ \ \ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPointCloudAdaptor<PointT>}}\ pclAdaptor(*centroid\_cloud);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00670}00670\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00671}00671\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00672}00672\ \ \ nanoflann::SearchParameters\ search\_params;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00673}00673\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00674}00674\ \ \ nanoflann::SearchParams\ search\_params;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00675}00675\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00676}00676\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00677}00677\ \ \ search\_params.eps\ =\ 0.0;\ \ \ \ \ \ \textcolor{comment}{//\ Larger\ tolerance\ for\ faster\ results}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00678}00678\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00679}00679\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00680}00680\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00681}00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00682}00682\ \ \ tree.buildIndex();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00683}00683\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00684}00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ grid\_config.centroidSearchRadius\ *\ grid\_config.centroidSearchRadius;\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00637}00637\ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ best\_robot\_cell;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00639}00639\ \ \ \textcolor{comment}{//\ Compute\ z\ index\ directly\ from\ distToGround}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00640}00640\ \ \ \textcolor{keywordtype}{int}\ z\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(std::floor(grid\_config.distToGround\ /\ grid\_config.cellSizeZ));}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00641}00641\ \ \ best\_robot\_cell\ =\ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\{0,\ 0,\ z\};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00643}00643\ \ \ \textcolor{comment}{//\ Ensure\ the\ cell\ exists\ (even\ if\ empty)}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00644}00644\ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ robot\_cell\ =\ gridCells[best\_robot\_cell];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00645}00645\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00646}00646\ \ \ \textcolor{comment}{//\ Mark\ semantics}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00647}00647\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00649}00649\ \ \ \textcolor{comment}{//\ IMPORTANT:\ allow\ expansion\ even\ without\ points}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00650}00650\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00651}00651\ \ \ robot\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00653}00653\ \ \ \textcolor{comment}{//\ Add\ centroid\ ONLY\ for\ KD-\/tree\ seeding}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00654}00654\ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00655}00655\ \ \ centroid3d.x\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00656}00656\ \ \ centroid3d.y\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00657}00657\ \ \ centroid3d.z\ =\ grid\_config.distToGround;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00658}00658\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00659}00659\ \ \ centroid\_cloud-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00660}00660\ \ \ centroid\_indices.push\_back(best\_robot\_cell);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00661}00661\ \ \ index\_to\_centroid\_idx[best\_robot\_cell]\ =\ centroid\_cloud-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00663}00663\ \ \ q.push(best\_robot\_cell);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00664}00664\ \ \ expandGrid(q);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00665}00665\ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00667}00667\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00668}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{00668}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{PointCloudGrid<PointT>::expandGrid}}(std::queue<Index3D>\ q)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00669}00669\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00670}00670\ \ \ \textcolor{comment}{//\ Wrap\ the\ PCL\ point\ cloud\ with\ nanoflann\ adaptor}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00671}00671\ \ \ \mbox{\hyperlink{structground__segmentation_1_1PCLPointCloudAdaptor}{PCLPointCloudAdaptor<PointT>}}\ pclAdaptor(*centroid\_cloud);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00673}00673\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00674}00674\ \ \ nanoflann::SearchParameters\ search\_params;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00675}00675\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00676}00676\ \ \ nanoflann::SearchParams\ search\_params;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00677}00677\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00678}00678\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00679}00679\ \ \ search\_params.eps\ =\ 0.0;\ \ \ \ \ \ \textcolor{comment}{//\ Larger\ tolerance\ for\ faster\ results}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00680}00680\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00681}00681\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00682}00682\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00683}00683\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00684}00684\ \ \ tree.buildIndex();}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00685}00685\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00686}00686\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00687}00687\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ idx\ =\ q.front();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00688}00688\ \ \ \ \ q.pop();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00689}00689\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00690}00690\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ current\_cell\ =\ gridCells[idx];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00691}00691\ \ \ \ \ current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \textcolor{comment}{//\ Mark\ as\ not\ in\ queue\ now\ that\ we're\ processing\ it}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00692}00692\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00693}00693\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}})\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00694}00694\ \ \ \ \ current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00695}00695\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00696}00696\ \ \ \ \ \textcolor{comment}{//\ Find\ current\ centroid\ index}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00697}00697\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ curr\_centroid\_idx\ =\ index\_to\_centroid\_idx[idx];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00698}00698\ \ \ \ \ \textcolor{keyword}{const}\ PointT\ \&\ curr\_centroid\ =\ centroid\_cloud-\/>points.at(curr\_centroid\_idx);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00699}00699\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00700}00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00701}00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00703}00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00705}00705\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00706}00706\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00707}00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00686}00686\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ grid\_config.centroidSearchRadius\ *\ grid\_config.centroidSearchRadius;\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00688}00688\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00689}00689\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ idx\ =\ q.front();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00690}00690\ \ \ \ \ q.pop();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00692}00692\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ current\_cell\ =\ gridCells[idx];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00693}00693\ \ \ \ \ current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{false};\ \ \ \ \ \textcolor{comment}{//\ Mark\ as\ not\ in\ queue\ now\ that\ we're\ processing\ it}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00695}00695\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}})\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00696}00696\ \ \ \ \ current\_cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00698}00698\ \ \ \ \ \textcolor{comment}{//\ Find\ current\ centroid\ index}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00699}00699\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ curr\_centroid\_idx\ =\ index\_to\_centroid\_idx[idx];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00700}00700\ \ \ \ \ \textcolor{keyword}{const}\ PointT\ \&\ curr\_centroid\ =\ centroid\_cloud-\/>points.at(curr\_centroid\_idx);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00702}00702\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00703}00703\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00704}00704\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00705}00705\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00706}00706\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00707}00707\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00708}00708\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00709}00709\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00710}00710\ \ \ \ \ \textcolor{keywordtype}{double}\ query\_pt[3]\ =\ \{\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.x),}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00711}00711\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.y),}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00712}00712\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.z)\};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00713}00713\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00714}00714\ \ \ \ \ tree.radiusSearch(query\_pt,\ radius,\ neighbors,\ search\_params);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00709}00709\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00712}00712\ \ \ \ \ \textcolor{keywordtype}{double}\ query\_pt[3]\ =\ \{\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.x),}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00713}00713\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.y),}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00714}00714\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.z)\};}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00715}00715\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00716}00716\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ nb\ :\ neighbors)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00717}00717\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ ni\ =\ nb.first;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00718}00718\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ni\ ==\ curr\_centroid\_idx)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ self}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00720}00720\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00721}00721\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00722}00722\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ neighbor\_id\ =\ centroid\_indices[ni];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00723}00723\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_id\ ==\ idx)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ redundant\ but\ safe}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00725}00725\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00726}00726\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00727}00727\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ neighbor\ =\ gridCells[neighbor\_id];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00728}00728\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>empty()\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00729}00729\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00730}00730\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (grid\_config.processing\_phase\ ==\ 2)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ neighbor\ if\ centroid\ height\ difference\ is\ too\ large}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00732}00732\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Height\ continuity\ constraint}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dz\ =}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \ \ \ \ std::abs(curr\_centroid.z\ -\/\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2]);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00735}00735\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00736}00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dz\ >\ grid\_config.maxGroundHeightDeviation)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00738}00738\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00739}00739\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00740}00740\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00741}00741\ \ \ \ \ \ \ \ \ q.push(neighbor\_id);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00742}00742\ \ \ \ \ \ \ \ \ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00743}00743\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00744}00744\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00745}00745\ \ \ \ \ ground\_cells.emplace\_back(idx);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00746}00746\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00747}00747\ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00748}00748\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00749}00749\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00750}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac2d3d69cae6d8eed58b39380ab115cf3}{00750}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac2d3d69cae6d8eed58b39380ab115cf3}{PointCloudGrid<PointT>::setInputCloud}}(}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00751}00751\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ input,}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00752}00752\ \ \ \textcolor{keyword}{const}\ Eigen::Quaterniond\ \&\ R\_body2World)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00753}00753\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00754}00754\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00755}00755\ \ \ this-\/>clear();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00756}00756\ \ \ orientation\ =\ R\_body2World;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00757}00757\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::iterator\ it\ =\ input-\/>begin();\ it\ !=\ input-\/>end();\ ++it)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00758}00758\ \ \ \ \ this-\/>addPoint(*it);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00759}00759\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00760}00760\ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00761}00761\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00762}00762\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00763}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{00763}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{PointCloudGrid<PointT>::checkIndex3DInGrid}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ \&\ index)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00764}00764\ \textcolor{keyword}{}\{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00765}00765\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ search\ =\ gridCells.find(index);\ search\ !=\ gridCells.end())\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00766}00766\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00767}00767\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00768}00768\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00769}00769\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00770}00770\ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00771}00771\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00772}00772\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00773}00773\ std::pair<typename\ pcl::PointCloud<PointT>::Ptr,}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00774}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_abf8aa7aee1fd1524bfc9e861f1c706d8}{00774}}\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr>\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_abf8aa7aee1fd1524bfc9e861f1c706d8}{PointCloudGrid<PointT>::segmentPoints}}()}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00775}00775\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00776}00776\ \ \ ground\_points-\/>clear();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00777}00777\ \ \ non\_ground\_points-\/>clear();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00778}00778\ \ \ ground\_inliers-\/>clear();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00779}00779\ \ \ non\_ground\_inliers-\/>clear();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00780}00780\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00781}00781\ \ \ pcl::ExtractIndices<PointT>\ extract\_ground;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00716}00716\ \ \ \ \ tree.radiusSearch(query\_pt,\ radius,\ neighbors,\ search\_params);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00718}00718\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ nb\ :\ neighbors)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00719}00719\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ ni\ =\ nb.first;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00720}00720\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ni\ ==\ curr\_centroid\_idx)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ self}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00723}00723\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00724}00724\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ neighbor\_id\ =\ centroid\_indices[ni];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00725}00725\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_id\ ==\ idx)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ redundant\ but\ safe}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00727}00727\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00729}00729\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ neighbor\ =\ gridCells[neighbor\_id];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00730}00730\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>empty()\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a580024e759ba76fa5504de41ac1ea38d}{expanded}}\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ ||\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00731}00731\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00732}00732\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (grid\_config.processing\_phase\ ==\ 2)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ neighbor\ if\ centroid\ height\ difference\ is\ too\ large}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Height\ continuity\ constraint}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dz\ =}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ std::abs(curr\_centroid.z\ -\/\ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_aa46715c317da4d4ae56cb7ceb8454edf}{centroid}}[2]);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dz\ >\ grid\_config.maxGroundHeightDeviation)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00740}00740\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00741}00741\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00742}00742\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00743}00743\ \ \ \ \ \ \ \ \ q.push(neighbor\_id);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00744}00744\ \ \ \ \ \ \ \ \ neighbor.\mbox{\hyperlink{structground__segmentation_1_1GridCell_affb9335a0f505384021b7fc7a1b61636}{in\_queue}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00745}00745\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00746}00746\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00747}00747\ \ \ \ \ ground\_cells.emplace\_back(idx);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00748}00748\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00749}00749\ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00751}00751\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00752}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac2d3d69cae6d8eed58b39380ab115cf3}{00752}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac2d3d69cae6d8eed58b39380ab115cf3}{PointCloudGrid<PointT>::setInputCloud}}(}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00753}00753\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ input,}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00754}00754\ \ \ \textcolor{keyword}{const}\ Eigen::Quaterniond\ \&\ R\_body2World)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00755}00755\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00756}00756\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00757}00757\ \ \ this-\/>clear();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00758}00758\ \ \ orientation\ =\ R\_body2World;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00759}00759\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::iterator\ it\ =\ input-\/>begin();\ it\ !=\ input-\/>end();\ ++it)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00760}00760\ \ \ \ \ this-\/>addPoint(*it);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00761}00761\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00762}00762\ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00764}00764\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00765}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{00765}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{PointCloudGrid<PointT>::checkIndex3DInGrid}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ \&\ index)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00766}00766\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00767}00767\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ search\ =\ gridCells.find(index);\ search\ !=\ gridCells.end())\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00768}00768\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00769}00769\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00770}00770\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00771}00771\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00772}00772\ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00774}00774\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Po\textcolor{keywordtype}{int}T>}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00775}00775\ std::pair<typename\ pcl::PointCloud<PointT>::Ptr,}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00776}\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_abf8aa7aee1fd1524bfc9e861f1c706d8}{00776}}\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr>\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_abf8aa7aee1fd1524bfc9e861f1c706d8}{PointCloudGrid<PointT>::segmentPoints}}()}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00777}00777\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00778}00778\ \ \ ground\_points-\/>clear();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00779}00779\ \ \ non\_ground\_points-\/>clear();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00780}00780\ \ \ ground\_inliers-\/>clear();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00781}00781\ \ \ non\_ground\_inliers-\/>clear();}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00782}00782\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00783}00783\ \ \ getGroundCells();}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00784}00784\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ cell\_id\ :\ ground\_cells)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00785}00785\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00786}00786\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ cell\ =\ gridCells[cell\_id];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00783}00783\ \ \ pcl::ExtractIndices<PointT>\ extract\_ground;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00784}00784\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00785}00785\ \ \ getGroundCells();}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00786}00786\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ cell\_id\ :\ ground\_cells)\ \{}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00787}00787\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00788}00788\ \ \ \ \ \textcolor{keywordflow}{if}\ ((cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>size()\ <=\ 5\ ||\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}})\ \&\&}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00789}00789\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00790}00790\ \ \ \ \ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00791}00791\ \ \ \ \ \ \ *ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00792}00792\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00793}00793\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00794}00794\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00795}00795\ \ \ \ \ extract\_ground.setInputCloud(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}});}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00796}00796\ \ \ \ \ extract\_ground.setIndices(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e}{inliers}});}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00797}00797\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00798}00798\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{false});}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00799}00799\ \ \ \ \ extract\_ground.filter(*ground\_inliers);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00800}00800\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00801}00801\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{true});}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00802}00802\ \ \ \ \ extract\_ground.filter(*non\_ground\_inliers);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00803}00803\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00804}00804\ \ \ \ \ \textcolor{keywordflow}{if}\ (ground\_inliers-\/>size()\ ==\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00805}00805\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00806}00806\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00807}00807\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00808}00808\ \ \ \ \ \textcolor{keyword}{auto}\ score1\ =\ classifySparsityBoundingBox(cell,\ ground\_inliers);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00809}00809\ \ \ \ \ \textcolor{keyword}{auto}\ score2\ =\ classifySparsityBoundingBox(cell,\ non\_ground\_inliers);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00810}00810\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00811}00811\ \ \ \ \ \textcolor{keywordflow}{if}\ (score1\ ==\ score2)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00812}00812\ \ \ \ \ \ \ Eigen::Vector4d\ centroid;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00813}00813\ \ \ \ \ \ \ pcl::compute3DCentroid(*(ground\_inliers),\ centroid);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00814}00814\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00815}00815\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ candidate\ ground\ cell:}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00816}00816\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cell\_z\ =\ centroid[2];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00817}00817\ \ \ \ \ \ \ std::vector<double>\ neighbor\_zs;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00818}00818\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ offset\ :\ neighbor\_offsets)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00819}00819\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ nidx\ =\ cell\_id\ +\ offset;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00820}00820\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!checkIndex3DInGrid(nidx))\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00821}00821\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ ncell\ =\ gridCells[nidx];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00822}00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ncell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ neighbor\_zs.push\_back(ncell.centroid[2]);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00824}00824\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00825}00825\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00826}00826\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00827}00827\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_zs.empty())\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00828}00828\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00830}00830\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00831}00831\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00832}00832\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ local\_ref\ =\ *std::min\_element(neighbor\_zs.begin(),\ neighbor\_zs.end());}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00788}00788\ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ cell\ =\ gridCells[cell\_id];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00789}00789\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00790}00790\ \ \ \ \ \textcolor{keywordflow}{if}\ ((cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>size()\ <=\ 5\ ||\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a95aee9c061ebecbfdaf5d51bbc2d8fb2}{primitive\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}})\ \&\&}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00791}00791\ \ \ \ \ \ \ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_abc94e019fa445bc9ef6983bdf90bdcbb}{terrain\_type}}\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00792}00792\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00793}00793\ \ \ \ \ \ \ *ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00794}00794\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00795}00795\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00796}00796\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00797}00797\ \ \ \ \ extract\_ground.setInputCloud(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}});}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00798}00798\ \ \ \ \ extract\_ground.setIndices(cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a1f0092e9c182a35031621ded836a666e}{inliers}});}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00799}00799\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00800}00800\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00801}00801\ \ \ \ \ extract\_ground.filter(*ground\_inliers);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00802}00802\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00803}00803\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00804}00804\ \ \ \ \ extract\_ground.filter(*non\_ground\_inliers);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00805}00805\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00806}00806\ \ \ \ \ \textcolor{keywordflow}{if}\ (ground\_inliers-\/>size()\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00807}00807\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00808}00808\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00809}00809\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00810}00810\ \ \ \ \ \textcolor{keyword}{auto}\ score1\ =\ classifySparsityBoundingBox(cell,\ ground\_inliers);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00811}00811\ \ \ \ \ \textcolor{keyword}{auto}\ score2\ =\ classifySparsityBoundingBox(cell,\ non\_ground\_inliers);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00812}00812\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00813}00813\ \ \ \ \ \textcolor{keywordflow}{if}\ (score1\ ==\ score2)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00814}00814\ \ \ \ \ \ \ Eigen::Vector4d\ centroid;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00815}00815\ \ \ \ \ \ \ pcl::compute3DCentroid(*(ground\_inliers),\ centroid);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00816}00816\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00817}00817\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ candidate\ ground\ cell:}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00818}00818\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cell\_z\ =\ centroid[2];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00819}00819\ \ \ \ \ \ \ std::vector<double>\ neighbor\_zs;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00820}00820\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ offset\ :\ neighbor\_offsets)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00821}00821\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ nidx\ =\ cell\_id\ +\ offset;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00822}00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!checkIndex3DInGrid(nidx))\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ ncell\ =\ gridCells[nidx];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00824}00824\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ncell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ neighbor\_zs.push\_back(ncell.centroid[2]);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00826}00826\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00827}00827\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00829}00829\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_zs.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00830}00830\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00831}00831\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00832}00832\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00833}00833\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00834}00834\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(cell\_z\ -\/\ local\_ref)\ >\ grid\_config.maxGroundHeightDeviation)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00835}00835\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00837}00837\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00838}00838\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00839}00839\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ reject\_as\_floating\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00840}00840\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bz\ =\ cell\_id.z\ -\/\ 1;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00841}00841\ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00842}00842\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ below(cell\_id.x,\ cell\_id.y,\ bz);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00843}00843\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!checkIndex3DInGrid(below))\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Out\ of\ bound:\ stop\ looping}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00845}00845\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00846}00846\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ bcell\ =\ gridCells[below];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00847}00847\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!bcell.points-\/>empty()\ \&\&\ bcell.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Found\ an\ occupied\ non-\/ground\ cell\ below—reject\ as\ floating!}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ reject\_as\_floating\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00852}00852\ \ \ \ \ \ \ \ \ -\/-\/bz;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00853}00853\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00854}00854\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reject\_as\_floating)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00855}00855\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00856}00856\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00857}00857\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00858}00858\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00859}00859\ \ \ \ \ *ground\_points\ +=\ *ground\_inliers;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00860}00860\ \ \ \ \ *non\_ground\_points\ +=\ *non\_ground\_inliers;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00861}00861\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00862}00862\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00863}00863\ \ \ \textcolor{keywordflow}{if}\ (grid\_config.processing\_phase\ ==\ 1)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00864}00864\ \ \ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00865}00865\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ non\_ground\_cells)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00866}00866\ \ \ \ \ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00867}00867\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ cell\ =\ gridCells[cell\_id];}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00868}00868\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00869}00869\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ nearest\_ground\_id;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00834}00834\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ local\_ref\ =\ *std::min\_element(neighbor\_zs.begin(),\ neighbor\_zs.end());}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00835}00835\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00836}00836\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(cell\_z\ -\/\ local\_ref)\ >\ grid\_config.maxGroundHeightDeviation)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00837}00837\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00838}00838\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00839}00839\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00840}00840\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00841}00841\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ reject\_as\_floating\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00842}00842\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bz\ =\ cell\_id.z\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00843}00843\ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00844}00844\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ below(cell\_id.x,\ cell\_id.y,\ bz);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00845}00845\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!checkIndex3DInGrid(below))\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Out\ of\ bound:\ stop\ looping}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00847}00847\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00848}00848\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ bcell\ =\ gridCells[below];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!bcell.points-\/>empty()\ \&\&\ bcell.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Found\ an\ occupied\ non-\/ground\ cell\ below—reject\ as\ floating!}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ reject\_as\_floating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00854}00854\ \ \ \ \ \ \ \ \ -\/-\/bz;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00855}00855\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00856}00856\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reject\_as\_floating)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00857}00857\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00858}00858\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00859}00859\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00860}00860\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00861}00861\ \ \ \ \ *ground\_points\ +=\ *ground\_inliers;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00862}00862\ \ \ \ \ *non\_ground\_points\ +=\ *non\_ground\_inliers;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00863}00863\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00865}00865\ \ \ \textcolor{keywordflow}{if}\ (grid\_config.processing\_phase\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00866}00866\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00867}00867\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ non\_ground\_cells)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00868}00868\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00869}00869\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structground__segmentation_1_1GridCell}{GridCell<PointT>}}\ \&\ cell\ =\ gridCells[cell\_id];}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00870}00870\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00871}00871\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!findNearestGroundNeighbor(cell\_id,\ nearest\_ground\_id))\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00873}00873\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00874}00874\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00875}00875\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00876}00876\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ gcell\ =\ gridCells[nearest\_ground\_id];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00871}00871\ \ \ \ \ \ \ \mbox{\hyperlink{structground__segmentation_1_1Index3D}{Index3D}}\ nearest\_ground\_id;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00872}00872\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00873}00873\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!findNearestGroundNeighbor(cell\_id,\ nearest\_ground\_id))\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00875}00875\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00876}00876\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00877}00877\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00878}00878\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ pt\ :\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>points)}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00879}00879\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pointIsGroundWrtCell(pt,\ gcell))}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ground\_points-\/>push\_back(pt);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ non\_ground\_points-\/>push\_back(pt);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00884}00884\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00885}00885\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00886}00886\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00887}00887\ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00888}00888\ \ \ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00889}00889\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ non\_ground\_cells)\ \{}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00890}00890\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *gridCells[cell\_id].points;}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00891}00891\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00892}00892\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00893}00893\ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(ground\_points,\ non\_ground\_points);}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00894}00894\ \}}
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00895}00895\ }
-\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00896}00896\ \}\ \textcolor{comment}{//namespace\ ground\_segmentation}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00878}00878\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ gcell\ =\ gridCells[nearest\_ground\_id];}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00879}00879\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00880}00880\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ pt\ :\ cell.\mbox{\hyperlink{structground__segmentation_1_1GridCell_a28c210ea86309368a9f9b8a392d1ed70}{points}}-\/>points)}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00881}00881\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pointIsGroundWrtCell(pt,\ gcell))}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ground\_points-\/>push\_back(pt);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ non\_ground\_points-\/>push\_back(pt);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00886}00886\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00887}00887\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00888}00888\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00889}00889\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00890}00890\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00891}00891\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ non\_ground\_cells)\ \{}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00892}00892\ \ \ \ \ \ \ \ \ *non\_ground\_points\ +=\ *gridCells[cell\_id].points;}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00893}00893\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00894}00894\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00895}00895\ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(ground\_points,\ non\_ground\_points);}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00896}00896\ \}}
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00897}00897\ }
+\DoxyCodeLine{\Hypertarget{ground__detection_8hpp_source_l00898}00898\ \}\ \textcolor{comment}{//namespace\ ground\_segmentation}}
 
 \end{DoxyCode}

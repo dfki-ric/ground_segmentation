@@ -247,17 +247,17 @@ bool \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid}{ground\+\_\+s
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00763}{763}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00765}{765}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00764\ \{}
-\DoxyCodeLine{00765\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ search\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}.find(index);\ search\ !=\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}.end())\ \{}
-\DoxyCodeLine{00766\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00767\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00768\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00769\ \ \ \}}
-\DoxyCodeLine{00770\ \}}
+\DoxyCodeLine{00766\ \{}
+\DoxyCodeLine{00767\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ search\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}.find(index);\ search\ !=\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}.end())\ \{}
+\DoxyCodeLine{00768\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00769\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00771\ \ \ \}}
+\DoxyCodeLine{00772\ \}}
 
 \end{DoxyCode}
 \Hypertarget{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8}\label{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8} 
@@ -453,91 +453,91 @@ Expands only to\+:
 
 Ensures ground continuity and prevents floating ground artifacts. 
 
-Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00666}{666}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00668}{668}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00667\ \{}
-\DoxyCodeLine{00668\ \ \ \textcolor{comment}{//\ Wrap\ the\ PCL\ point\ cloud\ with\ nanoflann\ adaptor}}
-\DoxyCodeLine{00669\ \ \ PCLPointCloudAdaptor<PointT>\ pclAdaptor(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}});}
-\DoxyCodeLine{00670\ }
-\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{00672\ \ \ nanoflann::SearchParameters\ search\_params;}
-\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00674\ \ \ nanoflann::SearchParams\ search\_params;}
-\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00676\ }
-\DoxyCodeLine{00677\ \ \ search\_params.eps\ =\ 0.0;\ \ \ \ \ \ \textcolor{comment}{//\ Larger\ tolerance\ for\ faster\ results}}
-\DoxyCodeLine{00678\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
-\DoxyCodeLine{00679\ }
-\DoxyCodeLine{00680\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
-\DoxyCodeLine{00681\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
-\DoxyCodeLine{00682\ \ \ tree.buildIndex();}
-\DoxyCodeLine{00683\ }
-\DoxyCodeLine{00684\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ *\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}};\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{00669\ \{}
+\DoxyCodeLine{00670\ \ \ \textcolor{comment}{//\ Wrap\ the\ PCL\ point\ cloud\ with\ nanoflann\ adaptor}}
+\DoxyCodeLine{00671\ \ \ PCLPointCloudAdaptor<PointT>\ pclAdaptor(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}});}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
+\DoxyCodeLine{00674\ \ \ nanoflann::SearchParameters\ search\_params;}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00676\ \ \ nanoflann::SearchParams\ search\_params;}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ search\_params.eps\ =\ 0.0;\ \ \ \ \ \ \textcolor{comment}{//\ Larger\ tolerance\ for\ faster\ results}}
+\DoxyCodeLine{00680\ \ \ search\_params.sorted\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ No\ need\ to\ sort}}
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ \ \ nanoflann::KDTreeSingleIndexAdaptorParams\ build\_params(10);\ \ \ \textcolor{comment}{//\ leaf\ size}}
+\DoxyCodeLine{00683\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a49f50989f10619d599b4424b5fd8c0d5}{KDTree}}\ tree(3,\ pclAdaptor,\ build\_params);}
+\DoxyCodeLine{00684\ \ \ tree.buildIndex();}
 \DoxyCodeLine{00685\ }
-\DoxyCodeLine{00686\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
-\DoxyCodeLine{00687\ \ \ \ \ Index3D\ idx\ =\ q.front();}
-\DoxyCodeLine{00688\ \ \ \ \ q.pop();}
-\DoxyCodeLine{00689\ }
-\DoxyCodeLine{00690\ \ \ \ \ GridCell<PointT>\ \&\ current\_cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[idx];}
-\DoxyCodeLine{00691\ \ \ \ \ current\_cell.in\_queue\ =\ \textcolor{keyword}{false};\ \ \ \ \ \textcolor{comment}{//\ Mark\ as\ not\ in\ queue\ now\ that\ we're\ processing\ it}}
-\DoxyCodeLine{00692\ }
-\DoxyCodeLine{00693\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_cell.expanded)\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{00694\ \ \ \ \ current\_cell.expanded\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00695\ }
-\DoxyCodeLine{00696\ \ \ \ \ \textcolor{comment}{//\ Find\ current\ centroid\ index}}
-\DoxyCodeLine{00697\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ curr\_centroid\_idx\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[idx];}
-\DoxyCodeLine{00698\ \ \ \ \ \textcolor{keyword}{const}\ PointT\ \&\ curr\_centroid\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.at(curr\_centroid\_idx);}
-\DoxyCodeLine{00699\ }
-\DoxyCodeLine{00700\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
-\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
-\DoxyCodeLine{00702\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
-\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
-\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00706\ }
-\DoxyCodeLine{00707\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
+\DoxyCodeLine{00686\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ radius\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}}\ *\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_ab60b8eee50415325b899105e659c6625}{centroidSearchRadius}};\ \ \ \textcolor{comment}{//\ nanoflann\ uses\ squared\ radius}}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \textcolor{keywordflow}{while}\ (!q.empty())\ \{}
+\DoxyCodeLine{00689\ \ \ \ \ Index3D\ idx\ =\ q.front();}
+\DoxyCodeLine{00690\ \ \ \ \ q.pop();}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ GridCell<PointT>\ \&\ current\_cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[idx];}
+\DoxyCodeLine{00693\ \ \ \ \ current\_cell.in\_queue\ =\ \textcolor{keyword}{false};\ \ \ \ \ \textcolor{comment}{//\ Mark\ as\ not\ in\ queue\ now\ that\ we're\ processing\ it}}
+\DoxyCodeLine{00694\ }
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_cell.expanded)\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{00696\ \ \ \ \ current\_cell.expanded\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{comment}{//\ Find\ current\ centroid\ index}}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ curr\_centroid\_idx\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[idx];}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keyword}{const}\ PointT\ \&\ curr\_centroid\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.at(curr\_centroid\_idx);}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \ \ \ \ \textcolor{comment}{//\ Prepare\ radius\ search}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#if\ NANOFLANN\_VERSION\ >=\ 0x150}}
+\DoxyCodeLine{00704\ \textcolor{keyword}{using\ }Neighbor\ =\ nanoflann::ResultItem<size\_t,\ double>;}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00706\ \textcolor{keyword}{using\ }Neighbor\ =\ std::pair<size\_t,\ double>;}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{00708\ }
-\DoxyCodeLine{00709\ }
-\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keywordtype}{double}\ query\_pt[3]\ =\ \{\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.x),}
-\DoxyCodeLine{00711\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.y),}
-\DoxyCodeLine{00712\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.z)\};}
-\DoxyCodeLine{00713\ }
-\DoxyCodeLine{00714\ \ \ \ \ tree.radiusSearch(query\_pt,\ radius,\ neighbors,\ search\_params);}
+\DoxyCodeLine{00709\ \ \ \ \ std::vector<Neighbor>\ neighbors;}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ }
+\DoxyCodeLine{00712\ \ \ \ \ \textcolor{keywordtype}{double}\ query\_pt[3]\ =\ \{\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.x),}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.y),}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(curr\_centroid.z)\};}
 \DoxyCodeLine{00715\ }
-\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ nb\ :\ neighbors)\ \{}
-\DoxyCodeLine{00717\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ ni\ =\ nb.first;}
-\DoxyCodeLine{00718\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ni\ ==\ curr\_centroid\_idx)\ \{}
-\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ self}}
-\DoxyCodeLine{00720\ }
-\DoxyCodeLine{00721\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00722\ \ \ \ \ \ \ Index3D\ neighbor\_id\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}[ni];}
-\DoxyCodeLine{00723\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_id\ ==\ idx)\ \{}
-\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ redundant\ but\ safe}}
-\DoxyCodeLine{00725\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00726\ }
-\DoxyCodeLine{00727\ \ \ \ \ \ \ GridCell<PointT>\ \&\ neighbor\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[neighbor\_id];}
-\DoxyCodeLine{00728\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.points-\/>empty()\ ||\ neighbor.expanded\ ||\ neighbor.in\_queue\ ||\ neighbor.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{00729\ }
-\DoxyCodeLine{00730\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ ==\ 2)\ \{}
-\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ neighbor\ if\ centroid\ height\ difference\ is\ too\ large}}
-\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Height\ continuity\ constraint}}
-\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dz\ =}
-\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ std::abs(curr\_centroid.z\ -\/\ neighbor.centroid[2]);}
-\DoxyCodeLine{00735\ }
-\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dz\ >\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{maxGroundHeightDeviation}})}
-\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00738\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00739\ }
-\DoxyCodeLine{00740\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ q.push(neighbor\_id);}
-\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ neighbor.in\_queue\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00743\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00744\ \ \ \ \ \}}
-\DoxyCodeLine{00745\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac5a3bb7b7e69fd4cfd1be4fc762cfca4}{ground\_cells}}.emplace\_back(idx);}
-\DoxyCodeLine{00746\ \ \ \}}
-\DoxyCodeLine{00747\ \}}
+\DoxyCodeLine{00716\ \ \ \ \ tree.radiusSearch(query\_pt,\ radius,\ neighbors,\ search\_params);}
+\DoxyCodeLine{00717\ }
+\DoxyCodeLine{00718\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ nb\ :\ neighbors)\ \{}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ ni\ =\ nb.first;}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ni\ ==\ curr\_centroid\_idx)\ \{}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ self}}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ Index3D\ neighbor\_id\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}[ni];}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_id\ ==\ idx)\ \{}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ redundant\ but\ safe}}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \ \ \ \ \ \ GridCell<PointT>\ \&\ neighbor\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[neighbor\_id];}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.points-\/>empty()\ ||\ neighbor.expanded\ ||\ neighbor.in\_queue\ ||\ neighbor.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ ==\ 2)\ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ neighbor\ if\ centroid\ height\ difference\ is\ too\ large}}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Height\ continuity\ constraint}}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dz\ =}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ std::abs(curr\_centroid.z\ -\/\ neighbor.centroid[2]);}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dz\ >\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{maxGroundHeightDeviation}})}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00741\ }
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ q.push(neighbor\_id);}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ neighbor.in\_queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00746\ \ \ \ \ \}}
+\DoxyCodeLine{00747\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac5a3bb7b7e69fd4cfd1be4fc762cfca4}{ground\_cells}}.emplace\_back(idx);}
+\DoxyCodeLine{00748\ \ \ \}}
+\DoxyCodeLine{00749\ \}}
 
 \end{DoxyCode}
 
@@ -800,120 +800,122 @@ Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00496}{496}} 
 \DoxyCodeLine{00547\ \ \ \ \ \}}
 \DoxyCodeLine{00548\ }
 \DoxyCodeLine{00549\ \ \ \ \ Eigen::Matrix3d\ covariance\_matrix;}
-\DoxyCodeLine{00550\ \ \ \ \ pcl::computeCovarianceMatrixNormalized(*cell.points,\ cell.centroid,\ covariance\_matrix);}
-\DoxyCodeLine{00551\ }
-\DoxyCodeLine{00552\ \ \ \ \ Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d>\ eigen\_solver(covariance\_matrix,}
-\DoxyCodeLine{00553\ \ \ \ \ \ \ Eigen::ComputeEigenvectors);}
-\DoxyCodeLine{00554\ \ \ \ \ cell.eigenvectors\ =\ eigen\_solver.eigenvectors();}
-\DoxyCodeLine{00555\ \ \ \ \ cell.eigenvalues\ =\ eigen\_solver.eigenvalues();}
-\DoxyCodeLine{00556\ }
-\DoxyCodeLine{00557\ \ \ \ \ Eigen::Vector3d\ normal\ =\ cell.eigenvectors.col(0);}
+\DoxyCodeLine{00550\ \ \ \ \ \textcolor{keywordflow}{if}(0\ ==\ pcl::computeCovarianceMatrixNormalized(*cell.points,\ cell.centroid,\ covariance\_matrix))\{}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \textcolor{comment}{//\ THIS\ SHOULD\ NEVER\ HAPPEN\ (only\ here\ to\ fix\ compiler\ warning)}}
+\DoxyCodeLine{00552\ \ \ \ \ \}}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d>\ eigen\_solver(covariance\_matrix,}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ Eigen::ComputeEigenvectors);}
+\DoxyCodeLine{00556\ \ \ \ \ cell.eigenvectors\ =\ eigen\_solver.eigenvectors();}
+\DoxyCodeLine{00557\ \ \ \ \ cell.eigenvalues\ =\ eigen\_solver.eigenvalues();}
 \DoxyCodeLine{00558\ }
-\DoxyCodeLine{00559\ \ \ \ \ \textcolor{comment}{//\ Ensure\ all\ normals\ point\ upward}}
-\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keywordflow}{if}\ (normal(2)\ <\ 0)\ \{}
-\DoxyCodeLine{00561\ \ \ \ \ \ \ normal\ *=\ -\/1;\ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
-\DoxyCodeLine{00562\ \ \ \ \ \}}
-\DoxyCodeLine{00563\ }
-\DoxyCodeLine{00564\ \ \ \ \ normal.normalize();}
-\DoxyCodeLine{00565\ \ \ \ \ cell.normal\ =\ normal;}
-\DoxyCodeLine{00566\ }
-\DoxyCodeLine{00567\ \ \ \ \ \textcolor{keywordtype}{double}\ ratio\ =\ cell.eigenvalues[2]\ /\ cell.eigenvalues.sum();}
-\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.950)\ \{}
-\DoxyCodeLine{00569\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}};}
-\DoxyCodeLine{00570\ }
-\DoxyCodeLine{00571\ \ \ \ \ \ \ Eigen::Vector3d\ v\ =\ cell.eigenvectors.col(2);}
-\DoxyCodeLine{00572\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v(2)\ <\ 0)\ \{}
-\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ v\ *=\ -\/1;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
-\DoxyCodeLine{00574\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00575\ \ \ \ \ \ \ v\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae715bfd68d27f8c08820e3d89db82e31}{orientation}}\ *\ v;}
-\DoxyCodeLine{00576\ \ \ \ \ \ \ v.normalize();}
-\DoxyCodeLine{00577\ }
-\DoxyCodeLine{00578\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ angle\_rad\ =\ acos(std::abs(v.dot(Eigen::Vector3d::UnitZ())));}
+\DoxyCodeLine{00559\ \ \ \ \ Eigen::Vector3d\ normal\ =\ cell.eigenvectors.col(0);}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{//\ Ensure\ all\ normals\ point\ upward}}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keywordflow}{if}\ (normal(2)\ <\ 0)\ \{}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ normal\ *=\ -\/1;\ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
+\DoxyCodeLine{00564\ \ \ \ \ \}}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \ \ \ \ normal.normalize();}
+\DoxyCodeLine{00567\ \ \ \ \ cell.normal\ =\ normal;}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \textcolor{keywordtype}{double}\ ratio\ =\ cell.eigenvalues[2]\ /\ cell.eigenvalues.sum();}
+\DoxyCodeLine{00570\ \ \ \ \ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.950)\ \{}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}};}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \ \ \ \ \ \ Eigen::Vector3d\ v\ =\ cell.eigenvectors.col(2);}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v(2)\ <\ 0)\ \{}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ v\ *=\ -\/1;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ flip\ the\ normal\ direction}}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ v\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae715bfd68d27f8c08820e3d89db82e31}{orientation}}\ *\ v;}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ v.normalize();}
 \DoxyCodeLine{00579\ }
-\DoxyCodeLine{00580\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (angle\_rad\ >\ ((90\ -\/\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}})\ *\ (M\_PI\ /\ 180)))\ \{}
-\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{00583\ }
-\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ centroid3d.x\ =\ cell.centroid[0];}
-\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ centroid3d.y\ =\ cell.centroid[1];}
-\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ centroid3d.z\ =\ cell.centroid[2];}
-\DoxyCodeLine{00587\ }
-\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(cell\_id);}
-\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[cell\_id]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{00591\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
-\DoxyCodeLine{00594\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00595\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00596\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.4)\ \{}
-\DoxyCodeLine{00597\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PrimitiveType::PLANE}};}
-\DoxyCodeLine{00598\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a22f8b51dbe081da7715013cf57d929a2}{computeSlope}}(cell.normal))\ >\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ *\ (M\_PI\ /\ 180.0)))\ \{}
-\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
-\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00602\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00603\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00604\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{00605\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{PrimitiveType::NOISE}};}
-\DoxyCodeLine{00606\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
-\DoxyCodeLine{00607\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00608\ \ \ \ \ \}}
-\DoxyCodeLine{00609\ }
-\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac0082dad8b7370c4cbdd6ba1e6930110}{fitGroundPlane}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{groundInlierThreshold}}))\ \{}
-\DoxyCodeLine{00611\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{00612\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
-\DoxyCodeLine{00613\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00614\ \ \ \ \ \}}
-\DoxyCodeLine{00615\ }
-\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keywordflow}{if}\ (cell.slope\ <\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ *\ (M\_PI\ /\ 180))\ )\ \{}
-\DoxyCodeLine{00617\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{00618\ \ \ \ \ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{00619\ }
-\DoxyCodeLine{00620\ \ \ \ \ \ \ centroid3d.x\ =\ cell.centroid[0];}
-\DoxyCodeLine{00621\ \ \ \ \ \ \ centroid3d.y\ =\ cell.centroid[1];}
-\DoxyCodeLine{00622\ \ \ \ \ \ \ centroid3d.z\ =\ cell.centroid[2];}
-\DoxyCodeLine{00623\ }
-\DoxyCodeLine{00624\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{00625\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(cell\_id);}
-\DoxyCodeLine{00626\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[cell\_id]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{00627\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00628\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
-\DoxyCodeLine{00629\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
-\DoxyCodeLine{00630\ \ \ \ \ \}}
-\DoxyCodeLine{00631\ \ \ \}}
-\DoxyCodeLine{00632\ }
-\DoxyCodeLine{00633\ \ \ std::queue<Index3D>\ q;}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ angle\_rad\ =\ acos(std::abs(v.dot(Eigen::Vector3d::UnitZ())));}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (angle\_rad\ >\ ((90\ -\/\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}})\ *\ (M\_PI\ /\ 180)))\ \{}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ centroid3d.x\ =\ cell.centroid[0];}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ centroid3d.y\ =\ cell.centroid[1];}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ centroid3d.z\ =\ cell.centroid[2];}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(cell\_id);}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[cell\_id]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00598\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ratio\ >\ 0.4)\ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfa21fdb0c27f2a5855825463224374e7fe}{PrimitiveType::PLANE}};}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a22f8b51dbe081da7715013cf57d929a2}{computeSlope}}(cell.normal))\ >\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ *\ (M\_PI\ /\ 180.0)))\ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ cell.primitive\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfaa98ab30addd69c9a074d056989a396f1}{PrimitiveType::NOISE}};}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00610\ \ \ \ \ \}}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac0082dad8b7370c4cbdd6ba1e6930110}{fitGroundPlane}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a9736550fb5094bb17933f639de74fb8e}{groundInlierThreshold}}))\ \{}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00616\ \ \ \ \ \}}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keywordflow}{if}\ (cell.slope\ <\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a5483cbdd7461934ce0b6ba7efa78cae4}{slopeThresholdDegrees}}\ *\ (M\_PI\ /\ 180))\ )\ \{}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \ \ centroid3d.x\ =\ cell.centroid[0];}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ centroid3d.y\ =\ cell.centroid[1];}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ centroid3d.z\ =\ cell.centroid[2];}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(cell\_id);}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[cell\_id]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{00629\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810af09c13504d0a3117a899b419876c2052}{TerrainType::OBSTACLE}};}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}}.push\_back(cell\_id);}
+\DoxyCodeLine{00632\ \ \ \ \ \}}
+\DoxyCodeLine{00633\ \ \ \}}
 \DoxyCodeLine{00634\ }
-\DoxyCodeLine{00635\ \ \ Index3D\ best\_robot\_cell;}
+\DoxyCodeLine{00635\ \ \ std::queue<Index3D>\ q;}
 \DoxyCodeLine{00636\ }
-\DoxyCodeLine{00637\ \ \ \textcolor{comment}{//\ Compute\ z\ index\ directly\ from\ distToGround}}
-\DoxyCodeLine{00638\ \ \ \textcolor{keywordtype}{int}\ z\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(std::floor(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}}\ /\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cellSizeZ}}));}
-\DoxyCodeLine{00639\ \ \ best\_robot\_cell\ =\ Index3D\{0,\ 0,\ z\};}
-\DoxyCodeLine{00640\ }
-\DoxyCodeLine{00641\ \ \ \textcolor{comment}{//\ Ensure\ the\ cell\ exists\ (even\ if\ empty)}}
-\DoxyCodeLine{00642\ \ \ GridCell<PointT>\ \&\ robot\_cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[best\_robot\_cell];}
-\DoxyCodeLine{00643\ }
-\DoxyCodeLine{00644\ \ \ \textcolor{comment}{//\ Mark\ semantics}}
-\DoxyCodeLine{00645\ \ \ robot\_cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
-\DoxyCodeLine{00646\ }
-\DoxyCodeLine{00647\ \ \ \textcolor{comment}{//\ IMPORTANT:\ allow\ expansion\ even\ without\ points}}
-\DoxyCodeLine{00648\ \ \ robot\_cell.expanded\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00649\ \ \ robot\_cell.in\_queue\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00650\ }
-\DoxyCodeLine{00651\ \ \ \textcolor{comment}{//\ Add\ centroid\ ONLY\ for\ KD-\/tree\ seeding}}
-\DoxyCodeLine{00652\ \ \ PointT\ centroid3d;}
-\DoxyCodeLine{00653\ \ \ centroid3d.x\ =\ 0.0;}
-\DoxyCodeLine{00654\ \ \ centroid3d.y\ =\ 0.0;}
-\DoxyCodeLine{00655\ \ \ centroid3d.z\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}};}
-\DoxyCodeLine{00656\ }
-\DoxyCodeLine{00657\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
-\DoxyCodeLine{00658\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(best\_robot\_cell);}
-\DoxyCodeLine{00659\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[best\_robot\_cell]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
-\DoxyCodeLine{00660\ }
-\DoxyCodeLine{00661\ \ \ q.push(best\_robot\_cell);}
-\DoxyCodeLine{00662\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{expandGrid}}(q);}
-\DoxyCodeLine{00663\ \}}
+\DoxyCodeLine{00637\ \ \ Index3D\ best\_robot\_cell;}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \ \ \textcolor{comment}{//\ Compute\ z\ index\ directly\ from\ distToGround}}
+\DoxyCodeLine{00640\ \ \ \textcolor{keywordtype}{int}\ z\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(std::floor(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}}\ /\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a8141a474df39e37f268205402ebbc91d}{cellSizeZ}}));}
+\DoxyCodeLine{00641\ \ \ best\_robot\_cell\ =\ Index3D\{0,\ 0,\ z\};}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \textcolor{comment}{//\ Ensure\ the\ cell\ exists\ (even\ if\ empty)}}
+\DoxyCodeLine{00644\ \ \ GridCell<PointT>\ \&\ robot\_cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[best\_robot\_cell];}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \textcolor{comment}{//\ Mark\ semantics}}
+\DoxyCodeLine{00647\ \ \ robot\_cell.terrain\_type\ =\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}};}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \ \ \textcolor{comment}{//\ IMPORTANT:\ allow\ expansion\ even\ without\ points}}
+\DoxyCodeLine{00650\ \ \ robot\_cell.expanded\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00651\ \ \ robot\_cell.in\_queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \ \ \textcolor{comment}{//\ Add\ centroid\ ONLY\ for\ KD-\/tree\ seeding}}
+\DoxyCodeLine{00654\ \ \ PointT\ centroid3d;}
+\DoxyCodeLine{00655\ \ \ centroid3d.x\ =\ 0.0;}
+\DoxyCodeLine{00656\ \ \ centroid3d.y\ =\ 0.0;}
+\DoxyCodeLine{00657\ \ \ centroid3d.z\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2208c857dbaa2879dda721cf93f4aa2b}{distToGround}};}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>points.push\_back(centroid3d);}
+\DoxyCodeLine{00660\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7358ddac8e1c4991089a9bd722b96a6c}{centroid\_indices}}.push\_back(best\_robot\_cell);}
+\DoxyCodeLine{00661\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aec65e97e550ac61412cb79730b00116b}{index\_to\_centroid\_idx}}[best\_robot\_cell]\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a39f3a64c5ecb16b305b1e57c56d822c1}{centroid\_cloud}}-\/>size()\ -\/\ 1;}
+\DoxyCodeLine{00662\ }
+\DoxyCodeLine{00663\ \ \ q.push(best\_robot\_cell);}
+\DoxyCodeLine{00664\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_aeb6850fa8b8e510aa7f2aa10e938d56b}{expandGrid}}(q);}
+\DoxyCodeLine{00665\ \}}
 
 \end{DoxyCode}
 
@@ -1040,130 +1042,130 @@ pair$<$ground\+\_\+cloud, non\+\_\+ground\+\_\+cloud$>$
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00774}{774}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00776}{776}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00775\ \{}
-\DoxyCodeLine{00776\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}-\/>clear();}
-\DoxyCodeLine{00777\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}-\/>clear();}
-\DoxyCodeLine{00778\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}-\/>clear();}
-\DoxyCodeLine{00779\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}}-\/>clear();}
-\DoxyCodeLine{00780\ }
-\DoxyCodeLine{00781\ \ \ pcl::ExtractIndices<PointT>\ extract\_ground;}
+\DoxyCodeLine{00777\ \{}
+\DoxyCodeLine{00778\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}-\/>clear();}
+\DoxyCodeLine{00779\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}-\/>clear();}
+\DoxyCodeLine{00780\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}-\/>clear();}
+\DoxyCodeLine{00781\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}}-\/>clear();}
 \DoxyCodeLine{00782\ }
-\DoxyCodeLine{00783\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a52eba5b5c1d6c3810d9617875a10d269}{getGroundCells}}();}
-\DoxyCodeLine{00784\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac5a3bb7b7e69fd4cfd1be4fc762cfca4}{ground\_cells}})\ \{}
-\DoxyCodeLine{00785\ }
-\DoxyCodeLine{00786\ \ \ \ \ GridCell<PointT>\ \&\ cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id];}
+\DoxyCodeLine{00783\ \ \ pcl::ExtractIndices<PointT>\ extract\_ground;}
+\DoxyCodeLine{00784\ }
+\DoxyCodeLine{00785\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a52eba5b5c1d6c3810d9617875a10d269}{getGroundCells}}();}
+\DoxyCodeLine{00786\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ac5a3bb7b7e69fd4cfd1be4fc762cfca4}{ground\_cells}})\ \{}
 \DoxyCodeLine{00787\ }
-\DoxyCodeLine{00788\ \ \ \ \ \textcolor{keywordflow}{if}\ ((cell.points-\/>size()\ <=\ 5\ ||\ cell.primitive\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}})\ \&\&}
-\DoxyCodeLine{00789\ \ \ \ \ \ \ cell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})}
-\DoxyCodeLine{00790\ \ \ \ \ \{}
-\DoxyCodeLine{00791\ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}\ +=\ *cell.points;}
-\DoxyCodeLine{00792\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00793\ \ \ \ \ \}}
-\DoxyCodeLine{00794\ }
-\DoxyCodeLine{00795\ \ \ \ \ extract\_ground.setInputCloud(cell.points);}
-\DoxyCodeLine{00796\ \ \ \ \ extract\_ground.setIndices(cell.inliers);}
-\DoxyCodeLine{00797\ }
-\DoxyCodeLine{00798\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{false});}
-\DoxyCodeLine{00799\ \ \ \ \ extract\_ground.filter(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}});}
-\DoxyCodeLine{00800\ }
-\DoxyCodeLine{00801\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{true});}
-\DoxyCodeLine{00802\ \ \ \ \ extract\_ground.filter(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}});}
-\DoxyCodeLine{00803\ }
-\DoxyCodeLine{00804\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}-\/>size()\ ==\ 0)\ \{}
-\DoxyCodeLine{00805\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00806\ \ \ \ \ \}}
-\DoxyCodeLine{00807\ }
-\DoxyCodeLine{00808\ \ \ \ \ \textcolor{keyword}{auto}\ score1\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8}{classifySparsityBoundingBox}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}});}
-\DoxyCodeLine{00809\ \ \ \ \ \textcolor{keyword}{auto}\ score2\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8}{classifySparsityBoundingBox}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}});}
-\DoxyCodeLine{00810\ }
-\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keywordflow}{if}\ (score1\ ==\ score2)\ \{}
-\DoxyCodeLine{00812\ \ \ \ \ \ \ Eigen::Vector4d\ centroid;}
-\DoxyCodeLine{00813\ \ \ \ \ \ \ pcl::compute3DCentroid(*(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}),\ centroid);}
-\DoxyCodeLine{00814\ }
-\DoxyCodeLine{00815\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ candidate\ ground\ cell:}}
-\DoxyCodeLine{00816\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cell\_z\ =\ centroid[2];}
-\DoxyCodeLine{00817\ \ \ \ \ \ \ std::vector<double>\ neighbor\_zs;}
-\DoxyCodeLine{00818\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ offset\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6b6b5a10467209f9850edfc62190deb2}{neighbor\_offsets}})\ \{}
-\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ Index3D\ nidx\ =\ cell\_id\ +\ offset;}
-\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{checkIndex3DInGrid}}(nidx))\ \{\textcolor{keywordflow}{continue};\}}
-\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ ncell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[nidx];}
-\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ncell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ neighbor\_zs.push\_back(ncell.centroid[2]);}
-\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00825\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00826\ }
-\DoxyCodeLine{00827\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_zs.empty())\ \{}
-\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
-\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00830\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00831\ }
-\DoxyCodeLine{00832\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ local\_ref\ =\ *std::min\_element(neighbor\_zs.begin(),\ neighbor\_zs.end());}
+\DoxyCodeLine{00788\ \ \ \ \ GridCell<PointT>\ \&\ cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id];}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \ \ \ \ \textcolor{keywordflow}{if}\ ((cell.points-\/>size()\ <=\ 5\ ||\ cell.primitive\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f}{PrimitiveType::LINE}})\ \&\&}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ cell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})}
+\DoxyCodeLine{00792\ \ \ \ \ \{}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}\ +=\ *cell.points;}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00795\ \ \ \ \ \}}
+\DoxyCodeLine{00796\ }
+\DoxyCodeLine{00797\ \ \ \ \ extract\_ground.setInputCloud(cell.points);}
+\DoxyCodeLine{00798\ \ \ \ \ extract\_ground.setIndices(cell.inliers);}
+\DoxyCodeLine{00799\ }
+\DoxyCodeLine{00800\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{false});}
+\DoxyCodeLine{00801\ \ \ \ \ extract\_ground.filter(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}});}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \ \ \ \ extract\_ground.setNegative(\textcolor{keyword}{true});}
+\DoxyCodeLine{00804\ \ \ \ \ extract\_ground.filter(*\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}});}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}-\/>size()\ ==\ 0)\ \{}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00808\ \ \ \ \ \}}
+\DoxyCodeLine{00809\ }
+\DoxyCodeLine{00810\ \ \ \ \ \textcolor{keyword}{auto}\ score1\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8}{classifySparsityBoundingBox}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}});}
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keyword}{auto}\ score2\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afd3955812bb00019cfd0814288570bc8}{classifySparsityBoundingBox}}(cell,\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}});}
+\DoxyCodeLine{00812\ }
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keywordflow}{if}\ (score1\ ==\ score2)\ \{}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ Eigen::Vector4d\ centroid;}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ pcl::compute3DCentroid(*(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}}),\ centroid);}
+\DoxyCodeLine{00816\ }
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ candidate\ ground\ cell:}}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cell\_z\ =\ centroid[2];}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ std::vector<double>\ neighbor\_zs;}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ offset\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6b6b5a10467209f9850edfc62190deb2}{neighbor\_offsets}})\ \{}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ Index3D\ nidx\ =\ cell\_id\ +\ offset;}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{checkIndex3DInGrid}}(nidx))\ \{\textcolor{keywordflow}{continue};\}}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ ncell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[nidx];}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ncell.terrain\_type\ ==\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ neighbor\_zs.push\_back(ncell.centroid[2]);}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (neighbor\_zs.empty())\ \{}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00833\ }
-\DoxyCodeLine{00834\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(cell\_z\ -\/\ local\_ref)\ >\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{maxGroundHeightDeviation}})\ \{}
-\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
-\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00837\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00838\ }
-\DoxyCodeLine{00839\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ reject\_as\_floating\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00840\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bz\ =\ cell\_id.z\ -\/\ 1;}
-\DoxyCodeLine{00841\ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
-\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ Index3D\ below(cell\_id.x,\ cell\_id.y,\ bz);}
-\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{checkIndex3DInGrid}}(below))\ \{}
-\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Out\ of\ bound:\ stop\ looping}}
-\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ bcell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[below];}
-\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!bcell.points-\/>empty()\ \&\&\ bcell.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
-\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Found\ an\ occupied\ non-\/ground\ cell\ below—reject\ as\ floating!}}
-\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ reject\_as\_floating\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ -\/-\/bz;}
-\DoxyCodeLine{00853\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00854\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reject\_as\_floating)\ \{}
-\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
-\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00857\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00858\ \ \ \ \ \}}
-\DoxyCodeLine{00859\ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}};}
-\DoxyCodeLine{00860\ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}};}
-\DoxyCodeLine{00861\ \ \ \}}
-\DoxyCodeLine{00862\ }
-\DoxyCodeLine{00863\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ ==\ 1)}
-\DoxyCodeLine{00864\ \ \ \{}
-\DoxyCodeLine{00865\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}})}
-\DoxyCodeLine{00866\ \ \ \ \ \{}
-\DoxyCodeLine{00867\ \ \ \ \ \ \ \textcolor{keyword}{const}\ GridCell<PointT>\ \&\ cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id];}
-\DoxyCodeLine{00868\ }
-\DoxyCodeLine{00869\ \ \ \ \ \ \ Index3D\ nearest\_ground\_id;}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ local\_ref\ =\ *std::min\_element(neighbor\_zs.begin(),\ neighbor\_zs.end());}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(cell\_z\ -\/\ local\_ref)\ >\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a88b311a8ee2a151101eecfe2be5a3469}{maxGroundHeightDeviation}})\ \{}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00840\ }
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ reject\_as\_floating\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bz\ =\ cell\_id.z\ -\/\ 1;}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ Index3D\ below(cell\_id.x,\ cell\_id.y,\ bz);}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afbe6dd7305ed36669996dc67f0faf488}{checkIndex3DInGrid}}(below))\ \{}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Out\ of\ bound:\ stop\ looping}}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ bcell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[below];}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!bcell.points-\/>empty()\ \&\&\ bcell.terrain\_type\ !=\ \mbox{\hyperlink{namespaceground__segmentation_aa896bb5409199d7b9d75a807ef857810aadc523b14d8ecb4e2fd3d381b0cccb4f}{TerrainType::GROUND}})\ \{}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Found\ an\ occupied\ non-\/ground\ cell\ below—reject\ as\ floating!}}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \ \ reject\_as\_floating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ -\/-\/bz;}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reject\_as\_floating)\ \{}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00860\ \ \ \ \ \}}
+\DoxyCodeLine{00861\ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a932324c749c873b5ab2bd7fb13cd36e7}{ground\_inliers}};}
+\DoxyCodeLine{00862\ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6af33057a380e576267831f6039c5e32}{non\_ground\_inliers}};}
+\DoxyCodeLine{00863\ \ \ \}}
+\DoxyCodeLine{00864\ }
+\DoxyCodeLine{00865\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_afce03e28a6df9289742dadc909913488}{grid\_config}}.\mbox{\hyperlink{structground__segmentation_1_1GridConfig_a2373c722c930fffca8dd2b1f20e34ce1}{processing\_phase}}\ ==\ 1)}
+\DoxyCodeLine{00866\ \ \ \{}
+\DoxyCodeLine{00867\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}})}
+\DoxyCodeLine{00868\ \ \ \ \ \{}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \textcolor{keyword}{const}\ GridCell<PointT>\ \&\ cell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id];}
 \DoxyCodeLine{00870\ }
-\DoxyCodeLine{00871\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae54e1023e09ad64cbec1271904c49d8d}{findNearestGroundNeighbor}}(cell\_id,\ nearest\_ground\_id))\ \{}
-\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
-\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00874\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00875\ }
-\DoxyCodeLine{00876\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ gcell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[nearest\_ground\_id];}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ Index3D\ nearest\_ground\_id;}
+\DoxyCodeLine{00872\ }
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae54e1023e09ad64cbec1271904c49d8d}{findNearestGroundNeighbor}}(cell\_id,\ nearest\_ground\_id))\ \{}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *cell.points;}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00877\ }
-\DoxyCodeLine{00878\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ pt\ :\ cell.points-\/>points)}
-\DoxyCodeLine{00879\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a77f15970c7cf470ff9f340ce1bd0be24}{pointIsGroundWrtCell}}(pt,\ gcell))}
-\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}-\/>push\_back(pt);}
-\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}-\/>push\_back(pt);}
-\DoxyCodeLine{00884\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00885\ \ \ \ \ \}}
-\DoxyCodeLine{00886\ \ \ \}}
-\DoxyCodeLine{00887\ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00888\ \ \ \{}
-\DoxyCodeLine{00889\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}})\ \{}
-\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id].points;}
-\DoxyCodeLine{00891\ \ \ \ \ \}}
-\DoxyCodeLine{00892\ \ \ \}}
-\DoxyCodeLine{00893\ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}},\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}});}
-\DoxyCodeLine{00894\ \}}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ gcell\ =\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[nearest\_ground\_id];}
+\DoxyCodeLine{00879\ }
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ pt\ :\ cell.points-\/>points)}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a77f15970c7cf470ff9f340ce1bd0be24}{pointIsGroundWrtCell}}(pt,\ gcell))}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}}-\/>push\_back(pt);}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}-\/>push\_back(pt);}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00887\ \ \ \ \ \}}
+\DoxyCodeLine{00888\ \ \ \}}
+\DoxyCodeLine{00889\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00890\ \ \ \{}
+\DoxyCodeLine{00891\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cell\_id\ :\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a1e6bb0ca4dddfdb8209f9e2504eec644}{non\_ground\_cells}})\ \{}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}}\ +=\ *\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a8666cb88a6baa0c76f783034b5315065}{gridCells}}[cell\_id].points;}
+\DoxyCodeLine{00893\ \ \ \ \ \}}
+\DoxyCodeLine{00894\ \ \ \}}
+\DoxyCodeLine{00895\ \ \ \textcolor{keywordflow}{return}\ std::make\_pair(\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a7c2c77cbbf664be01391048e9b3465b6}{ground\_points}},\ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a9e90543cd5157c77fca93b80a1fa75aa}{non\_ground\_points}});}
+\DoxyCodeLine{00896\ \}}
 
 \end{DoxyCode}
 
@@ -1201,18 +1203,18 @@ void \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid}{ground\+\_\+s
 
 
 
-Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00750}{750}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
+Definition at line \mbox{\hyperlink{ground__detection_8hpp_source_l00752}{752}} of file \mbox{\hyperlink{ground__detection_8hpp_source}{ground\+\_\+detection.\+hpp}}.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00753\ \{}
-\DoxyCodeLine{00754\ }
-\DoxyCodeLine{00755\ \ \ this-\/>\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_af2c87020ab9b35111511d3b7092c6592}{clear}}();}
-\DoxyCodeLine{00756\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae715bfd68d27f8c08820e3d89db82e31}{orientation}}\ =\ R\_body2World;}
-\DoxyCodeLine{00757\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::iterator\ it\ =\ input-\/>begin();\ it\ !=\ input-\/>end();\ ++it)\ \{}
-\DoxyCodeLine{00758\ \ \ \ \ this-\/>\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6cafc2ca7b3984be94bf8da742b0360c}{addPoint}}(*it);}
-\DoxyCodeLine{00759\ \ \ \}}
-\DoxyCodeLine{00760\ \}}
+\DoxyCodeLine{00755\ \{}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ this-\/>\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_af2c87020ab9b35111511d3b7092c6592}{clear}}();}
+\DoxyCodeLine{00758\ \ \ \mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_ae715bfd68d27f8c08820e3d89db82e31}{orientation}}\ =\ R\_body2World;}
+\DoxyCodeLine{00759\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::iterator\ it\ =\ input-\/>begin();\ it\ !=\ input-\/>end();\ ++it)\ \{}
+\DoxyCodeLine{00760\ \ \ \ \ this-\/>\mbox{\hyperlink{classground__segmentation_1_1PointCloudGrid_a6cafc2ca7b3984be94bf8da742b0360c}{addPoint}}(*it);}
+\DoxyCodeLine{00761\ \ \ \}}
+\DoxyCodeLine{00762\ \}}
 
 \end{DoxyCode}
 
