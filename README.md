@@ -3,6 +3,8 @@
   <a href="https://github.com/dfki-ric/ground_segmentation_ros2">ROS 2</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
   <a href="https://doi.org/10.1109/ICRCV67407.2025.11349133">Paper</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="docs/ICRCV_Lodhi.pdf">Slides</a>
 </div>
 
 ---
