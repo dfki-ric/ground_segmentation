@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['contributing_20to_20ground_5fsegmentation_0',['Contributing to ground_segmentation',['../md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html',1,'']]]
+  ['algorithm_20overview_0',['Algorithm Overview',['../index.html#autotoc_md7',1,'']]],
+  ['api_1',['Main API',['../index.html#autotoc_md22',1,'']]]
 ];

@@ -1,0 +1,10 @@
+<map id="ground_segmentation::PointCloudGrid::checkIndex3DInGrid" name="ground_segmentation::PointCloudGrid::checkIndex3DInGrid">
+<area shape="rect" id="Node000001" title=" " alt="" coords="554,73,770,135"/>
+<area shape="rect" id="Node000002" href="$classground__segmentation_1_1PointCloudGrid.html#ae54e1023e09ad64cbec1271904c49d8d" title=" " alt="" coords="291,5,500,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="536,73,501,66,501,60,541,73"/>
+<area shape="rect" id="Node000003" href="$classground__segmentation_1_1PointCloudGrid.html#abf8aa7aee1fd1524bfc9e861f1c706d8" title="Final segmentation step." alt="" coords="5,48,237,93"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="538,99,237,81,237,75,540,94"/>
+<area shape="rect" id="Node000004" href="$classground__segmentation_1_1PointCloudGrid.html#a1baf979f7c73cabd87e246f4cac3e868" title=" " alt="" coords="285,142,506,186"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="541,132,498,144,497,139,536,132"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="272,52,238,59,236,54,277,50"/>
+</map>

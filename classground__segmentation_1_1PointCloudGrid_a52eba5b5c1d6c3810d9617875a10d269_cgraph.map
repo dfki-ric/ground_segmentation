@@ -1,0 +1,12 @@
+<map id="ground_segmentation::PointCloudGrid::getGroundCells" name="ground_segmentation::PointCloudGrid::getGroundCells">
+<area shape="rect" id="Node000001" title="Classify grid cells into ground or obstacle." alt="" coords="5,88,208,149"/>
+<area shape="rect" id="Node000002" href="$classground__segmentation_1_1PointCloudGrid.html#aaac82bdb653890c6900f59068bf5b7bb" title=" " alt="" coords="267,5,454,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,84,283,54,279,57,196,89"/>
+<area shape="rect" id="Node000003" href="$classground__segmentation_1_1PointCloudGrid.html#a22f8b51dbe081da7715013cf57d929a2" title="Compute slope angle between surface normal and global Z&#45;axis." alt="" coords="513,135,740,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,106,331,102,399,104,465,110,546,130,540,130,465,116,398,109,331,107,208,112"/>
+<area shape="rect" id="Node000004" href="$classground__segmentation_1_1PointCloudGrid.html#aeb6850fa8b8e510aa7f2aa10e938d56b" title="Region growing from robot cell using centroid KD&#45;tree." alt="" coords="256,125,465,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="208,127,243,133,238,134,209,133"/>
+<area shape="rect" id="Node000005" href="$classground__segmentation_1_1PointCloudGrid.html#ac0082dad8b7370c4cbdd6ba1e6930110" title="Fit a planar model to cell points using PROSAC." alt="" coords="263,194,458,256"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,147,257,180,271,188,266,188,255,185,180,152"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="457,198,519,184,525,183,459,203"/>
+</map>

@@ -28,8 +28,8 @@ var NAVTREE =
     [ "Contributing to ground_segmentation", "md__2home_2runner_2work_2ground__segmentation_2ground__segmentation_2CONTRIBUTING.html", [
       [ "Motivation", "index.html#autotoc_md6", null ],
       [ "Algorithm Overview", "index.html#autotoc_md7", [
-        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29\" >Phase I – Coarse Segmentation</a>", "index.html#autotoc_md8", null ],
-        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30\" >Phase II – Refinement</a>", "index.html#autotoc_md9", null ]
+        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L84C8-L84C29\">Phase I – Coarse Segmentation</a>", "index.html#autotoc_md8", null ],
+        [ "<a href=\"https://github.com/dfki-ric/ground_segmentation_ros2/blob/c370b2be20c75dc9fb9e6710f933ab1328fa0981/src/ground_segmentation_ros2_node.cpp#L91C8-L91C30\">Phase II – Refinement</a>", "index.html#autotoc_md9", null ]
       ] ],
       [ "Processing Pipeline", "index.html#autotoc_md10", null ],
       [ "Key Design Contributions", "index.html#autotoc_md11", [
@@ -49,8 +49,8 @@ var NAVTREE =
       [ "Typical Configuration", "index.html#autotoc_md23", null ],
       [ "Performance Summary (SemanticKITTI)", "index.html#autotoc_md24", null ],
       [ "Intended Use", "index.html#autotoc_md25", null ],
-      [ "Notes & Future Work", "index.html#autotoc_md26", null ],
-      [ "Tests & Visualisation", "index.html#autotoc_md27", [
+      [ "Notes &amp; Future Work", "index.html#autotoc_md26", null ],
+      [ "Tests", "index.html#autotoc_md27", [
         [ "Contents", "index.html#autotoc_md28", null ],
         [ "Notes", "index.html#autotoc_md29", null ]
       ] ],
@@ -86,9 +86,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"structground__segmentation_1_1Point.html#aa9ec4718e16b0e0f86eefbe8f4f5ea33"
+"annotated.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

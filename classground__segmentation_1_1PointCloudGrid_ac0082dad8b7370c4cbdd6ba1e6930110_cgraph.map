@@ -1,0 +1,5 @@
+<map id="ground_segmentation::PointCloudGrid::fitGroundPlane" name="ground_segmentation::PointCloudGrid::fitGroundPlane">
+<area shape="rect" id="Node000001" title="Fit a planar model to cell points using PROSAC." alt="" coords="5,5,200,67"/>
+<area shape="rect" id="Node000002" href="$classground__segmentation_1_1PointCloudGrid.html#a22f8b51dbe081da7715013cf57d929a2" title="Compute slope angle between surface normal and global Z&#45;axis." alt="" coords="248,14,475,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,34,235,36,229,36,200,39"/>
+</map>

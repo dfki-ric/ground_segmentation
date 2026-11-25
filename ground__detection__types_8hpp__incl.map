@@ -1,27 +1,27 @@
 <map id="/home/runner/work/ground_segmentation/ground_segmentation/include/ground_detection_types.hpp" name="/home/runner/work/ground_segmentation/ground_segmentation/include/ground_detection_types.hpp">
-<area shape="rect" id="Node000001" title="Core data structures and configuration types for grid&#45;based ground segmentation." alt="" coords="1018,5,1283,60"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,195,141"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1018,43,652,67,429,86,207,111,173,116,172,110,206,105,429,81,651,62,1018,38"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="219,115,389,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1018,46,734,71,568,89,402,111,372,115,371,110,401,105,567,84,734,66,1018,41"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="414,108,575,148"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1018,51,820,76,589,110,588,105,819,71,1017,46"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="599,108,731,148"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1018,59,745,110,744,105,1017,53"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="755,115,930,141"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1065,63,894,114,893,109,1063,58"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="955,115,1139,141"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1123,62,1072,108,1068,104,1119,58"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="1163,115,1347,141"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1182,58,1233,104,1230,108,1178,62"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="1371,115,1474,141"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1228,58,1377,108,1375,113,1226,63"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="1498,115,1561,141"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1284,54,1384,77,1487,105,1493,108,1492,113,1486,111,1383,82,1283,60"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="1585,115,1647,141"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1284,46,1425,69,1500,86,1574,105,1581,108,1579,113,1573,111,1499,91,1424,75,1283,52"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="1672,115,1723,141"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1284,39,1369,48,1465,61,1564,80,1661,105,1666,107,1664,112,1659,111,1563,85,1464,66,1369,53,1283,44"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="1747,115,1810,141"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1284,38,1384,46,1498,59,1618,79,1735,105,1743,108,1742,113,1734,111,1617,84,1497,65,1383,51,1284,43"/>
+<area shape="rect" id="Node000001" title="Core data structures and configuration types for grid&#45;based ground segmentation." alt="" coords="1014,5,1278,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,124,194,151"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1011,44,649,71,428,91,207,118,175,123,174,118,206,112,427,86,649,65,1016,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="218,124,389,151"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1011,47,731,75,566,94,401,118,375,122,374,117,400,112,565,89,731,70,1016,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="413,115,573,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1016,52,817,81,589,117,588,112,816,76,1011,53"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="596,115,728,160"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1016,60,743,117,742,112,1011,61"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="752,124,927,151"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1055,67,895,121,894,116,1050,68"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="950,124,1134,151"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1117,67,1068,115,1066,110,1112,69"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="1158,124,1342,151"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1179,65,1228,114,1223,112,1177,70"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="1366,124,1468,151"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1229,65,1370,118,1364,118,1228,70"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1492,124,1555,151"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1279,59,1379,82,1480,112,1488,117,1482,117,1479,118,1377,87,1278,64"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="1579,124,1641,151"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1279,50,1419,74,1494,92,1567,112,1574,117,1569,117,1565,118,1493,97,1418,80,1279,56"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1665,124,1715,151"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1279,42,1364,51,1459,65,1558,85,1654,112,1659,117,1653,116,1652,118,1557,90,1458,70,1364,56,1279,47"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="1740,124,1801,151"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1279,40,1378,48,1492,62,1612,83,1728,112,1736,118,1731,117,1727,118,1610,88,1491,67,1378,54,1279,46"/>
 </map>

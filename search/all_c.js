@@ -7,5 +7,5 @@ var searchData=
   ['non_5fground_5fpoints_4',['non_ground_points',['../classground__segmentation_1_1PointCloudGrid.html#a9e90543cd5157c77fca93b80a1fa75aa',1,'ground_segmentation::PointCloudGrid']]],
   ['normal_5',['normal',['../structground__segmentation_1_1GridCell.html#aa980c243de5392754ffdf4c0a18fbaf5',1,'ground_segmentation::GridCell']]],
   ['notes_6',['Notes',['../index.html#autotoc_md29',1,'']]],
-  ['notes_20future_20work_7',['Notes &amp; Future Work',['../index.html#autotoc_md26',1,'']]]
+  ['notes_20future_20work_7',['Notes &amp;amp; Future Work',['../index.html#autotoc_md26',1,'']]]
 ];

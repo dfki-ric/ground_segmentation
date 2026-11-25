@@ -1,0 +1,5 @@
+<map id="ground_segmentation::PointCloudGrid::findNearestGroundNeighbor" name="ground_segmentation::PointCloudGrid::findNearestGroundNeighbor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,215,67"/>
+<area shape="rect" id="Node000002" href="$classground__segmentation_1_1PointCloudGrid.html#afbe6dd7305ed36669996dc67f0faf488" title=" " alt="" coords="263,5,479,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,34,249,36,244,36,215,39"/>
+</map>

@@ -26,13 +26,15 @@ Definition at line \mbox{\hyperlink{pointcloud__processor_8hpp_source_l00035}{35
 
 
 
+\label{doc-func-members}
+\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}\label{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003} 
-\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!euclideanClustering@{euclideanClustering}}
+\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003}\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!euclideanClustering@{euclideanClustering}}
 \index{euclideanClustering@{euclideanClustering}!ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}}
 \doxysubsubsection{\texorpdfstring{euclideanClustering()}{euclideanClustering()}}
-{\footnotesize\ttfamily template$<$typename PointT $>$ \\
-std\+::vector$<$ typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr $>$ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::euclidean\+Clustering (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud,  }\item[{float}]{cluster\+Tolerance,  }\item[{int}]{min\+Size,  }\item[{int}]{max\+Size }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classground__segmentation_1_1ProcessCloudProcessor_af4e1a0bd3344423cb5691226c8025003} 
+template$<$typename PointT$>$ \\
+std\+::vector$<$ typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr $>$ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::euclidean\+Clustering (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud}{, }\item[{float}]{cluster\+Tolerance}{, }\item[{int}]{min\+Size}{, }\item[{int}]{max\+Size}{}\end{DoxyParamCaption})}
 
 
 
@@ -41,39 +43,39 @@ Definition at line \mbox{\hyperlink{pointcloud__processor_8hpp_source_l00083}{83
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00087\ \{}
-\DoxyCodeLine{00088\ \ \ std::vector<typename\ pcl::PointCloud<PointT>::Ptr>\ clusters;}
-\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{typename}\ pcl::search::KdTree<PointT>::Ptr\ tree(\textcolor{keyword}{new}\ pcl::search::KdTree<PointT>);}
-\DoxyCodeLine{00090\ \ \ tree-\/>setInputCloud(cloud);}
+\DoxyCodeLine{00088\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{std::vector<typename\ pcl::PointCloud<PointT>::Ptr}}>\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{clusters}};}
+\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::search::KdTree<PointT>::Ptr}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{tree}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::search::KdTree<PointT>}});}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{tree}}-\/>setInputCloud(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}});}
 \DoxyCodeLine{00091\ }
-\DoxyCodeLine{00092\ \ \ std::vector<pcl::PointIndices>\ cluster\_indices;}
-\DoxyCodeLine{00093\ \ \ pcl::EuclideanClusterExtraction<PointT>\ ec;}
-\DoxyCodeLine{00094\ \ \ ec.setClusterTolerance(clusterTolerance);}
-\DoxyCodeLine{00095\ \ \ ec.setMinClusterSize(minSize);}
-\DoxyCodeLine{00096\ \ \ ec.setMaxClusterSize(maxSize);}
-\DoxyCodeLine{00097\ \ \ ec.setSearchMethod(tree);}
-\DoxyCodeLine{00098\ \ \ ec.setInputCloud(cloud);}
-\DoxyCodeLine{00099\ \ \ ec.extract(cluster\_indices);}
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{std::vector<pcl::PointIndices>}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cluster\_indices}};}
+\DoxyCodeLine{00093\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::EuclideanClusterExtraction<PointT>}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}};}
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.setClusterTolerance(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{clusterTolerance}});}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.setMinClusterSize(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{minSize}});}
+\DoxyCodeLine{00096\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.setMaxClusterSize(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{maxSize}});}
+\DoxyCodeLine{00097\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.setSearchMethod(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{tree}});}
+\DoxyCodeLine{00098\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.setInputCloud(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}});}
+\DoxyCodeLine{00099\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ec}}.extract(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cluster\_indices}});}
 \DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ cluster\ :\ cluster\_indices)\ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud\_cluster(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>);}
-\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ idx\ :\ cluster.indices)\ \{}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ cloud\_cluster-\/>push\_back((*cloud)[idx]);}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cluster}}\ :\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cluster\_indices}})\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>::Ptr}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>}});}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{idx}}\ :\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cluster}}.indices)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}-\/>push\_back((*\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}})[\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{idx}}]);}
 \DoxyCodeLine{00105\ \ \ \ \ \}}
-\DoxyCodeLine{00106\ \ \ \ \ cloud\_cluster-\/>width\ =\ cloud\_cluster-\/>size();}
-\DoxyCodeLine{00107\ \ \ \ \ cloud\_cluster-\/>height\ =\ 1;}
-\DoxyCodeLine{00108\ \ \ \ \ cloud\_cluster-\/>is\_dense\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00109\ \ \ \ \ clusters.push\_back(cloud\_cluster);}
+\DoxyCodeLine{00106\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}-\/>width\ =\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}-\/>size();}
+\DoxyCodeLine{00107\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}-\/>height\ =\ 1;}
+\DoxyCodeLine{00108\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}}-\/>is\_dense\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00109\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{clusters}}.push\_back(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_cluster}});}
 \DoxyCodeLine{00110\ \ \ \}}
-\DoxyCodeLine{00111\ \ \ \textcolor{keywordflow}{return}\ clusters;}
+\DoxyCodeLine{00111\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{clusters}};}
 \DoxyCodeLine{00112\ \}}
 
 \end{DoxyCode}
-\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3}\label{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3} 
-\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!filterCloud@{filterCloud}}
+\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3}\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!filterCloud@{filterCloud}}
 \index{filterCloud@{filterCloud}!ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}}
 \doxysubsubsection{\texorpdfstring{filterCloud()}{filterCloud()}}
-{\footnotesize\ttfamily template$<$typename PointT $>$ \\
-pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::filter\+Cloud (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud,  }\item[{bool}]{down\+Sample\+Input\+Cloud,  }\item[{float}]{filter\+Res,  }\item[{Eigen\+::\+Vector4f}]{min\+Point,  }\item[{Eigen\+::\+Vector4f}]{max\+Point,  }\item[{bool}]{invert\+Crop\+Box }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classground__segmentation_1_1ProcessCloudProcessor_a498cf005e3bd0daa58ac5c9481b743f3} 
+template$<$typename PointT$>$ \\
+pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::filter\+Cloud (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud}{, }\item[{bool}]{down\+Sample\+Input\+Cloud}{, }\item[{float}]{filter\+Res}{, }\item[{Eigen\+::\+Vector4f}]{min\+Point}{, }\item[{Eigen\+::\+Vector4f}]{max\+Point}{, }\item[{bool}]{invert\+Crop\+Box}{}\end{DoxyParamCaption})}
 
 
 
@@ -82,32 +84,32 @@ Definition at line \mbox{\hyperlink{pointcloud__processor_8hpp_source_l00054}{54
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00062\ \{}
-\DoxyCodeLine{00063\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud\_filtered(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>());}
-\DoxyCodeLine{00064\ \ \ pcl::CropBox<PointT>\ roi;}
-\DoxyCodeLine{00065\ \ \ roi.setMin(minPoint);}
-\DoxyCodeLine{00066\ \ \ roi.setMax(maxPoint);}
-\DoxyCodeLine{00067\ \ \ roi.setNegative(invertCropBox);}
+\DoxyCodeLine{00063\ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>::Ptr}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_filtered}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>}}());}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::CropBox<PointT>}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}};}
+\DoxyCodeLine{00065\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.setMin(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{minPoint}});}
+\DoxyCodeLine{00066\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.setMax(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{maxPoint}});}
+\DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.setNegative(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{invertCropBox}});}
 \DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \textcolor{keywordflow}{if}\ (downSampleInputCloud)\ \{}
-\DoxyCodeLine{00070\ \ \ \ \ pcl::VoxelGrid<PointT>\ sor;}
-\DoxyCodeLine{00071\ \ \ \ \ sor.setInputCloud(cloud);}
-\DoxyCodeLine{00072\ \ \ \ \ sor.setLeafSize(filterRes,\ filterRes,\ filterRes);}
-\DoxyCodeLine{00073\ \ \ \ \ sor.filter(*cloud\_filtered);}
-\DoxyCodeLine{00074\ \ \ \ \ roi.setInputCloud(cloud\_filtered);}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{downSampleInputCloud}})\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::VoxelGrid<PointT>}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{sor}};}
+\DoxyCodeLine{00071\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{sor}}.setInputCloud(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}});}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{sor}}.setLeafSize(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{filterRes}},\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{filterRes}},\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{filterRes}});}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{sor}}.filter(*\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_filtered}});}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.setInputCloud(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_filtered}});}
 \DoxyCodeLine{00075\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00076\ \ \ \ \ roi.setInputCloud(cloud);}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.setInputCloud(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}});}
 \DoxyCodeLine{00077\ \ \ \}}
-\DoxyCodeLine{00078\ \ \ roi.filter(*cloud\_filtered);}
-\DoxyCodeLine{00079\ \ \ \textcolor{keywordflow}{return}\ cloud\_filtered;}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{roi}}.filter(*\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_filtered}});}
+\DoxyCodeLine{00079\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud\_filtered}};}
 \DoxyCodeLine{00080\ \}}
 
 \end{DoxyCode}
-\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032}\label{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032} 
-\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!loadPcd@{loadPcd}}
+\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032}\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!loadPcd@{loadPcd}}
 \index{loadPcd@{loadPcd}!ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}}
 \doxysubsubsection{\texorpdfstring{loadPcd()}{loadPcd()}}
-{\footnotesize\ttfamily template$<$typename PointT $>$ \\
-pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::load\+Pcd (\begin{DoxyParamCaption}\item[{std\+::string}]{file }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classground__segmentation_1_1ProcessCloudProcessor_ac1009e6bb459da6842cbff1cbbd2e032} 
+template$<$typename PointT$>$ \\
+pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::load\+Pcd (\begin{DoxyParamCaption}\item[{std\+::string}]{file}{}\end{DoxyParamCaption})}
 
 
 
@@ -116,20 +118,20 @@ Definition at line \mbox{\hyperlink{pointcloud__processor_8hpp_source_l00123}{12
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00124\ \{}
-\DoxyCodeLine{00125\ \ \ \textcolor{keyword}{typename}\ pcl::PointCloud<PointT>::Ptr\ cloud(\textcolor{keyword}{new}\ pcl::PointCloud<PointT>);}
-\DoxyCodeLine{00126\ \ \ \textcolor{keywordflow}{if}\ (pcl::io::loadPCDFile<PointT>(file,\ *cloud)\ ==\ -\/1)\ \{\ \ \ \ \textcolor{comment}{//*\ load\ the\ file}}
-\DoxyCodeLine{00127\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ read\ PCD\ file:\ "{}}\ <<\ file\ <<\ std::endl;}
+\DoxyCodeLine{00125\ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>::Ptr}}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}}(\textcolor{keyword}{new}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::PointCloud<PointT>}});}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::io::loadPCDFile<PointT>}}(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{file}},\ *\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}})\ ==\ -\/1)\ \{\ \ \ \ \textcolor{comment}{//*\ load\ the\ file}}
+\DoxyCodeLine{00127\ \ \ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{std::cerr}}\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ read\ PCD\ file:\ "{}}\ <<\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{file}}\ <<\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{std::endl}};}
 \DoxyCodeLine{00128\ \ \ \}}
-\DoxyCodeLine{00129\ \ \ \textcolor{keywordflow}{return}\ cloud;}
+\DoxyCodeLine{00129\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}};}
 \DoxyCodeLine{00130\ \}}
 
 \end{DoxyCode}
-\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586}\label{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586} 
-\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!savePcd@{savePcd}}
+\Hypertarget{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586}\index{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}!savePcd@{savePcd}}
 \index{savePcd@{savePcd}!ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$@{ground\_segmentation::ProcessCloudProcessor$<$ PointT $>$}}
 \doxysubsubsection{\texorpdfstring{savePcd()}{savePcd()}}
-{\footnotesize\ttfamily template$<$typename PointT $>$ \\
-void \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::save\+Pcd (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud,  }\item[{std\+::string}]{file }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classground__segmentation_1_1ProcessCloudProcessor_abe046552b6604c0efcfe51a3e12cf586} 
+template$<$typename PointT$>$ \\
+void \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{ground\+\_\+segmentation\+::\+Process\+Cloud\+Processor}}$<$ PointT $>$\+::save\+Pcd (\begin{DoxyParamCaption}\item[{typename pcl\+::\+Point\+Cloud$<$ PointT $>$\+::\+Ptr}]{cloud}{, }\item[{std\+::string}]{file}{}\end{DoxyParamCaption})}
 
 
 
@@ -138,7 +140,7 @@ Definition at line \mbox{\hyperlink{pointcloud__processor_8hpp_source_l00115}{11
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00118\ \{}
-\DoxyCodeLine{00119\ \ \ pcl::io::savePCDFileASCII(file,\ *cloud);}
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{pcl::io::savePCDFileASCII}}(\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{file}},\ *\mbox{\hyperlink{classground__segmentation_1_1ProcessCloudProcessor}{cloud}});}
 \DoxyCodeLine{00120\ \}}
 
 \end{DoxyCode}

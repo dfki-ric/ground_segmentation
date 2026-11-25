@@ -1,11 +1,11 @@
 var namespaceground__segmentation =
 [
-    [ "GridCell", "structground__segmentation_1_1GridCell.html", "structground__segmentation_1_1GridCell" ],
-    [ "GridConfig", "structground__segmentation_1_1GridConfig.html", "structground__segmentation_1_1GridConfig" ],
-    [ "Index3D", "structground__segmentation_1_1Index3D.html", "structground__segmentation_1_1Index3D" ],
     [ "PCLPointCloudAdaptor", "structground__segmentation_1_1PCLPointCloudAdaptor.html", "structground__segmentation_1_1PCLPointCloudAdaptor" ],
-    [ "Point", "structground__segmentation_1_1Point.html", "structground__segmentation_1_1Point" ],
     [ "PointCloudGrid", "classground__segmentation_1_1PointCloudGrid.html", "classground__segmentation_1_1PointCloudGrid" ],
+    [ "Point", "structground__segmentation_1_1Point.html", "structground__segmentation_1_1Point" ],
+    [ "GridCell", "structground__segmentation_1_1GridCell.html", "structground__segmentation_1_1GridCell" ],
+    [ "Index3D", "structground__segmentation_1_1Index3D.html", "structground__segmentation_1_1Index3D" ],
+    [ "GridConfig", "structground__segmentation_1_1GridConfig.html", "structground__segmentation_1_1GridConfig" ],
     [ "ProcessCloudProcessor", "classground__segmentation_1_1ProcessCloudProcessor.html", "classground__segmentation_1_1ProcessCloudProcessor" ],
     [ "PrimitiveType", "namespaceground__segmentation.html#acf181d525e8a5b29e9c35841066d38bf", [
       [ "LINE", "namespaceground__segmentation.html#acf181d525e8a5b29e9c35841066d38bfad189dc6a8462138db8b885128b3d6a9f", null ],
