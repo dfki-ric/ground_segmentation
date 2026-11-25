@@ -246,9 +246,9 @@ GSeg3D consistently demonstrates **stable, high-precision performance** across:
   - Temporal fusion
   - GPU acceleration
 
-## Tests & Visualisation
+## Tests
 
-This directory contains **unit tests** and a **visual debugging tool** for the
+The `test/` directory contains **unit tests** for the
 `PointCloudGrid` ground segmentation implementation.
 
 The code uses **PCL**, **Eigen**, and **GoogleTest** and is intended for quick
@@ -265,12 +265,6 @@ segmentation behaviour.
   - Phase 1 vs Phase 2 behaviour
   - Orientation / gravity influence
   - Robustness against empty inputs
-
-- `test_visual_segmentation.cpp`  
-  A **visual inspection tool** that:
-  - Loads a `.pcd` or `.ply` point cloud
-  - Runs **phase 1 + phase 2** ground segmentation
-  - Displays ground (green) and obstacles (red) using PCLVisualizer
 
 ### Notes
 
